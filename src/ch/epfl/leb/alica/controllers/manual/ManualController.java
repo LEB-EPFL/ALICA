@@ -31,4 +31,9 @@ public class ManualController extends AbstractController {
             return maximum;
     }
     
+    @Override
+    public String getName() {
+        return "Manual";
+    }
+    
 }

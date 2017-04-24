@@ -41,4 +41,9 @@ public class PID_controller extends AbstractController {
         return current_output;
     }
     
+    @Override
+    public String getName() {
+        return "PID";
+    }
+    
 }

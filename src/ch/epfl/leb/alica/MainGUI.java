@@ -64,10 +64,6 @@ public final class MainGUI extends JFrame {
         analyzer_setup_panels.get(newPanelName).setBounds(5, 5, 200, 150);
         analyzer_setup_panels.get(newPanelName).revalidate();
         analyzer_setup_panels.get(newPanelName).repaint();
-        analyzer_panel.revalidate();
-        analyzer_panel.repaint();
-        this.validate();
-        this.repaint();
         
     }
 
@@ -173,7 +169,7 @@ public final class MainGUI extends JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap(122, Short.MAX_VALUE)
                         .addComponent(b_magic)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(b_exit_plugin))
@@ -253,7 +249,7 @@ public final class MainGUI extends JFrame {
         b_worker_stop.setEnabled(true);
         
         alica_core.setAnalyzer(analyzer_setup_panels.get(cb_analyzer_setup.getSelectedItem()).initAnalyzer());
-        alica_core.startWorker();
+        alica_core.startWorker(rb_source_mmcore.isSelected());
     }//GEN-LAST:event_b_worker_startMouseClicked
 
     private void b_worker_stopMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_b_worker_stopMouseClicked

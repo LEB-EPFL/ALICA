@@ -19,4 +19,6 @@ public interface Controller {
     public void nextValue(double value, long time_ms);
     
     public double getCurrentOutput();
+    
+    public String getName();
 }

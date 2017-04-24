@@ -38,4 +38,8 @@ public class InvertController extends AbstractController {
             return out;
     }
     
+    @Override
+    public String getName() {
+        return "Inverter";
+    }
 }

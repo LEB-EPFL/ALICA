@@ -5,6 +5,7 @@
  */
 package ch.epfl.leb.alica;
 
+import ch.epfl.leb.alica.worker.WorkerThread;
 import ch.epfl.leb.alica.analyzers.spotcounter.SpotCounter;
 import ch.epfl.leb.alica.controllers.pid.PID_controller;
 import ch.epfl.leb.alica.lasers.MMLaser;
@@ -84,10 +85,10 @@ public final class AlicaCore {
         this.analyzer = analyzer;
     }
      
-    public void startWorker() {
+    public void startWorker(boolean draw_from_core) {
         laser = new MMLaser(studio, "Laseer", "Voltaage", 0.0, 42.0);
         controller = new PID_controller(1.0, 0, 0, 0, 56.0);
-        worker = new WorkerThread(studio, analyzer, controller, laser);
+        worker = new WorkerThread(studio, analyzer, controller, laser, draw_from_core);
         worker.start();
     }
     
