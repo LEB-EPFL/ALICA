@@ -8,6 +8,7 @@ package ch.epfl.leb.alica;
 import ch.epfl.leb.alica.analyzers.AnalyzerSetupPanel;
 import ch.epfl.leb.alica.analyzers.autolase.AutoLaseSetupPanel;
 import ch.epfl.leb.alica.analyzers.spotcounter.SpotCounterSetupPanel;
+import ch.epfl.leb.alica.controllers.ControllerFactory;
 import java.util.HashMap;
 import javax.swing.ComboBoxModel;
 import javax.swing.JFrame;
@@ -22,6 +23,7 @@ public final class MainGUI extends JFrame {
     
     private final AlicaCore alica_core;
     private final HashMap<String, AnalyzerSetupPanel> analyzer_setup_panels;
+    private final ControllerFactory controller_factory;
     
     
     /**
@@ -34,11 +36,20 @@ public final class MainGUI extends JFrame {
             this.alica_core = core;
         }
         
+        controller_factory = new ControllerFactory();
+        
         analyzer_setup_panels = new HashMap<String, AnalyzerSetupPanel>();
         analyzer_setup_panels.put("SpotCounter", new SpotCounterSetupPanel());
         analyzer_setup_panels.put("AutoLase", new AutoLaseSetupPanel());
         initComponents();
         updateAnalyzerSetupPanel("SpotCounter");
+        updateControllerSetupPanel();
+        
+        cb_controller_setup.removeAllItems();
+        for (String key: controller_factory.getControllerList()) {
+            cb_controller_setup.addItem(key);
+        }
+        cb_controller_setup.setSelectedItem(controller_factory.getCurrentController());
     }
     
     public static MainGUI initialize(AlicaCore core) {
@@ -66,6 +77,14 @@ public final class MainGUI extends JFrame {
         analyzer_setup_panels.get(newPanelName).repaint();
         
     }
+    
+    private void updateControllerSetupPanel() {
+        controller_panel.removeAll();
+        controller_panel.add(controller_factory.getSelectedSetupPanel());
+        controller_factory.getSelectedSetupPanel().setBounds(5,5,200,150);
+        controller_factory.getSelectedSetupPanel().revalidate();
+        controller_factory.getSelectedSetupPanel().repaint();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -89,6 +108,9 @@ public final class MainGUI extends JFrame {
         analyzer_panel = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         cb_analyzer_setup = new javax.swing.JComboBox();
+        controller_panel = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        cb_controller_setup = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setResizable(false);
@@ -130,6 +152,7 @@ public final class MainGUI extends JFrame {
         jLabel1.setText("Image source");
 
         buttonGroup_source.add(rb_source_mmcore);
+        rb_source_mmcore.setSelected(true);
         rb_source_mmcore.setText("MM Core");
 
         buttonGroup_source.add(rb_source_pipeline);
@@ -162,6 +185,32 @@ public final class MainGUI extends JFrame {
             }
         });
 
+        controller_panel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        javax.swing.GroupLayout controller_panelLayout = new javax.swing.GroupLayout(controller_panel);
+        controller_panel.setLayout(controller_panelLayout);
+        controller_panelLayout.setHorizontalGroup(
+            controller_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 210, Short.MAX_VALUE)
+        );
+        controller_panelLayout.setVerticalGroup(
+            controller_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
+        jLabel3.setText("Controller:");
+
+        cb_controller_setup.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cb_controller_setup.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+                cb_controller_setupPopupMenuWillBecomeInvisible(evt);
+            }
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -169,7 +218,7 @@ public final class MainGUI extends JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap(122, Short.MAX_VALUE)
+                        .addContainerGap(440, Short.MAX_VALUE)
                         .addComponent(b_magic)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(b_exit_plugin))
@@ -181,14 +230,20 @@ public final class MainGUI extends JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel2)
                                 .addGap(18, 18, 18)
-                                .addComponent(cb_analyzer_setup, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(cb_analyzer_setup, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(77, 77, 77)
+                                .addComponent(jLabel3)
+                                .addGap(18, 18, 18)
+                                .addComponent(cb_controller_setup, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(10, 10, 10)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(rb_source_pipeline)
                                     .addComponent(rb_source_mmcore)
-                                    .addComponent(analyzer_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(20, 20, 20)))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(analyzer_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(controller_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
@@ -219,9 +274,13 @@ public final class MainGUI extends JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(cb_analyzer_setup, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cb_analyzer_setup, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3)
+                    .addComponent(cb_controller_setup, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(analyzer_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(controller_panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(analyzer_panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(b_worker_stop)
@@ -249,6 +308,7 @@ public final class MainGUI extends JFrame {
         b_worker_stop.setEnabled(true);
         
         alica_core.setAnalyzer(analyzer_setup_panels.get(cb_analyzer_setup.getSelectedItem()).initAnalyzer());
+        alica_core.setController(controller_factory.buildController());
         alica_core.startWorker(rb_source_mmcore.isSelected());
     }//GEN-LAST:event_b_worker_startMouseClicked
 
@@ -262,6 +322,11 @@ public final class MainGUI extends JFrame {
         updateAnalyzerSetupPanel((String) cb_analyzer_setup.getSelectedItem());
     }//GEN-LAST:event_cb_analyzer_setupPopupMenuWillBecomeInvisible
 
+    private void cb_controller_setupPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_cb_controller_setupPopupMenuWillBecomeInvisible
+        controller_factory.selectController((String) cb_controller_setup.getSelectedItem());
+        updateControllerSetupPanel();
+    }//GEN-LAST:event_cb_controller_setupPopupMenuWillBecomeInvisible
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel analyzer_panel;
@@ -271,8 +336,11 @@ public final class MainGUI extends JFrame {
     private javax.swing.JButton b_worker_stop;
     private javax.swing.ButtonGroup buttonGroup_source;
     private javax.swing.JComboBox cb_analyzer_setup;
+    private javax.swing.JComboBox cb_controller_setup;
+    private javax.swing.JPanel controller_panel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel l_title;
     private javax.swing.JLabel l_titletext;
     private javax.swing.JRadioButton rb_source_mmcore;

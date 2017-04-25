@@ -7,6 +7,7 @@ package ch.epfl.leb.alica;
 
 import ch.epfl.leb.alica.worker.WorkerThread;
 import ch.epfl.leb.alica.analyzers.spotcounter.SpotCounter;
+import ch.epfl.leb.alica.controllers.inverter.InvertController;
 import ch.epfl.leb.alica.controllers.pid.PID_controller;
 import ch.epfl.leb.alica.lasers.MMLaser;
 import ij.IJ;
@@ -74,20 +75,19 @@ public final class AlicaCore {
             }
         }
         IJ.log(out);
-        Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, out);
+        Logger.getLogger(this.getClass().getName()).log(Level.FINE, out);
     }
-    
-    public void magic() {
-        
-    }
-    
+
     public void setAnalyzer(Analyzer analyzer) {
         this.analyzer = analyzer;
+    }
+    
+    public void setController(Controller controller) {
+        this.controller = controller;
     }
      
     public void startWorker(boolean draw_from_core) {
         laser = new MMLaser(studio, "Laseer", "Voltaage", 0.0, 42.0);
-        controller = new PID_controller(1.0, 0, 0, 0, 56.0);
         worker = new WorkerThread(studio, analyzer, controller, laser, draw_from_core);
         worker.start();
     }

@@ -50,7 +50,8 @@ public class WorkerThread extends Thread {
         this.laser = laser;
         this.draw_from_core = draw_from_core;
         
-        this.gui = new MonitorGUI(this, analyzer.getName(), controller.toString(), laser.getDeviceName());
+        this.gui = new MonitorGUI(this, analyzer.getName(), controller.getName(), laser.getDeviceName());
+        gui.setLaserPowerMax(laser.getMaxPower());
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 gui.setVisible(true);

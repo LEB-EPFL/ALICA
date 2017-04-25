@@ -5,7 +5,6 @@
  */
 package ch.epfl.leb.alica.controllers.manual;
 
-import ch.epfl.leb.alica.Controller;
 import ch.epfl.leb.alica.controllers.AbstractController;
 
 /**
@@ -33,7 +32,7 @@ public class ManualController extends AbstractController {
     
     @Override
     public String getName() {
-        return "Manual";
+        return "Manuals";
     }
     
 }
