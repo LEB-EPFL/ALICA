@@ -19,4 +19,6 @@ public interface Laser {
     public double getMinPower();
     
     public String getDeviceName();
+    
+    public String getPropertyName();
 }

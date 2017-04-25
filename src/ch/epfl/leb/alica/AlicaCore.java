@@ -5,10 +5,13 @@
  */
 package ch.epfl.leb.alica;
 
+import ch.epfl.leb.alica.analyzers.AnalyzerFactory;
 import ch.epfl.leb.alica.worker.WorkerThread;
 import ch.epfl.leb.alica.analyzers.spotcounter.SpotCounter;
+import ch.epfl.leb.alica.controllers.ControllerFactory;
 import ch.epfl.leb.alica.controllers.inverter.InvertController;
 import ch.epfl.leb.alica.controllers.pid.PID_controller;
+import ch.epfl.leb.alica.lasers.LaserFactory;
 import ch.epfl.leb.alica.lasers.MMLaser;
 import ij.IJ;
 import ij.process.ImageProcessor;
@@ -29,13 +32,18 @@ public final class AlicaCore {
     private final Studio studio;
     private WorkerThread worker;
     
-    private Analyzer analyzer;
-    private Controller controller;
-    private Laser laser;
+    private final AnalyzerFactory analyzer_factory;
+    private final ControllerFactory controller_factory;
+    private final LaserFactory laser_factory;
+    
+
     
     // private constructor disables instantiation
     private AlicaCore(Studio studio) {
         this.studio = studio;
+        this.analyzer_factory = new AnalyzerFactory();
+        this.controller_factory = new ControllerFactory();
+        this.laser_factory = new LaserFactory(studio);
     }
     
     public static AlicaCore initialize(Studio studio) throws RuntimeException {
@@ -68,7 +76,7 @@ public final class AlicaCore {
                     } catch (Exception ex) {
                         propValue = "Error.";
                     }
-                    out = out.concat("  "+property+": "+propValue+"\n");
+                    out = out.concat("  - "+property+": "+propValue+"\n");
                 }
             } catch (Exception ex) {
                 Logger.getLogger(AlicaCore.class.getName()).log(Level.SEVERE, null, ex);
@@ -77,18 +85,22 @@ public final class AlicaCore {
         IJ.log(out);
         Logger.getLogger(this.getClass().getName()).log(Level.FINE, out);
     }
-
-    public void setAnalyzer(Analyzer analyzer) {
-        this.analyzer = analyzer;
+    
+    public AnalyzerFactory getAnalyzerFactory() {
+        return analyzer_factory;
     }
     
-    public void setController(Controller controller) {
-        this.controller = controller;
+    public ControllerFactory getControllerFactory() {
+        return controller_factory;
+    }
+    
+    public LaserFactory getLaserFactory() {
+        return laser_factory;
     }
      
     public void startWorker(boolean draw_from_core) {
-        laser = new MMLaser(studio, "Laseer", "Voltaage", 0.0, 42.0);
-        worker = new WorkerThread(studio, analyzer, controller, laser, draw_from_core);
+        worker = new WorkerThread(studio, analyzer_factory.build(), 
+                controller_factory.build(), laser_factory.build(), draw_from_core);
         worker.start();
     }
     

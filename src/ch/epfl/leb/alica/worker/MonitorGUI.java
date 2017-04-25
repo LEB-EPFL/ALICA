@@ -18,6 +18,7 @@ import org.micromanager.internal.graph.GraphPanel;
  */
 public class MonitorGUI extends javax.swing.JFrame {
     private double laser_power_max;
+    private double plot_max = 0.0;
     private final WorkerThread worker;
     private final GraphPanel realtime_graph;
     
@@ -65,7 +66,9 @@ public class MonitorGUI extends javax.swing.JFrame {
     
     public void updatePlot(GraphData data) {
         realtime_graph.setData(data);
-        realtime_graph.setBounds(data.getBounds());
+        GraphData.Bounds bounds = data.getBounds();
+        plot_max = (1.2*bounds.yMax > plot_max) ? 1.2*bounds.yMax : plot_max;
+        realtime_graph.setBounds(bounds.xMin, bounds.xMax, 0.0, plot_max);
         realtime_graph.repaint();
     }
     
@@ -103,7 +106,7 @@ public class MonitorGUI extends javax.swing.JFrame {
         jLabel12 = new javax.swing.JLabel();
         p_realtime_plot = new javax.swing.JPanel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
 
         pb_laser_power.setOrientation(1);
@@ -146,12 +149,12 @@ public class MonitorGUI extends javax.swing.JFrame {
         jLabel4.setText("Current setpoint:");
 
         l_setpoint.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        l_setpoint.setText("0.35");
+        l_setpoint.setText("1.0");
 
         jLabel5.setText("New setpoint:");
 
         e_new_setpoint.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
-        e_new_setpoint.setText("100.35");
+        e_new_setpoint.setText("1.0");
         e_new_setpoint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 e_new_setpointActionPerformed(evt);
@@ -266,7 +269,8 @@ public class MonitorGUI extends javax.swing.JFrame {
         l_fps.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         l_fps.setText("0.0");
 
-        l_last_analysis_duration.setText("13500");
+        l_last_analysis_duration.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        l_last_analysis_duration.setText("0");
 
         jLabel12.setText("ms");
 
@@ -282,9 +286,7 @@ public class MonitorGUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(l_fps, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(l_last_analysis_duration)))
+                    .addComponent(l_last_analysis_duration, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel12)
                 .addContainerGap())
@@ -372,7 +374,7 @@ public class MonitorGUI extends javax.swing.JFrame {
             IJ.showMessage("Setpoint can't be negative!");
             return;
         }
-        worker.setSetpoint(laser_power_max);
+        worker.setSetpoint(setpoint);
         l_setpoint.setText(e_new_setpoint.getText());
     }//GEN-LAST:event_b_set_setpointMouseClicked
 

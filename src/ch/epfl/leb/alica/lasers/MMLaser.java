@@ -68,4 +68,9 @@ public class MMLaser implements Laser {
     public String getDeviceName() {
         return device_name;
     }
+    
+    @Override
+    public String getPropertyName() {
+        return property_name;
+    }
 }

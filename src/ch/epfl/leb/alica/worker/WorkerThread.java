@@ -24,7 +24,7 @@ import org.micromanager.internal.graph.GraphFrame;
 public class WorkerThread extends Thread {
     private final boolean draw_from_core;
     private boolean stop_flag = false;
-    private long time_delay_ms = 100;
+    private long time_delay_ms = 1;
     
     private final Studio studio;
     private final Analyzer analyzer;
@@ -50,7 +50,7 @@ public class WorkerThread extends Thread {
         this.laser = laser;
         this.draw_from_core = draw_from_core;
         
-        this.gui = new MonitorGUI(this, analyzer.getName(), controller.getName(), laser.getDeviceName());
+        this.gui = new MonitorGUI(this, analyzer.getName(), controller.getName(), laser.getDeviceName()+"-"+laser.getPropertyName());
         gui.setLaserPowerMax(laser.getMaxPower());
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {

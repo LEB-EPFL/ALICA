@@ -320,8 +320,8 @@ public class MiniPID{
 		output=Foutput + Poutput + Ioutput + Doutput;
 
 		// Figure out what we're doing with the error.
-		if(minOutput!=maxOutput && !bounded(output, minOutput,maxOutput) ){
-			errorSum+=error; 
+		if((errorSum) > 4*setpoint ){
+			errorSum=4*setpoint; 
 			// reset the error sum to a sane level
 			// Setting to current error ensures a smooth transition when the P term 
 			// decreases enough for the I term to start acting upon the controller

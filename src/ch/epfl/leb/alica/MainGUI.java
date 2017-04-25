@@ -9,7 +9,10 @@ import ch.epfl.leb.alica.analyzers.AnalyzerSetupPanel;
 import ch.epfl.leb.alica.analyzers.autolase.AutoLaseSetupPanel;
 import ch.epfl.leb.alica.analyzers.spotcounter.SpotCounterSetupPanel;
 import ch.epfl.leb.alica.controllers.ControllerFactory;
+import ij.IJ;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ComboBoxModel;
 import javax.swing.JFrame;
 import javax.swing.event.ListDataListener;
@@ -22,8 +25,6 @@ public final class MainGUI extends JFrame {
     private static MainGUI instance = null;
     
     private final AlicaCore alica_core;
-    private final HashMap<String, AnalyzerSetupPanel> analyzer_setup_panels;
-    private final ControllerFactory controller_factory;
     
     
     /**
@@ -36,20 +37,28 @@ public final class MainGUI extends JFrame {
             this.alica_core = core;
         }
         
-        controller_factory = new ControllerFactory();
-        
-        analyzer_setup_panels = new HashMap<String, AnalyzerSetupPanel>();
-        analyzer_setup_panels.put("SpotCounter", new SpotCounterSetupPanel());
-        analyzer_setup_panels.put("AutoLase", new AutoLaseSetupPanel());
+
         initComponents();
-        updateAnalyzerSetupPanel("SpotCounter");
+        updateAnalyzerSetupPanel();
         updateControllerSetupPanel();
         
+        cb_analyzer_setup.removeAllItems();
+        for (String key: alica_core.getAnalyzerFactory().getProductNameList()) {
+            cb_analyzer_setup.addItem(key);
+        }
+        cb_analyzer_setup.setSelectedItem(alica_core.getAnalyzerFactory().getSelectedProductName());
+        
         cb_controller_setup.removeAllItems();
-        for (String key: controller_factory.getControllerList()) {
+        for (String key: alica_core.getControllerFactory().getProductNameList()) {
             cb_controller_setup.addItem(key);
         }
-        cb_controller_setup.setSelectedItem(controller_factory.getCurrentController());
+        cb_controller_setup.setSelectedItem(alica_core.getControllerFactory().getSelectedProductName());
+        
+        cb_laser_setup.removeAllItems();
+        for (String key: alica_core.getLaserFactory().getPossibleLasers()) {
+            cb_laser_setup.addItem(key);
+        }
+        cb_laser_setup.setSelectedItem(alica_core.getLaserFactory().getSelectedDeviceName());
     }
     
     public static MainGUI initialize(AlicaCore core) {
@@ -69,21 +78,37 @@ public final class MainGUI extends JFrame {
     }
     
     
-    private void updateAnalyzerSetupPanel(String newPanelName) {
+    private void updateAnalyzerSetupPanel() {
         analyzer_panel.removeAll();
-        analyzer_panel.add(analyzer_setup_panels.get(newPanelName));
-        analyzer_setup_panels.get(newPanelName).setBounds(5, 5, 200, 150);
-        analyzer_setup_panels.get(newPanelName).revalidate();
-        analyzer_setup_panels.get(newPanelName).repaint();
+        javax.swing.JPanel panel = alica_core.getAnalyzerFactory().getSelectedSetupPanel();
+        analyzer_panel.add(panel);
+        panel.setBounds(5,5,200,150);
+        panel.revalidate();
+        panel.repaint();
         
     }
     
     private void updateControllerSetupPanel() {
         controller_panel.removeAll();
-        controller_panel.add(controller_factory.getSelectedSetupPanel());
-        controller_factory.getSelectedSetupPanel().setBounds(5,5,200,150);
-        controller_factory.getSelectedSetupPanel().revalidate();
-        controller_factory.getSelectedSetupPanel().repaint();
+        javax.swing.JPanel panel = alica_core.getControllerFactory().getSelectedSetupPanel();
+        controller_panel.add(panel);
+        panel.setBounds(5,5,200,150);
+        panel.revalidate();
+        panel.repaint();
+    }
+    
+    private void updateLaserPropertyList() {
+        cb_laser_properties.removeAllItems();
+        try {
+            for (String s: alica_core.getLaserFactory().getSelectedDeviceProperties()) {
+                cb_laser_properties.addItem(s);
+            }
+        } catch (Exception ex) {
+            IJ.error("Error in getting selected device properties.");
+            Logger.getLogger(MainGUI.class.getName()).log(Level.SEVERE, null, ex);
+            return;
+        }
+        cb_laser_properties.setSelectedIndex(0);
     }
 
     /**
@@ -111,6 +136,9 @@ public final class MainGUI extends JFrame {
         controller_panel = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         cb_controller_setup = new javax.swing.JComboBox();
+        jLabel4 = new javax.swing.JLabel();
+        cb_laser_setup = new javax.swing.JComboBox();
+        cb_laser_properties = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setResizable(false);
@@ -174,7 +202,6 @@ public final class MainGUI extends JFrame {
 
         jLabel2.setText("Analyzer:");
 
-        cb_analyzer_setup.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "SpotCounter", "AutoLase" }));
         cb_analyzer_setup.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
             public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
             }
@@ -200,7 +227,6 @@ public final class MainGUI extends JFrame {
 
         jLabel3.setText("Controller:");
 
-        cb_controller_setup.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         cb_controller_setup.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
             public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
             }
@@ -211,39 +237,66 @@ public final class MainGUI extends JFrame {
             }
         });
 
+        jLabel4.setText("Laser:");
+
+        cb_laser_setup.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+                cb_laser_setupPopupMenuWillBecomeInvisible(evt);
+            }
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+            }
+        });
+
+        cb_laser_properties.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+                cb_laser_propertiesPopupMenuWillBecomeInvisible(evt);
+            }
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap(440, Short.MAX_VALUE)
-                        .addComponent(b_magic)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(b_exit_plugin))
+                .addGap(20, 20, 20)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel1)
+                    .addComponent(l_titletext)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
+                        .addGap(10, 10, 10)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(l_titletext)
+                            .addComponent(rb_source_pipeline)
+                            .addComponent(rb_source_mmcore)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel2)
+                                .addComponent(analyzer_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(cb_analyzer_setup, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(77, 77, 77)
-                                .addComponent(jLabel3)
+                                .addComponent(controller_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(cb_controller_setup, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(10, 10, 10)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(rb_source_pipeline)
-                                    .addComponent(rb_source_mmcore)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(analyzer_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(controller_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
+                                .addComponent(cb_laser_properties, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(18, 18, 18)
+                        .addComponent(cb_analyzer_setup, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(77, 77, 77)
+                        .addComponent(jLabel3)
+                        .addGap(18, 18, 18)
+                        .addComponent(cb_controller_setup, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(80, 80, 80)
+                        .addComponent(jLabel4)
+                        .addGap(18, 18, 18)
+                        .addComponent(cb_laser_setup, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(440, Short.MAX_VALUE)
+                .addComponent(b_magic)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(b_exit_plugin)
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
@@ -276,19 +329,26 @@ public final class MainGUI extends JFrame {
                     .addComponent(jLabel2)
                     .addComponent(cb_analyzer_setup, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
-                    .addComponent(cb_controller_setup, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cb_controller_setup, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4)
+                    .addComponent(cb_laser_setup, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(controller_panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(analyzer_panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(b_worker_stop)
-                    .addComponent(b_worker_start))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(b_exit_plugin)
-                    .addComponent(b_magic))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(controller_panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(analyzer_panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(b_worker_stop)
+                            .addComponent(b_worker_start))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(b_exit_plugin)
+                            .addComponent(b_magic)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(cb_laser_properties, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -307,8 +367,6 @@ public final class MainGUI extends JFrame {
         b_worker_start.setEnabled(false);
         b_worker_stop.setEnabled(true);
         
-        alica_core.setAnalyzer(analyzer_setup_panels.get(cb_analyzer_setup.getSelectedItem()).initAnalyzer());
-        alica_core.setController(controller_factory.buildController());
         alica_core.startWorker(rb_source_mmcore.isSelected());
     }//GEN-LAST:event_b_worker_startMouseClicked
 
@@ -319,13 +377,23 @@ public final class MainGUI extends JFrame {
     }//GEN-LAST:event_b_worker_stopMouseClicked
 
     private void cb_analyzer_setupPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_cb_analyzer_setupPopupMenuWillBecomeInvisible
-        updateAnalyzerSetupPanel((String) cb_analyzer_setup.getSelectedItem());
+        alica_core.getAnalyzerFactory().selectProduct((String) cb_analyzer_setup.getSelectedItem());
+        updateAnalyzerSetupPanel();
     }//GEN-LAST:event_cb_analyzer_setupPopupMenuWillBecomeInvisible
 
     private void cb_controller_setupPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_cb_controller_setupPopupMenuWillBecomeInvisible
-        controller_factory.selectController((String) cb_controller_setup.getSelectedItem());
+        alica_core.getControllerFactory().selectProduct((String) cb_controller_setup.getSelectedItem());
         updateControllerSetupPanel();
     }//GEN-LAST:event_cb_controller_setupPopupMenuWillBecomeInvisible
+
+    private void cb_laser_setupPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_cb_laser_setupPopupMenuWillBecomeInvisible
+        alica_core.getLaserFactory().selectDevice((String) cb_laser_setup.getSelectedItem());
+        updateLaserPropertyList();
+    }//GEN-LAST:event_cb_laser_setupPopupMenuWillBecomeInvisible
+
+    private void cb_laser_propertiesPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_cb_laser_propertiesPopupMenuWillBecomeInvisible
+        alica_core.getLaserFactory().selectProperty((String) cb_laser_properties.getSelectedItem());
+    }//GEN-LAST:event_cb_laser_propertiesPopupMenuWillBecomeInvisible
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -337,10 +405,13 @@ public final class MainGUI extends JFrame {
     private javax.swing.ButtonGroup buttonGroup_source;
     private javax.swing.JComboBox cb_analyzer_setup;
     private javax.swing.JComboBox cb_controller_setup;
+    private javax.swing.JComboBox cb_laser_properties;
+    private javax.swing.JComboBox cb_laser_setup;
     private javax.swing.JPanel controller_panel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel l_title;
     private javax.swing.JLabel l_titletext;
     private javax.swing.JRadioButton rb_source_mmcore;
