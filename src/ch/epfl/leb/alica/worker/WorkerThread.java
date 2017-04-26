@@ -105,7 +105,7 @@ public class WorkerThread extends Thread {
      * @param value new value of controller setpoint
      */
     public void setSetpoint(double value) {
-        controller.setTarget(value);
+        controller.setSetpoint(value);
     }
     
     /**

@@ -50,7 +50,7 @@ public class PID_controller extends AbstractController {
     }
     
     @Override
-    public void setTarget(double target) {
+    public void setSetpoint(double target) {
         core.setSetpoint(target);
     }
 

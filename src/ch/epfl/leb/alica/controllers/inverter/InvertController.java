@@ -42,8 +42,13 @@ public class InvertController extends AbstractController {
         this.value_at_1_mw = value_at_1_mw;
     }
     
+    /**
+     * Sets the scaling constant, since it basically fulfills the role of 
+     * setpoint for this controller.
+     * @param value new scaling constant 
+     */
     @Override
-    public void setTarget(double value) {
+    public void setSetpoint(double value) {
         if (value>=0.0)
             throw new IllegalArgumentException("Setpoint must be positive!");
         this.value_at_1_mw = value;

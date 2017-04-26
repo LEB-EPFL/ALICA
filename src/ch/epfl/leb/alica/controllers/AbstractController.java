@@ -46,7 +46,7 @@ public abstract class AbstractController implements Controller {
     }
     
     @Override
-    public void setTarget(double target) {
+    public void setSetpoint(double target) {
         setpoint = target;
     }
     

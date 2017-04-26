@@ -28,10 +28,10 @@ package ch.epfl.leb.alica;
  */
 public interface Controller {
     /**
-     * Sets target value
-     * @param target desired input signal value (setpoint)
+     * Sets new_setpoint value
+     * @param new_setpoint desired input signal value (setpoint)
      */
-    public void setTarget(double target);
+    public void setSetpoint(double new_setpoint);
     
     /**
      * Receives next input from the WorkerThread (this is the output of the
