@@ -127,6 +127,7 @@ public class WorkerThread extends Thread {
         
         // for easier access to the core
         final CMMCore core = studio.core();
+        
         while (!stop_flag) {
             
             // draw the next image from the core or from the display

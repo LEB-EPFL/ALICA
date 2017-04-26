@@ -34,6 +34,11 @@ public interface Controller {
     public void setSetpoint(double new_setpoint);
     
     /**
+     * @return current setpoint value
+     */
+    public double getSetpoint();
+    
+    /**
      * Receives next input from the WorkerThread (this is the output of the
      * analyzer)
      * @param value input to be processed
