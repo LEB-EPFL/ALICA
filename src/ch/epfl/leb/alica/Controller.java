@@ -20,19 +20,36 @@
 package ch.epfl.leb.alica;
 
 /**
- *
- * @author stefko
+ * A Controller receives the output of the Analyzer as input, and then
+ * adjusts its internal state accordingly. It can be asked for output
+ * at any time by the WorkerThread.
+ * @author Marcel Stefko
  */
 public interface Controller {
     /**
-     * Sets target value for error signal.
-     * @param target desired error signal value (setpoint)
+     * Sets target value
+     * @param target desired input signal value (setpoint)
      */
     public void setTarget(double target);
     
+    /**
+     * Receives next input from the WorkerThread (this is the output of the
+     * analyzer)
+     * @param value input to be processed
+     * @param time_ms time at which the input was acquired in ms
+     */
     public void nextValue(double value, long time_ms);
     
+    /**
+     * Produce an output value based on internal state (the output value is
+     * fed into the laser)
+     * @return output value (desired laser power)
+     */
     public double getCurrentOutput();
     
+    /**
+     *
+     * @return unique name of the controller
+     */
     public String getName();
 }

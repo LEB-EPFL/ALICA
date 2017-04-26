@@ -26,17 +26,26 @@ import org.micromanager.Studio;
 import org.scijava.plugin.Plugin;
 import org.scijava.plugin.SciJavaPlugin;
 /**
- *
- * @author stefko
+ * MicroManager2.0 MenuPlugin for automated laser illumination intensity
+ * control.
+ * @author Marcel Stefko
  */
 @Plugin(type = MenuPlugin.class)
 public class AlicaPlugin implements MenuPlugin, SciJavaPlugin {
     
+    /**
+     * 
+     * @return Sub-menu location of the plugin
+     */
     @Override
     public String getSubMenu() {
         return "";
     }
 
+    /**
+     * Display the MainGUI singleton if it was hidden, if it doesn't exist,
+     * initialize it. AlicaCore must be initialized before calling this method.
+     */
     @Override
     public void onPluginSelected() {
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -51,6 +60,10 @@ public class AlicaPlugin implements MenuPlugin, SciJavaPlugin {
         });
     }
 
+    /**
+     * Initialize the AlicaCore, if it already exists, do nothing.
+     * @param studio MMStudio
+     */
     @Override
     public void setContext(Studio studio) {
         try {
@@ -60,21 +73,37 @@ public class AlicaPlugin implements MenuPlugin, SciJavaPlugin {
         }
     }
 
+    /**
+     *
+     * @return name of the plugin
+     */
     @Override
     public String getName() {
         return "ALICA";
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String getHelpText() {
         return "Help!";
     }
 
+    /**
+     *
+     * @return current plugin version
+     */
     @Override
     public String getVersion() {
         return "0.0.1";
     }
 
+    /**
+     *
+     * @return plugin copyright
+     */
     @Override
     public String getCopyright() {
         return "GPLv3";

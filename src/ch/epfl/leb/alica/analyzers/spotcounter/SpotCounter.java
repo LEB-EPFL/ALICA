@@ -38,6 +38,11 @@ public class SpotCounter implements Analyzer {
     
     private double current_output = 0.0;
     
+    /**
+     * Initialize the analyzer
+     * @param noise_tolerance required height of peak around surroundings
+     * @param box_size size of the scanning box in pixels
+     */
     public SpotCounter(int noise_tolerance, int box_size) {
         this.noise_tolerance = noise_tolerance;
         this.box_size = box_size;
@@ -49,6 +54,7 @@ public class SpotCounter implements Analyzer {
     public double getCurrentOutput() {
         return current_output;
     }
+
 
     @Override
     public String getName() {

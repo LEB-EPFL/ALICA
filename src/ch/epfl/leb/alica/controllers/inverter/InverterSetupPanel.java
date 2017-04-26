@@ -23,8 +23,8 @@ import ch.epfl.leb.alica.Controller;
 import ch.epfl.leb.alica.controllers.ControllerSetupPanel;
 
 /**
- *
- * @author stefko
+ * Setup panel for the InvertController
+ * @author Marcel Stefko
  */
 public class InverterSetupPanel extends ControllerSetupPanel {
 
@@ -97,6 +97,10 @@ public class InverterSetupPanel extends ControllerSetupPanel {
     private javax.swing.JLabel jLabel2;
     // End of variables declaration//GEN-END:variables
 
+    /**
+     *
+     * @return
+     */
     @Override
     public Controller initController() {
         double max_output = Double.parseDouble(e_max_output.getText());

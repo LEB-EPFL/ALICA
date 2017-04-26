@@ -23,15 +23,16 @@ import ch.epfl.leb.alica.AbstractFactory;
 import ch.epfl.leb.alica.Analyzer;
 import ch.epfl.leb.alica.analyzers.autolase.AutoLaseSetupPanel;
 import ch.epfl.leb.alica.analyzers.spotcounter.SpotCounterSetupPanel;
-import java.util.HashMap;
-import java.util.Set;
 
 /**
- *
- * @author stefko
+ * Analyzer factory.
+ * @author Marcel Stefko
  */
 public class AnalyzerFactory extends AbstractFactory<AnalyzerSetupPanel>{
     
+    /**
+     * Adds the known algorithms to the list.
+     */
     public AnalyzerFactory() {
         super();
         addSetupPanel("SpotCounter", new SpotCounterSetupPanel());
@@ -40,6 +41,10 @@ public class AnalyzerFactory extends AbstractFactory<AnalyzerSetupPanel>{
         selectProduct("SpotCounter");
     }
     
+    /**
+     * Build the selected analyzer using current settings
+     * @return initialized analyzer
+     */
     public Analyzer build() {
         return getSelectedSetupPanel().initAnalyzer();
     }

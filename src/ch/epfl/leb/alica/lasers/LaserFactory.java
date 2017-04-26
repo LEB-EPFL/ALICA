@@ -20,43 +20,72 @@
 package ch.epfl.leb.alica.lasers;
 
 import ch.epfl.leb.alica.Laser;
-import java.util.Set;
 import mmcorej.StrVector;
 import org.micromanager.Studio;
 
 /**
- *
- * @author stefko
+ * LaserFactory
+ * @author Marcel Stefko
  */
-public class LaserFactory {
+public final class LaserFactory {
     private final Studio studio;
     private String selected_name;
     private String selected_property;
+
+    /**
+     * Initialize the factory with the MM studio
+     * @param studio
+     */
     public LaserFactory(Studio studio) {
         this.studio = studio;
         selected_name = getPossibleLasers().get(0);
     }
     
+    /**
+     * Query the MMCore for list of loaded devices
+     * @return StrVector list of loaded devices in the core
+     */
     public StrVector getPossibleLasers() {
         return studio.core().getLoadedDevices();
     }
     
+    /**
+     * Select a device
+     * @param name unique device identifier from the MMCore
+     */
     public void selectDevice(String name) {
         selected_name = name;
     }
     
+    /**
+     * 
+     * @return currently selected device identifier
+     */
     public String getSelectedDeviceName() {
         return selected_name;
     }
     
+    /**
+     * Query the MMCore for properties of the selected device
+     * @return StrVector list of properties
+     * @throws Exception if hardware communication fails
+     */
     public StrVector getSelectedDeviceProperties() throws Exception {
         return studio.core().getDevicePropertyNames(selected_name);
     }
     
+    /**
+     * Select a property of the currently selected device
+     * @param property unique property identifier from MMCore
+     */
     public void selectProperty(String property) {
         selected_property = property;
     }
     
+    /**
+     * Build the laser using the current state
+     * @return initialized Laser
+     */
     public Laser build() {
         return new MMLaser(studio, selected_name, selected_property, 0.0, 42.0);
     }

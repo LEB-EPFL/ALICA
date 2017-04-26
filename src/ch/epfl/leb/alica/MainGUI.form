@@ -65,7 +65,7 @@
           </Group>
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace pref="440" max="32767" attributes="0"/>
-              <Component id="b_magic" min="-2" max="-2" attributes="0"/>
+              <Component id="b_print_loaded_devices" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="b_exit_plugin" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
@@ -125,7 +125,7 @@
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="b_exit_plugin" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="b_magic" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="b_print_loaded_devices" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <Group type="102" attributes="0">
@@ -160,12 +160,12 @@
         <Property name="text" type="java.lang.String" value="Automated Laser Illumination Control Algorithm"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="b_magic">
+    <Component class="javax.swing.JButton" name="b_print_loaded_devices">
       <Properties>
         <Property name="text" type="java.lang.String" value="Print Loaded Devices"/>
       </Properties>
       <Events>
-        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="b_magicMouseClicked"/>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="b_print_loaded_devicesMouseClicked"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="b_worker_start">

@@ -22,11 +22,15 @@ package ch.epfl.leb.alica.controllers.manual;
 import ch.epfl.leb.alica.controllers.AbstractController;
 
 /**
- *
- * @author stefko
+ * Manual controller. Output is equal to setpoint value, any input is ignored.
+ * @author Marcel Stefko
  */
 public class ManualController extends AbstractController {
 
+    /**
+     * Initialize with maximal output value
+     * @param maximum max output value
+     */
     public ManualController(double maximum) {
         super(maximum);
     }

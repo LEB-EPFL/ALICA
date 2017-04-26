@@ -22,13 +22,25 @@ package ch.epfl.leb.alica.controllers;
 import ch.epfl.leb.alica.Controller;
 
 /**
- *
- * @author stefko
+ * Abstract controller class to reduce boilerplate code.
+ * @author Marcel Stefko
  */
 public abstract class AbstractController implements Controller {
+
+    /**
+     * Current input setpoint value.
+     */
     protected double setpoint = 0.0;
+
+    /**
+     * Maximal possible output value.
+     */
     protected double maximum = 0.0;
     
+    /**
+     * Initialize the controller with a maximal output value.
+     * @param maximum max output value
+     */
     public AbstractController(double maximum) {
         this.maximum = maximum;
     }

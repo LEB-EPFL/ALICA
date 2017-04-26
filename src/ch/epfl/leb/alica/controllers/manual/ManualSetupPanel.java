@@ -80,6 +80,10 @@ public class ManualSetupPanel extends ControllerSetupPanel {
     private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 
+    /**
+     *
+     * @return
+     */
     @Override
     public Controller initController() {
         double max_output = Double.parseDouble(e_max_output.getText());

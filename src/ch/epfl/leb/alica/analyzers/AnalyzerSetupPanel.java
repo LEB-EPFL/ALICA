@@ -22,14 +22,14 @@ package ch.epfl.leb.alica.analyzers;
 import ch.epfl.leb.alica.Analyzer;
 
 /**
- *
- * @author stefko
+ * Sets up the analyzer, allows to customize settings.
+ * @author Marcel Stefko
  */
 public abstract class AnalyzerSetupPanel extends javax.swing.JPanel {
     
-    public abstract Analyzer initAnalyzer();
-    
-    @Override
-    public abstract String toString();
-    
+    /**
+     * Construct the analyzer from current settings.
+     * @return initialized analyzer
+     */
+    public abstract Analyzer initAnalyzer();   
 }

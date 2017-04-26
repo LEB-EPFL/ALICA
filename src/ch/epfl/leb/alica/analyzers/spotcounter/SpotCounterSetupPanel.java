@@ -22,10 +22,7 @@ package ch.epfl.leb.alica.analyzers.spotcounter;
 import ch.epfl.leb.alica.Analyzer;
 import ch.epfl.leb.alica.analyzers.AnalyzerSetupPanel;
 
-/**
- *
- * @author stefko
- */
+
 public class SpotCounterSetupPanel extends AnalyzerSetupPanel {
 
     /**
@@ -35,6 +32,7 @@ public class SpotCounterSetupPanel extends AnalyzerSetupPanel {
         initComponents();
     }
     
+
     @Override
     public Analyzer initAnalyzer() {
         int noise_tolerance = Integer.parseInt(e_noise_tolerance.getText());
@@ -42,11 +40,6 @@ public class SpotCounterSetupPanel extends AnalyzerSetupPanel {
         return new SpotCounter(noise_tolerance, box_size);
     }
     
-    @Override
-    public String toString() {
-        return "SpotCounter";
-    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

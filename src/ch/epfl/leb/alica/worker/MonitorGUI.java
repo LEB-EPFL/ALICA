@@ -21,14 +21,14 @@ package ch.epfl.leb.alica.worker;
 
 import ij.IJ;
 import org.micromanager.internal.graph.GraphData;
-import org.micromanager.internal.graph.GraphFrame;
 import org.micromanager.internal.graph.GraphPanel;
 
 
 
 /**
- *
- * @author stefko
+ * Display for monitoring the current WorkerThread state. It is controlled
+ * by the WorkerThread
+ * @author Marcel Stefko
  */
 public class MonitorGUI extends javax.swing.JFrame {
     private double laser_power_max;
@@ -38,6 +38,10 @@ public class MonitorGUI extends javax.swing.JFrame {
     
     /**
      * Creates new form MonitorGUI
+     * @param worker WorkerThread parent
+     * @param analyzer_name name of the used analyzer
+     * @param controller_name name of the used controller
+     * @param laser_name name of the used laser
      */
     public MonitorGUI(WorkerThread worker, String analyzer_name, String controller_name, String laser_name) {
         if (worker == null) {
@@ -56,12 +60,21 @@ public class MonitorGUI extends javax.swing.JFrame {
         p_realtime_plot.add(realtime_graph);
     }
     
-    public void setLaserPowerMax(double value) {
+    /**
+     * Adjust the displayed laser power maximal value and store it for
+     * progressbar calculations.
+     * @param value max laser power value
+     */
+    public void setLaserPowerDisplayMax(double value) {
         l_laser_power_max.setText(String.format("%5.2f",value));
         laser_power_max = value;
     }
     
-    public void showLaserPower(double value) {
+    /**
+     * Update displayed laser power to new value
+     * @param value new value of laser power
+     */
+    public void updateLaserPowerDisplay(double value) {
         double pctage = 100.0 * value / laser_power_max;
         if (pctage>100.0)
             pctage = 100.0;
@@ -70,14 +83,26 @@ public class MonitorGUI extends javax.swing.JFrame {
         pb_laser_power.setValue((int) pctage);
     }
 
-    public void showFPS(int value) {
+    /**
+     * Update displayed FPS to new value
+     * @param value new value of FPS
+     */
+    public void updateFPS(int value) {
         l_fps.setText(String.format("%d", value));
     }
     
-    public void showLastAnalysisDuration(int duration_ms) {
+    /**
+     * Update last analysis duration to new value
+     * @param duration_ms last analysis duration in ms
+     */
+    public void updateLastAnalysisDuration(int duration_ms) {
         l_last_analysis_duration.setText(String.format("%d", duration_ms));
     }
     
+    /**
+     * Update the plow with new data
+     * @param data data to be plotted
+     */
     public void updatePlot(GraphData data) {
         realtime_graph.setData(data);
         GraphData.Bounds bounds = data.getBounds();

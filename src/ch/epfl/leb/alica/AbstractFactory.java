@@ -23,17 +23,28 @@ import java.util.HashMap;
 import java.util.Set;
 
 /**
- *
- * @author stefko
+ * Template for factories that are set up using a JPanel. Currently
+ * used by Analyzer and Controller
+ * @author Marcel Stefko
+ * @param <ProductSetupPanel> A JPanel which is used to set up the parameters.
  */
 public abstract class AbstractFactory<ProductSetupPanel> {
     String selected_name;
     private final HashMap<String, ProductSetupPanel> setup_panels;
     
+    /**
+     * Initialize the map which stores different setup panels.
+     */
     public AbstractFactory() {
         setup_panels = new HashMap<String, ProductSetupPanel>();
     }
     
+    /**
+     * Add new setup panel to list
+     * @param name Identifier of the product associated with panel, 
+     *  displayed in GUI
+     * @param panel The setup JPanel
+     */
     protected void addSetupPanel(String name, ProductSetupPanel panel) {
         if (setup_panels.containsKey(name)) {
             throw new IllegalArgumentException("Such setup panel already exists!");
@@ -41,16 +52,28 @@ public abstract class AbstractFactory<ProductSetupPanel> {
         setup_panels.put(name, panel);
     }
     
+    /**
+     *
+     * @return currently selected factory product
+     */
     public String getSelectedProductName() {
         if (selected_name == null)
             throw new NullPointerException("No product selected.");
         return selected_name;
     }
     
+    /**
+     *
+     * @return list of all possible products
+     */
     public Set<String> getProductNameList() {
         return setup_panels.keySet();
     }
     
+    /**
+     * Select a product of the factory
+     * @param name identifier of the product
+     */
     public void selectProduct(String name) {
         if (!setup_panels.containsKey(name)) {
             throw new IllegalArgumentException("No such product: "+name);
@@ -58,6 +81,10 @@ public abstract class AbstractFactory<ProductSetupPanel> {
         selected_name = name;
     }
     
+    /**
+     *
+     * @return Return setup panel of currently selected product
+     */
     public ProductSetupPanel getSelectedSetupPanel() {
         return setup_panels.get(selected_name);
     }

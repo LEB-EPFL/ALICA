@@ -22,11 +22,16 @@ package ch.epfl.leb.alica.controllers;
 import ch.epfl.leb.alica.Controller;
 
 /**
- *
- * @author stefko
+ * Makes sure that the added setup panels know how to initialize Controllers.
+ * @author Marcel Stefko
  */
 public abstract class ControllerSetupPanel extends javax.swing.JPanel{
-   public abstract Controller initController();
+
+    /**
+     * Initialize and return the controller based on GUI information.
+     * @return initialized controller
+     */
+    public abstract Controller initController();
    
     
 }

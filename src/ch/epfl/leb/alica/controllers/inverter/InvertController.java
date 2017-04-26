@@ -19,17 +19,23 @@
  */
 package ch.epfl.leb.alica.controllers.inverter;
 
-import ch.epfl.leb.alica.Controller;
 import ch.epfl.leb.alica.controllers.AbstractController;
 
 /**
- *
- * @author stefko
+ * Controller which inverts and scales the input using 1/x function. 
+ * (high input -> low output, low input -> high output)
+ * @author Marcel Stefko
  */
 public class InvertController extends AbstractController {
     private final double value_at_1_mw;
     private double last_input = 1.0;
     
+    /**
+     * Initializes the InvertController
+     * @param maximum max output value
+     * @param value_at_1_mw what is the value of input that you want to cause
+     *  an output value of 1.0 (scaling constant)
+     */
     public InvertController(double maximum, double value_at_1_mw) {
         super(maximum);
         this.value_at_1_mw = value_at_1_mw;

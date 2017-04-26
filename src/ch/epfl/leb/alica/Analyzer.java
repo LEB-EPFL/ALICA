@@ -20,13 +20,32 @@
 package ch.epfl.leb.alica;
 
 /**
- *
- * @author stefko
+ * An analyzer receives images from the WorkerThread, processes them, and
+ * adjusts its internal state (and output) accordingly. The WorkerThread 
+ * can request the output at any time. 
+ * @author Marcel Stefko
  */
 public interface Analyzer {
+
+    /**
+     * Process the next image and adjust internal state.
+     * @param image image to be processed
+     * @param image_width width in pixels
+     * @param image_height height in pixels
+     * @param pixel_size_um length of one pixel side in micrometers
+     * @param time_ms time of image acquisition in milliseconds
+     */
     public void processImage(Object image, int image_width, int image_height, double pixel_size_um, long time_ms);
     
+    /**
+     * Return output of the analyzer based on current internal state.
+     * @return output value of the analyzer to be passed to the controller
+     */
     public double getCurrentOutput();
     
+    /**
+     * 
+     * @return unique name of the analyzer.
+     */
     public String getName();
 }

@@ -52,6 +52,11 @@ import java.util.LinkedHashMap;
 //               IN NO EVENT SHALL THE COPYRIGHT OWNER OR
 //               CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
 //               INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES.
+
+/**
+ * Core of the SpotCounter algorithm
+ * @author Nico Stuurman
+ */
 public class SpotCounterCore {
 
     private final int nPasses_ = 1;
@@ -66,11 +71,21 @@ public class SpotCounterCore {
     private int boxSize_;
     private int noiseTolerance_;
     
+    /**
+     *
+     * @param noiseTolerance minimum peak value
+     * @param boxSize size of scanning box
+     */
     public SpotCounterCore(int noiseTolerance, int boxSize) {
         boxSize_ = boxSize;
         noiseTolerance_ = noiseTolerance;
     }
     
+    /**
+     * Set new parameters for the analysis
+     * @param noiseTolerance minimum peak value
+     * @param boxSize size of scanning box
+     */
     public void setParams(int noiseTolerance, int boxSize) {
         boxSize_ = boxSize;
         noiseTolerance_ = noiseTolerance;

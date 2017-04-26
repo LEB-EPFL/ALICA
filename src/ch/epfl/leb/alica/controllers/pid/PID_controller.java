@@ -23,8 +23,8 @@ import ch.epfl.leb.alica.Controller;
 import ch.epfl.leb.alica.controllers.AbstractController;
 
 /**
- *
- * @author stefko
+ * PID controller.
+ * @author Marcel Stefko
  */
 public class PID_controller extends AbstractController {
     private final MiniPID core;
@@ -32,7 +32,14 @@ public class PID_controller extends AbstractController {
     
     private double current_output = 0.0;
     
-    
+    /**
+     * Initialize the PID controller
+     * @param P proportional component
+     * @param I integral component
+     * @param D derivative component
+     * @param F output filtering
+     * @param output_max maximal output value
+     */
     public PID_controller(double P, double I, double D, double F, double output_max) {
         super(output_max);
         this.P = P; this.I = I; this.D = D; this.F = F; 

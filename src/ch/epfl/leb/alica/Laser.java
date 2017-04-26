@@ -20,19 +20,48 @@
 package ch.epfl.leb.alica;
 
 /**
- *
- * @author stefko
+ * Laser recieves input from the controller and adjusts the laser power
+ * accordingly.
+ * @author Marcel Stefko
  */
 public interface Laser {
+
+    /**
+     * Set the laser power to desired value
+     * @param desired_power desired laser power value
+     * @return actual laser power value
+     * @throws Exception if error occurred during communication with hardware
+     */
     public double setLaserPower(double desired_power) throws Exception;
     
+    /**
+     * Asks the hardware for current actual value of laser power
+     * @return actual laser power value
+     * @throws Exception if error occurred during communication with hardware
+     */
     public double getLaserPower() throws Exception;
     
+    /**
+     * 
+     * @return maximal allowed value of laser power
+     */
     public double getMaxPower();
     
+    /**
+     *
+     * @return minimal allowed value of laser power
+     */
     public double getMinPower();
     
+    /**
+     *
+     * @return unique device name (assigned by MicroManager)
+     */
     public String getDeviceName();
     
+    /**
+     *
+     * @return unique device property name (assigned by MicroManager)
+     */
     public String getPropertyName();
 }

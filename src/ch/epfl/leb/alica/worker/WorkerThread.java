@@ -29,16 +29,16 @@ import mmcorej.CMMCore;
 import org.micromanager.Studio;
 import org.micromanager.data.Datastore;
 import org.micromanager.internal.graph.GraphData;
-import org.micromanager.internal.graph.GraphFrame;
 
 /**
- *
- * @author stefko
+ * The workhorse of the analysis. Grabs images from the MM core, analyzes them,
+ * and controls the laser power while running.
+ * @author Marcel Stefko
  */
 public class WorkerThread extends Thread {
     private final boolean draw_from_core;
     private boolean stop_flag = false;
-    private long time_delay_ms = 1;
+    private final long time_delay_ms = 1;
     
     private final Studio studio;
     private final Analyzer analyzer;
@@ -48,7 +48,15 @@ public class WorkerThread extends Thread {
     private final MonitorGUI gui;
     private final Grapher grapher;
     
-    
+    /**
+     * Initialize the worker
+     * @param studio MM studio
+     * @param analyzer
+     * @param controller
+     * @param laser
+     * @param draw_from_core whether the images should be drawn from the MMCore
+     *  (true), or from the end of the processing pipeline (false)
+     */
     public WorkerThread(Studio studio, Analyzer analyzer, Controller controller, Laser laser, boolean draw_from_core) {
         if (studio == null)
             throw new NullPointerException("You need to set a studio!");
@@ -65,7 +73,7 @@ public class WorkerThread extends Thread {
         this.draw_from_core = draw_from_core;
         
         this.gui = new MonitorGUI(this, analyzer.getName(), controller.getName(), laser.getDeviceName()+"-"+laser.getPropertyName());
-        gui.setLaserPowerMax(laser.getMaxPower());
+        gui.setLaserPowerDisplayMax(laser.getMaxPower());
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 gui.setVisible(true);
@@ -74,10 +82,17 @@ public class WorkerThread extends Thread {
         this.grapher = new Grapher(100);
     }
     
+    /**
+     * Request the thread to stop after analyzing the current picture.
+     */
     public void requestStop() {
         stop_flag = true;
     }
     
+    /**
+     * Set the controller setpoint to value
+     * @param value new value of controller setpoint
+     */
     public void setSetpoint(double value) {
         controller.setTarget(value);
     }
@@ -96,8 +111,7 @@ public class WorkerThread extends Thread {
                     Datastore store = studio.live().getDisplay().getDatastore();
                     ImageProcessor ip = studio.live().getDisplay().getImagePlus().getProcessor();
                     analyzer.processImage(ip.getPixels(), ip.getWidth(), ip.getHeight(), studio.core().getPixelSizeUm(), last_time);
-                }
-                
+                } 
             } catch (Exception ex) {
                 Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
             }
@@ -111,7 +125,7 @@ public class WorkerThread extends Thread {
                 laser.setLaserPower(controller_output);
                 javax.swing.SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
-                        gui.showLaserPower(controller_output);
+                        gui.updateLaserPowerDisplay(controller_output);
                     }
                 });
             } catch (Exception ex) {
@@ -121,7 +135,7 @@ public class WorkerThread extends Thread {
             javax.swing.SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
                     gui.updatePlot(grapher.getGraphData());
-                    gui.showLastAnalysisDuration(analysis_time_ms);
+                    gui.updateLastAnalysisDuration(analysis_time_ms);
                 }
             });
             
@@ -130,7 +144,7 @@ public class WorkerThread extends Thread {
             if (time_now-fps_time > 1000) {
                 javax.swing.SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
-                        gui.showFPS(fps_disp);
+                        gui.updateFPS(fps_disp);
                     }
                 });
                 fps_count = 0;
@@ -158,6 +172,10 @@ class Grapher {
     private int n_cur;
     private double[] datapoints;    
     
+    /**
+     * Initialize a grapher with set length of point plotting
+     * @param n_points no. of points to be plotted
+     */
     public Grapher(int n_points) {
         graph_data = new GraphData();
         this.n_max = n_points;
@@ -165,10 +183,18 @@ class Grapher {
         datapoints = new double[n_points];
     }
     
+    /**
+     * Return GraphData which can then be plotted
+     * @return GraphData
+     */
     public GraphData getGraphData() {
         return graph_data;
     }
     
+    /**
+     * Add the next point to the grapher
+     * @param value value to be added
+     */
     public void addDataPoint(double value) {
         if (n_cur < n_max) {
             datapoints[n_cur] = value;

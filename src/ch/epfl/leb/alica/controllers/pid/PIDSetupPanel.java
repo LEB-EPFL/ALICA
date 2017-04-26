@@ -23,8 +23,8 @@ import ch.epfl.leb.alica.Controller;
 import ch.epfl.leb.alica.controllers.ControllerSetupPanel;
 
 /**
- *
- * @author stefko
+ * Setup panel for the PID controller.
+ * @author Marcel Stefko
  */
 public class PIDSetupPanel extends ControllerSetupPanel {
 

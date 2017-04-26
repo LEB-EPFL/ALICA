@@ -21,14 +21,8 @@ package ch.epfl.leb.alica.analyzers.autolase;
 
 
 import ch.epfl.leb.alica.Analyzer;
-import ij.ImageStack;
-import ij.process.ImageProcessor;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Wrapper for Thomas Pengo's implementation of AutoLase algorithm.
@@ -45,13 +39,14 @@ public class AutoLase implements Analyzer {
     /**
      * Initializes AutoLase with default threshold (120) and averaging (30) 
      * values.
+     * @param threshold
+     * @param averaging
      */
     public AutoLase(int threshold, int averaging) {
         this.threshold = threshold;
         this.averaging = averaging;
         analyzer = new AutoLaseAnalyzer(threshold, averaging);
     }
-
 
     @Override
     public void processImage(Object image, int image_width, int image_height, double pixel_size_um, long time_ms) {

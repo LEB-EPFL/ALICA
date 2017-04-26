@@ -24,15 +24,16 @@ import ch.epfl.leb.alica.Controller;
 import ch.epfl.leb.alica.controllers.inverter.InverterSetupPanel;
 import ch.epfl.leb.alica.controllers.manual.ManualSetupPanel;
 import ch.epfl.leb.alica.controllers.pid.PIDSetupPanel;
-import java.util.HashMap;
-import java.util.Set;
 
 /**
- *
- * @author stefko
+ * Controller Factory
+ * @author Marcel Stefko
  */
 public class ControllerFactory extends AbstractFactory<ControllerSetupPanel>{
     
+    /**
+     * Add known Controllers
+     */
     public ControllerFactory() {
         super();
         addSetupPanel("PID",new PIDSetupPanel());
@@ -42,6 +43,10 @@ public class ControllerFactory extends AbstractFactory<ControllerSetupPanel>{
         selectProduct("Manual");
     }
     
+    /**
+     * Build the selected controller using current settings
+     * @return initialized controller
+     */
     public Controller build() {
         return getSelectedSetupPanel().initController();
     }

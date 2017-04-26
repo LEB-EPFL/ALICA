@@ -21,23 +21,18 @@ package ch.epfl.leb.alica;
 
 import ch.epfl.leb.alica.analyzers.AnalyzerFactory;
 import ch.epfl.leb.alica.worker.WorkerThread;
-import ch.epfl.leb.alica.analyzers.spotcounter.SpotCounter;
 import ch.epfl.leb.alica.controllers.ControllerFactory;
-import ch.epfl.leb.alica.controllers.inverter.InvertController;
-import ch.epfl.leb.alica.controllers.pid.PID_controller;
 import ch.epfl.leb.alica.lasers.LaserFactory;
-import ch.epfl.leb.alica.lasers.MMLaser;
 import ij.IJ;
-import ij.process.ImageProcessor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import mmcorej.CMMCore;
 import mmcorej.StrVector;
 import org.micromanager.Studio;
-import org.micromanager.data.Datastore;
 
 /**
- *
+ * The core's settings are controlled by MainGUI, and the Core then produces
+ * products from its factories, and initializes the WorkerThread, and later
+ * terminates it.
  * @author stefko
  */
 public final class AlicaCore {
@@ -60,7 +55,13 @@ public final class AlicaCore {
         this.laser_factory = new LaserFactory(studio);
     }
     
-    public static AlicaCore initialize(Studio studio) throws RuntimeException {
+    /**
+     * Initialize the Singleton core
+     * @param studio MicroManager studio
+     * @return the singleton instance of the core
+     * @throws AlreadyInitializedException if it was already initialized
+     */
+    public static AlicaCore initialize(Studio studio) throws AlreadyInitializedException {
         if (instance != null) {
             throw new AlreadyInitializedException("ALICA core was already initialized.");
         } else {
@@ -69,6 +70,10 @@ public final class AlicaCore {
         return instance;
     }
     
+    /**
+     * Returns the singleton instance, or an exception if it was not yet initialized
+     * @return the singleton instance of the core
+     */
     public static AlicaCore getInstance() {
         if (instance == null) {
             throw new NullPointerException("ALICA core was not yet initialized.");
@@ -76,6 +81,9 @@ public final class AlicaCore {
         return instance;
     }
     
+    /**
+     * Print all loaded devices in the MMCore to the log.
+     */
     public void printLoadedDevices() {
         StrVector v = studio.core().getLoadedDevices();
         String out = "";
@@ -100,24 +108,45 @@ public final class AlicaCore {
         Logger.getLogger(this.getClass().getName()).log(Level.FINE, out);
     }
     
+    /**
+     *
+     * @return AnalyzerFactory
+     */
     public AnalyzerFactory getAnalyzerFactory() {
         return analyzer_factory;
     }
     
+    /**
+     *
+     * @return ControllerFactory
+     */
     public ControllerFactory getControllerFactory() {
         return controller_factory;
     }
     
+    /**
+     *
+     * @return LaserFactory
+     */
     public LaserFactory getLaserFactory() {
         return laser_factory;
     }
      
+    /**
+     * Builds products from their factories using current settings, and
+     * starts the WorkerThread (analysis is started)
+     * @param draw_from_core true if images should be drawn directly from the
+     *  MMCore, false if the processing pipeline should be used
+     */
     public void startWorker(boolean draw_from_core) {
         worker = new WorkerThread(studio, analyzer_factory.build(), 
                 controller_factory.build(), laser_factory.build(), draw_from_core);
         worker.start();
     }
     
+    /**
+     * Requests the worker to stop and then waits for it to join.
+     */
     public void stopWorker() {
         worker.requestStop();
         try {
@@ -127,7 +156,15 @@ public final class AlicaCore {
         }
     }
     
+    /**
+     * Thrown if a double initialization is requested
+     */
     public static class AlreadyInitializedException extends RuntimeException {
+
+        /**
+         *
+         * @param message exception message
+         */
         public AlreadyInitializedException(String message) {
             super(message);
         }

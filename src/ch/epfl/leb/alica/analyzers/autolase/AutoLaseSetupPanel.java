@@ -36,6 +36,10 @@ public class AutoLaseSetupPanel extends AnalyzerSetupPanel {
         initComponents();
     }
     
+    /**
+     *
+     * @return
+     */
     @Override
     public Analyzer initAnalyzer() {
         int threshold = Integer.parseInt(e_threshold.getText());

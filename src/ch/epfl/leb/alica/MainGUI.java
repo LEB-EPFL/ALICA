@@ -19,21 +19,15 @@
  */
 package ch.epfl.leb.alica;
 
-import ch.epfl.leb.alica.analyzers.AnalyzerSetupPanel;
-import ch.epfl.leb.alica.analyzers.autolase.AutoLaseSetupPanel;
-import ch.epfl.leb.alica.analyzers.spotcounter.SpotCounterSetupPanel;
-import ch.epfl.leb.alica.controllers.ControllerFactory;
 import ij.IJ;
-import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.ComboBoxModel;
 import javax.swing.JFrame;
-import javax.swing.event.ListDataListener;
 
 /**
- *
- * @author stefko
+ * Main controlling GUI for the ALICA plugin. This is a singleton which
+ * is shown every time the plugin is invoked from MM menu.
+ * @author Marcel Stefko
  */
 public final class MainGUI extends JFrame {
     private static MainGUI instance = null;
@@ -42,7 +36,7 @@ public final class MainGUI extends JFrame {
     
     
     /**
-     * Creates new form MainGUI
+     * Creates new form MainGUI, private to prevent outside instantiation
      */
     private MainGUI(AlicaCore core) {
         if (core == null) {
@@ -51,11 +45,9 @@ public final class MainGUI extends JFrame {
             this.alica_core = core;
         }
         
-
         initComponents();
-        updateAnalyzerSetupPanel();
-        updateControllerSetupPanel();
-        
+
+        // Populate the dropdown menus of analyzer, controller and laser
         cb_analyzer_setup.removeAllItems();
         for (String key: alica_core.getAnalyzerFactory().getProductNameList()) {
             cb_analyzer_setup.addItem(key);
@@ -73,8 +65,17 @@ public final class MainGUI extends JFrame {
             cb_laser_setup.addItem(key);
         }
         cb_laser_setup.setSelectedItem(alica_core.getLaserFactory().getSelectedDeviceName());
+        
+        // update the setup panels
+        updateAnalyzerSetupPanel();
+        updateControllerSetupPanel();
     }
     
+    /**
+     * Singleton initializer
+     * @param core AlicaCore singleton
+     * @return the GUI instance
+     */
     public static MainGUI initialize(AlicaCore core) {
         if (instance != null) {
             throw new AlreadyInitializedException("Main ALICA GUI was already initialized.");
@@ -84,6 +85,10 @@ public final class MainGUI extends JFrame {
         return instance;
     }
     
+    /**
+     *
+     * @return the GUI singleton instance
+     */
     public static MainGUI getInstance() {
         if (instance == null) {
             throw new NullPointerException("Main ALICA GUI was not yet initialized.");
@@ -99,7 +104,6 @@ public final class MainGUI extends JFrame {
         panel.setBounds(5,5,200,150);
         panel.revalidate();
         panel.repaint();
-        
     }
     
     private void updateControllerSetupPanel() {
@@ -111,6 +115,10 @@ public final class MainGUI extends JFrame {
         panel.repaint();
     }
     
+    /**
+     *  Query the MM core for possible properties of the selected laser device,
+     *  and populate the dropdown menu.
+     */
     private void updateLaserPropertyList() {
         cb_laser_properties.removeAllItems();
         try {
@@ -138,7 +146,7 @@ public final class MainGUI extends JFrame {
         l_title = new javax.swing.JLabel();
         b_exit_plugin = new javax.swing.JButton();
         l_titletext = new javax.swing.JLabel();
-        b_magic = new javax.swing.JButton();
+        b_print_loaded_devices = new javax.swing.JButton();
         b_worker_start = new javax.swing.JButton();
         b_worker_stop = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
@@ -169,10 +177,10 @@ public final class MainGUI extends JFrame {
 
         l_titletext.setText("Automated Laser Illumination Control Algorithm");
 
-        b_magic.setText("Print Loaded Devices");
-        b_magic.addMouseListener(new java.awt.event.MouseAdapter() {
+        b_print_loaded_devices.setText("Print Loaded Devices");
+        b_print_loaded_devices.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                b_magicMouseClicked(evt);
+                b_print_loaded_devicesMouseClicked(evt);
             }
         });
 
@@ -308,7 +316,7 @@ public final class MainGUI extends JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(440, Short.MAX_VALUE)
-                .addComponent(b_magic)
+                .addComponent(b_print_loaded_devices)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(b_exit_plugin)
                 .addContainerGap())
@@ -359,7 +367,7 @@ public final class MainGUI extends JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(b_exit_plugin)
-                            .addComponent(b_magic)))
+                            .addComponent(b_print_loaded_devices)))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(cb_laser_properties, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -370,23 +378,29 @@ public final class MainGUI extends JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void b_exit_pluginMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_b_exit_pluginMouseClicked
+        // do not dispose of the singleton, only hide
         this.setVisible(false);
     }//GEN-LAST:event_b_exit_pluginMouseClicked
 
-    private void b_magicMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_b_magicMouseClicked
+    private void b_print_loaded_devicesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_b_print_loaded_devicesMouseClicked
         alica_core.printLoadedDevices();
-    }//GEN-LAST:event_b_magicMouseClicked
+    }//GEN-LAST:event_b_print_loaded_devicesMouseClicked
 
     private void b_worker_startMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_b_worker_startMouseClicked
+        // change button state
         b_worker_start.setEnabled(false);
         b_worker_stop.setEnabled(true);
         
+        // launch the worker
         alica_core.startWorker(rb_source_mmcore.isSelected());
     }//GEN-LAST:event_b_worker_startMouseClicked
 
     private void b_worker_stopMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_b_worker_stopMouseClicked
+        // change button states back to original
         b_worker_start.setEnabled(true);
         b_worker_stop.setEnabled(false);
+        
+        // request the worker to stop
         alica_core.stopWorker();
     }//GEN-LAST:event_b_worker_stopMouseClicked
 
@@ -413,7 +427,7 @@ public final class MainGUI extends JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel analyzer_panel;
     private javax.swing.JButton b_exit_plugin;
-    private javax.swing.JButton b_magic;
+    private javax.swing.JButton b_print_loaded_devices;
     private javax.swing.JButton b_worker_start;
     private javax.swing.JButton b_worker_stop;
     private javax.swing.ButtonGroup buttonGroup_source;
@@ -432,7 +446,16 @@ public final class MainGUI extends JFrame {
     private javax.swing.JRadioButton rb_source_pipeline;
     // End of variables declaration//GEN-END:variables
 
+    /**
+     * Thrown if the GUI singleton is attempted to be initialized for a second
+     * time.
+     */
     public static class AlreadyInitializedException extends RuntimeException {
+
+        /**
+         * 
+         * @param message message of the exception.
+         */
         public AlreadyInitializedException(String message) {
             super(message);
         }

@@ -36,6 +36,14 @@ public class MMLaser implements Laser {
     private final double min_power;
     private final double max_power;
     
+    /**
+     * Initialize the MicroManager laser
+     * @param studio MMStudio
+     * @param device_name MM identifier of the device
+     * @param property_name MM identifier of the property to be controlled
+     * @param min_power minimal allowed property value
+     * @param max_power maximal allowed property value
+     */
     public MMLaser(Studio studio, String device_name, String property_name, 
             double min_power, double max_power) {
         this.studio = studio;
@@ -77,12 +85,12 @@ public class MMLaser implements Laser {
     public double getMinPower() {
         return min_power;
     }
-    
+
     @Override
     public String getDeviceName() {
         return device_name;
     }
-    
+
     @Override
     public String getPropertyName() {
         return property_name;
