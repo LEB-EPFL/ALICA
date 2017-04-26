@@ -22,12 +22,14 @@ package ch.epfl.leb.alica.worker;
 import ch.epfl.leb.alica.Analyzer;
 import ch.epfl.leb.alica.Controller;
 import ch.epfl.leb.alica.Laser;
-import ij.process.ImageProcessor;
+import com.google.common.eventbus.Subscribe;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import mmcorej.CMMCore;
 import org.micromanager.Studio;
-import org.micromanager.data.Datastore;
+import org.micromanager.data.Coords;
+import org.micromanager.data.Image;
+import org.micromanager.data.NewImageEvent;
 import org.micromanager.internal.graph.GraphData;
 
 /**
@@ -38,7 +40,7 @@ import org.micromanager.internal.graph.GraphData;
 public class WorkerThread extends Thread {
     private final boolean draw_from_core;
     private boolean stop_flag = false;
-    private final long time_delay_ms = 1;
+    private final long min_frame_time_ms;
     private final long thread_start_time_ms;
     
     private final Studio studio;
@@ -49,6 +51,8 @@ public class WorkerThread extends Thread {
     private final MonitorGUI gui;
     private final Grapher grapher;
     
+    private Coords last_image_coords;
+    
     /**
      * Initialize the worker
      * @param studio MM studio
@@ -57,8 +61,9 @@ public class WorkerThread extends Thread {
      * @param laser
      * @param draw_from_core whether the images should be drawn from the MMCore
      *  (true), or from the end of the processing pipeline (false)
+     * @param max_FPS maximal number of processed images per second
      */
-    public WorkerThread(Studio studio, Analyzer analyzer, Controller controller, Laser laser, boolean draw_from_core) {
+    public WorkerThread(Studio studio, Analyzer analyzer, Controller controller, Laser laser, boolean draw_from_core, int max_FPS) {
         // sanitize input
         if (studio == null)
             throw new NullPointerException("You need to set a studio!");
@@ -73,6 +78,12 @@ public class WorkerThread extends Thread {
         this.controller = controller;
         this.laser = laser;
         this.draw_from_core = draw_from_core;
+        
+        // calculate the frame limiter duration
+        if (max_FPS<1) {
+            throw new IllegalArgumentException("FPS must be positive!");
+        }
+        this.min_frame_time_ms = 1000 / max_FPS;
         
         // initialize the GUI
         this.gui = new MonitorGUI(this, 
@@ -120,6 +131,15 @@ public class WorkerThread extends Thread {
         return System.currentTimeMillis() - thread_start_time_ms;
     }
     
+    @Subscribe
+    public void newImageAcquired(NewImageEvent evt) {
+        synchronized(this) {
+            // store the last image coords
+            this.last_image_coords = evt.getCoords();
+            // notify thread that it can wake up
+            this.notify();
+        }
+    }
     
     
     @Override
@@ -134,17 +154,30 @@ public class WorkerThread extends Thread {
         
         while (!stop_flag) {
             
+            // wait for image acquisition
+            if (this.last_image_coords==null) {
+                try {
+                    this.wait();
+                } catch (InterruptedException ex) {
+                    // if we get interrupted, try again
+                    Logger.getLogger(WorkerThread.class.getName()).log(Level.SEVERE, null, ex);
+                    continue;
+                }
+            }
+            
             // draw the next image from the core or from the display
-            try {
-                if (draw_from_core) {
-                    analyzer.processImage(studio.core().getLastImage(), (int) studio.core().getImageWidth(), (int) studio.core().getImageHeight(), studio.core().getPixelSizeUm(), last_time);
-                } else {
-                    Datastore store = studio.live().getDisplay().getDatastore();
-                    ImageProcessor ip = studio.live().getDisplay().getImagePlus().getProcessor();
-                    analyzer.processImage(ip.getPixels(), ip.getWidth(), ip.getHeight(), studio.core().getPixelSizeUm(), last_time);
-                } 
-            } catch (Exception ex) {
-                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+            // we don't want the last_image_coords to change during this operation
+            synchronized(this) {
+                try {
+                    if (draw_from_core) {
+                        analyzer.processImage(studio.core().getLastImage(), (int) studio.core().getImageWidth(), (int) studio.core().getImageHeight(), studio.core().getPixelSizeUm(), last_time);
+                    } else {
+                        Image img = studio.live().getDisplay().getDatastore().getImage(last_image_coords);
+                        analyzer.processImage(img.getRawPixels(), img.getWidth(), img.getHeight(), studio.core().getPixelSizeUm(), last_time);
+                    } 
+                } catch (Exception ex) {
+                    Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+                }
             }
             // log analysis time and increment FPS counter
             final int analysis_time_ms = (int) (getTimeMillis() - last_time);
@@ -193,9 +226,9 @@ public class WorkerThread extends Thread {
             }
             
             // this limits the FPS
-            if (time_now-last_time < time_delay_ms) {
+            if (time_now-last_time < min_frame_time_ms) {
                 try {
-                    Thread.sleep(time_delay_ms - (time_now-last_time));
+                    Thread.sleep(min_frame_time_ms - (time_now-last_time));
                 } catch (InterruptedException ex) {
                     Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
                 }

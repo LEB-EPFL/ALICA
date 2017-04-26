@@ -30,8 +30,11 @@ public class ManualController extends AbstractController {
      * Initialize with maximal output value
      * @param maximum max output value
      */
-    public ManualController(double maximum) {
+    public ManualController(double maximum, double initial_output) {
         super(maximum);
+        if (initial_output<0.0 || initial_output>maximum)
+            throw new IllegalArgumentException("Initial output must not be negative or higher than maximum.");
+        setSetpoint(initial_output);
     }
 
     @Override

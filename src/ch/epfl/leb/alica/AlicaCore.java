@@ -138,9 +138,9 @@ public final class AlicaCore {
      * @param draw_from_core true if images should be drawn directly from the
      *  MMCore, false if the processing pipeline should be used
      */
-    public void startWorker(boolean draw_from_core) {
+    public void startWorker(boolean draw_from_core, int max_analysis_FPS) {
         worker = new WorkerThread(studio, analyzer_factory.build(), 
-                controller_factory.build(), laser_factory.build(), draw_from_core);
+                controller_factory.build(), laser_factory.build(), draw_from_core, max_analysis_FPS);
         worker.start();
     }
     

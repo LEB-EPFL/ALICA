@@ -42,6 +42,9 @@ public abstract class AbstractController implements Controller {
      * @param maximum max output value
      */
     public AbstractController(double maximum) {
+        if (maximum<=0.0) {
+            throw new IllegalArgumentException("Maximum must be positive.");
+        }
         this.maximum = maximum;
     }
     

@@ -161,6 +161,8 @@ public final class MainGUI extends JFrame {
         jLabel4 = new javax.swing.JLabel();
         cb_laser_setup = new javax.swing.JComboBox();
         cb_laser_properties = new javax.swing.JComboBox();
+        jLabel5 = new javax.swing.JLabel();
+        e_max_analysis_FPS = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setResizable(false);
@@ -281,39 +283,15 @@ public final class MainGUI extends JFrame {
             }
         });
 
+        jLabel5.setText("Max analysis FPS:");
+
+        e_max_analysis_FPS.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
+        e_max_analysis_FPS.setText("100");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel1)
-                    .addComponent(l_titletext)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(rb_source_pipeline)
-                            .addComponent(rb_source_mmcore)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(analyzer_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(controller_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(cb_laser_properties, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(18, 18, 18)
-                        .addComponent(cb_analyzer_setup, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(77, 77, 77)
-                        .addComponent(jLabel3)
-                        .addGap(18, 18, 18)
-                        .addComponent(cb_controller_setup, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(80, 80, 80)
-                        .addComponent(jLabel4)
-                        .addGap(18, 18, 18)
-                        .addComponent(cb_laser_setup, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(440, Short.MAX_VALUE)
                 .addComponent(b_print_loaded_devices)
@@ -332,6 +310,42 @@ public final class MainGUI extends JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(b_worker_stop)
                         .addGap(75, 75, 75))))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel1)
+                    .addComponent(l_titletext)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(18, 18, 18)
+                        .addComponent(cb_analyzer_setup, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(77, 77, 77)
+                        .addComponent(jLabel3)
+                        .addGap(18, 18, 18)
+                        .addComponent(cb_controller_setup, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(80, 80, 80)
+                        .addComponent(jLabel4)
+                        .addGap(18, 18, 18)
+                        .addComponent(cb_laser_setup, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(analyzer_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(controller_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(cb_laser_properties, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(rb_source_pipeline)
+                                    .addComponent(rb_source_mmcore)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel5)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(e_max_analysis_FPS, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(0, 0, Short.MAX_VALUE)))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -363,15 +377,17 @@ public final class MainGUI extends JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(b_worker_stop)
-                            .addComponent(b_worker_start))
+                            .addComponent(b_worker_start)
+                            .addComponent(jLabel5)
+                            .addComponent(e_max_analysis_FPS, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(b_exit_plugin)
-                            .addComponent(b_print_loaded_devices)))
+                            .addComponent(b_print_loaded_devices))
+                        .addGap(11, 11, 11))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(cb_laser_properties, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
         pack();
@@ -391,8 +407,20 @@ public final class MainGUI extends JFrame {
         b_worker_start.setEnabled(false);
         b_worker_stop.setEnabled(true);
         
+        int max_analysis_FPS;
+        try {
+            max_analysis_FPS = Integer.parseInt(e_max_analysis_FPS.getText());
+        } catch (NumberFormatException ex) {
+            IJ.showMessage("Illegal FPS number format.");
+            return;
+        }
+        if (max_analysis_FPS < 1) {
+            IJ.showMessage("FPS must be at least 1.");
+            return;
+        }
+        
         // launch the worker
-        alica_core.startWorker(rb_source_mmcore.isSelected());
+        alica_core.startWorker(rb_source_mmcore.isSelected(), max_analysis_FPS);
     }//GEN-LAST:event_b_worker_startMouseClicked
 
     private void b_worker_stopMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_b_worker_stopMouseClicked
@@ -436,10 +464,12 @@ public final class MainGUI extends JFrame {
     private javax.swing.JComboBox cb_laser_properties;
     private javax.swing.JComboBox cb_laser_setup;
     private javax.swing.JPanel controller_panel;
+    private javax.swing.JTextField e_max_analysis_FPS;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel l_title;
     private javax.swing.JLabel l_titletext;
     private javax.swing.JRadioButton rb_source_mmcore;
