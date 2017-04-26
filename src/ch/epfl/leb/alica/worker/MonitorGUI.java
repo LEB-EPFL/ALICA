@@ -42,8 +42,9 @@ public class MonitorGUI extends javax.swing.JFrame {
      * @param analyzer_name name of the used analyzer
      * @param controller_name name of the used controller
      * @param laser_name name of the used laser
+     * @param start_setpoint setpoint value to display at startup
      */
-    public MonitorGUI(WorkerThread worker, String analyzer_name, String controller_name, String laser_name) {
+    public MonitorGUI(WorkerThread worker, String analyzer_name, String controller_name, String laser_name, double start_setpoint) {
         // check if worker is alive
         if (worker == null) {
             throw new NullPointerException();
@@ -66,6 +67,10 @@ public class MonitorGUI extends javax.swing.JFrame {
         
         // place the GraphPanel into its container
         p_realtime_plot.add(realtime_graph);
+        
+        // set the setpoint display
+        l_setpoint.setText(String.format("%5.2f", start_setpoint));
+        e_new_setpoint.setText(l_setpoint.getText());
     }
     
     /**

@@ -75,7 +75,11 @@ public class WorkerThread extends Thread {
         this.draw_from_core = draw_from_core;
         
         // initialize the GUI
-        this.gui = new MonitorGUI(this, analyzer.getName(), controller.getName(), laser.getDeviceName()+"-"+laser.getPropertyName());
+        this.gui = new MonitorGUI(this, 
+                analyzer.getName(), 
+                controller.getName(), 
+                laser.getDeviceName()+"-"+laser.getPropertyName(),
+                controller.getSetpoint());
         gui.setLaserPowerDisplayMax(laser.getMaxPower());
         
         // display the GUI
