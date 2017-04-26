@@ -20,7 +20,6 @@
 package ch.epfl.leb.alica.analyzers.spotcounter;
 
 import ch.epfl.leb.alica.Analyzer;
-import ch.epfl.leb.alica.analyzers.AnalyzerRealtimeControlPanel;
 import ij.measure.ResultsTable;
 import ij.process.ShortProcessor;
 import java.awt.image.ColorModel;
@@ -37,7 +36,6 @@ public class SpotCounter implements Analyzer {
     private final int box_size;
     private final SpotCounterCore core;
     
-    private final SpotCounterRealtimeControlPanel control_panel;
     
     private double current_output = 0.0;
     
@@ -50,7 +48,6 @@ public class SpotCounter implements Analyzer {
         this.noise_tolerance = noise_tolerance;
         this.box_size = box_size;
         this.core = new SpotCounterCore(noise_tolerance, box_size);
-        this.control_panel = new SpotCounterRealtimeControlPanel();
     }
     
 
@@ -75,10 +72,4 @@ public class SpotCounter implements Analyzer {
         current_output = results.getValue("n", results.getCounter()-1) ;// fov_area;
         Logger.getLogger(this.getName()).log(Level.SEVERE, String.format("Image: %d, Density: %10.5f\n", results.getCounter(), current_output));
     }
-
-    @Override
-    public AnalyzerRealtimeControlPanel getRealtimeControlPanel() {
-        return this.control_panel;
-    }
-    
 }

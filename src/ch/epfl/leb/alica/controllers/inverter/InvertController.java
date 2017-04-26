@@ -20,7 +20,6 @@
 package ch.epfl.leb.alica.controllers.inverter;
 
 import ch.epfl.leb.alica.controllers.AbstractController;
-import ch.epfl.leb.alica.controllers.ControllerRealtimeControlPanel;
 
 /**
  * Controller which inverts and scales the input using 1/x function. 
@@ -31,7 +30,6 @@ public class InvertController extends AbstractController {
     private double value_at_1_mw;
     private double last_input = 1.0;
     
-    private final InverterRealtimeControlPanel control_panel;
     
     /**
      * Initializes the InvertController
@@ -42,7 +40,6 @@ public class InvertController extends AbstractController {
     public InvertController(double maximum, double value_at_1_mw) {
         super(maximum);
         this.value_at_1_mw = value_at_1_mw;
-        this.control_panel = new InverterRealtimeControlPanel(this);
     }
 
     @Override
@@ -77,10 +74,5 @@ public class InvertController extends AbstractController {
     
     public double getValueAt1Mw() {
         return this.value_at_1_mw;
-    }
-
-    @Override
-    public ControllerRealtimeControlPanel getRealtimeControlPanel() {
-        return this.control_panel;
     }
 }

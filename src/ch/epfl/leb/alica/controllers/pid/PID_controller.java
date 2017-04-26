@@ -21,7 +21,6 @@ package ch.epfl.leb.alica.controllers.pid;
 
 import ch.epfl.leb.alica.Controller;
 import ch.epfl.leb.alica.controllers.AbstractController;
-import ch.epfl.leb.alica.controllers.ControllerRealtimeControlPanel;
 
 /**
  * PID controller.
@@ -30,7 +29,6 @@ import ch.epfl.leb.alica.controllers.ControllerRealtimeControlPanel;
 public class PID_controller extends AbstractController {
     private final MiniPID core;
     private final double P,I,D,F;
-    private final PIDRealtimeControlPanel control_panel;
     
     private double current_output = 0.0;
     
@@ -49,7 +47,6 @@ public class PID_controller extends AbstractController {
         this.P = P; this.I = I; this.D = D; this.F = F; 
         this.core = new MiniPID(P,I,D,F);
         this.core.setOutputLimits(0.0, maximum);
-        this.control_panel = new PIDRealtimeControlPanel();
     }
     
     @Override
@@ -70,11 +67,6 @@ public class PID_controller extends AbstractController {
     @Override
     public String getName() {
         return "PID";
-    }
-
-    @Override
-    public ControllerRealtimeControlPanel getRealtimeControlPanel() {
-        return this.control_panel;
     }
     
 }

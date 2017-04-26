@@ -19,7 +19,6 @@
  */
 package ch.epfl.leb.alica;
 
-import ch.epfl.leb.alica.controllers.ControllerRealtimeControlPanel;
 
 /**
  * A Controller receives the output of the Analyzer as input, and then
@@ -55,5 +54,4 @@ public interface Controller {
      */
     public String getName();
     
-    public ControllerRealtimeControlPanel getRealtimeControlPanel();
 }

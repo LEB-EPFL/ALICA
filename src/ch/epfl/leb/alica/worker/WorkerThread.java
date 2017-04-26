@@ -22,8 +22,6 @@ package ch.epfl.leb.alica.worker;
 import ch.epfl.leb.alica.Analyzer;
 import ch.epfl.leb.alica.Controller;
 import ch.epfl.leb.alica.Laser;
-import ch.epfl.leb.alica.analyzers.AnalyzerRealtimeControlPanel;
-import ch.epfl.leb.alica.controllers.ControllerRealtimeControlPanel;
 import ij.process.ImageProcessor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -94,13 +92,6 @@ public class WorkerThread extends Thread {
         this.thread_start_time_ms = System.currentTimeMillis();
     }
     
-    public AnalyzerRealtimeControlPanel getAnalyzerRealtimeControlPanel() {
-        return this.analyzer.getRealtimeControlPanel();
-    }
-    
-    public ControllerRealtimeControlPanel getControllerRealtimeControlPanel() {
-        return this.controller.getRealtimeControlPanel();
-    }
     
     /**
      * Request the thread to stop after analyzing the current picture.
