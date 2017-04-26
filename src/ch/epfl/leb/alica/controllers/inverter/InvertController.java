@@ -41,6 +41,13 @@ public class InvertController extends AbstractController {
         super(maximum);
         this.value_at_1_mw = value_at_1_mw;
     }
+    
+    @Override
+    public void setTarget(double value) {
+        if (value>=0.0)
+            throw new IllegalArgumentException("Setpoint must be positive!");
+        this.value_at_1_mw = value;
+    }
 
     @Override
     public void nextValue(double value, long time_ms) {
