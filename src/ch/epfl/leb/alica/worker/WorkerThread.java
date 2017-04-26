@@ -30,6 +30,7 @@ import org.micromanager.Studio;
 import org.micromanager.data.Coords;
 import org.micromanager.data.Image;
 import org.micromanager.data.NewImageEvent;
+import org.micromanager.events.LiveModeEvent;
 import org.micromanager.internal.graph.GraphData;
 
 /**
@@ -51,6 +52,7 @@ public class WorkerThread extends Thread {
     private final MonitorGUI gui;
     private final Grapher grapher;
     
+    private final NewImageWatcher new_image_watcher;
     private Coords last_image_coords;
     
     /**
@@ -74,10 +76,15 @@ public class WorkerThread extends Thread {
         if (laser == null)
             throw new NullPointerException("You need to set a laser!");
         this.studio = studio;
+        studio.events().registerForEvents(this);
         this.analyzer = analyzer;
         this.controller = controller;
         this.laser = laser;
         this.draw_from_core = draw_from_core;
+        
+        this.new_image_watcher = new NewImageWatcher(studio, this);
+        this.new_image_watcher.setDaemon(true);
+        this.new_image_watcher.start();
         
         // calculate the frame limiter duration
         if (max_FPS<1) {
@@ -131,13 +138,14 @@ public class WorkerThread extends Thread {
         return System.currentTimeMillis() - thread_start_time_ms;
     }
     
+    public void setLastImageCoords(Coords coords) {
+        this.last_image_coords = coords;
+    }
+    
     @Subscribe
-    public void newImageAcquired(NewImageEvent evt) {
-        synchronized(this) {
-            // store the last image coords
-            this.last_image_coords = evt.getCoords();
-            // notify thread that it can wake up
-            this.notify();
+    public void liveModeStarted(LiveModeEvent evt) {
+        if (evt.getIsOn()) {
+            this.studio.live().getDisplay().getDatastore().registerForEvents(this.new_image_watcher);
         }
     }
     
@@ -155,13 +163,15 @@ public class WorkerThread extends Thread {
         while (!stop_flag) {
             
             // wait for image acquisition
-            if (this.last_image_coords==null) {
-                try {
-                    this.wait();
-                } catch (InterruptedException ex) {
-                    // if we get interrupted, try again
-                    Logger.getLogger(WorkerThread.class.getName()).log(Level.SEVERE, null, ex);
-                    continue;
+            synchronized(this) {
+                if (this.last_image_coords==null) {
+                    try {
+                        this.wait();
+                    } catch (InterruptedException ex) {
+                        // if we get interrupted, try again
+                        Logger.getLogger(WorkerThread.class.getName()).log(Level.SEVERE, null, ex);
+                        continue;
+                    }
                 }
             }
             
@@ -178,6 +188,8 @@ public class WorkerThread extends Thread {
                 } catch (Exception ex) {
                     Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
                 }
+                // clear last image coords pointer
+                this.last_image_coords = null;
             }
             // log analysis time and increment FPS counter
             final int analysis_time_ms = (int) (getTimeMillis() - last_time);
@@ -281,4 +293,37 @@ class Grapher {
         graph_data.setData(datapoints);
     }
     
+}
+
+class NewImageWatcher extends Thread {
+    private final Studio studio;
+    private final WorkerThread thread_to_notify;
+    private boolean terminate_flag = false;
+    
+    public NewImageWatcher(Studio studio, WorkerThread thread_to_notify) {
+        this.studio = studio;
+        this.thread_to_notify = thread_to_notify;
+    }
+    
+    public void requestTerminate() {
+        terminate_flag = true;
+    }
+    
+    @Subscribe
+    public void newImageAcquired(NewImageEvent evt) {
+        synchronized(thread_to_notify) {
+            // notify thread that it can wake up
+            thread_to_notify.notify();
+            // store the last image coords
+            thread_to_notify.setLastImageCoords(evt.getCoords());
+        }
+    }
+    
+    
+    @Override
+    public void run() {
+        while (!terminate_flag) {
+            
+        } 
+    }
 }
