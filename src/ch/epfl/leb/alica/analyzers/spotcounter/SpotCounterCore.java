@@ -1,40 +1,3 @@
-/* 
- * Copyright (C) 2017 Laboratory of Experimental Biophysics
- * Ecole Polytechnique Federale de Lausanne
- * 
- * Author: Marcel Stefko
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-package ch.epfl.leb.alica.analyzers.spotcounter;
-
-///////////////////////////////////////////////////////////////////////////////
-
-import ij.gui.Overlay;
-import ij.gui.Roi;
-import ij.measure.ResultsTable;
-import ij.process.ImageProcessor;
-import java.awt.Color;
-import java.awt.Polygon;
-import java.awt.Rectangle;
-import static java.lang.Math.ceil;
-import static java.lang.Math.floor;
-import static java.lang.Math.sqrt;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-
 //Class:         SpotCounterCore
 //-----------------------------------------------------------------------------
 //
@@ -52,6 +15,24 @@ import java.util.LinkedHashMap;
 //               IN NO EVENT SHALL THE COPYRIGHT OWNER OR
 //               CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
 //               INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES.
+
+package ch.epfl.leb.alica.analyzers.spotcounter;
+
+///////////////////////////////////////////////////////////////////////////////
+
+import ij.gui.Overlay;
+import ij.gui.Roi;
+import ij.measure.ResultsTable;
+import ij.process.ImageProcessor;
+import java.awt.Color;
+import java.awt.Polygon;
+import java.awt.Rectangle;
+import static java.lang.Math.ceil;
+import static java.lang.Math.floor;
+import static java.lang.Math.sqrt;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /**
  * Core of the SpotCounter algorithm

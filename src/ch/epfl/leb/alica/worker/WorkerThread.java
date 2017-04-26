@@ -22,6 +22,8 @@ package ch.epfl.leb.alica.worker;
 import ch.epfl.leb.alica.Analyzer;
 import ch.epfl.leb.alica.Controller;
 import ch.epfl.leb.alica.Laser;
+import ch.epfl.leb.alica.analyzers.AnalyzerRealtimeControlPanel;
+import ch.epfl.leb.alica.controllers.ControllerRealtimeControlPanel;
 import ij.process.ImageProcessor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,6 +41,7 @@ public class WorkerThread extends Thread {
     private final boolean draw_from_core;
     private boolean stop_flag = false;
     private final long time_delay_ms = 1;
+    private final long thread_start_time_ms;
     
     private final Studio studio;
     private final Analyzer analyzer;
@@ -58,6 +61,7 @@ public class WorkerThread extends Thread {
      *  (true), or from the end of the processing pipeline (false)
      */
     public WorkerThread(Studio studio, Analyzer analyzer, Controller controller, Laser laser, boolean draw_from_core) {
+        // sanitize input
         if (studio == null)
             throw new NullPointerException("You need to set a studio!");
         if (analyzer == null)
@@ -72,14 +76,30 @@ public class WorkerThread extends Thread {
         this.laser = laser;
         this.draw_from_core = draw_from_core;
         
+        // initialize the GUI
         this.gui = new MonitorGUI(this, analyzer.getName(), controller.getName(), laser.getDeviceName()+"-"+laser.getPropertyName());
         gui.setLaserPowerDisplayMax(laser.getMaxPower());
+        
+        // display the GUI
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 gui.setVisible(true);
             }
         });
+        
+        // initialize the grapher
         this.grapher = new Grapher(100);
+        
+        // log the start time
+        this.thread_start_time_ms = System.currentTimeMillis();
+    }
+    
+    public AnalyzerRealtimeControlPanel getAnalyzerRealtimeControlPanel() {
+        return this.analyzer.getRealtimeControlPanel();
+    }
+    
+    public ControllerRealtimeControlPanel getControllerRealtimeControlPanel() {
+        return this.controller.getRealtimeControlPanel();
     }
     
     /**
@@ -97,13 +117,28 @@ public class WorkerThread extends Thread {
         controller.setTarget(value);
     }
     
+    /**
+     * Returns time in milliseconds since the worker was initialized
+     * @return elapsed time in milliseconds
+     */
+    public long getTimeMillis() {
+        return System.currentTimeMillis() - thread_start_time_ms;
+    }
+    
+    
+    
     @Override
     public void run() {
-        long last_time = System.currentTimeMillis();
+        // starting time values
+        long last_time = getTimeMillis();
         long fps_time = last_time;
         int fps_count = 0;
+        
+        // for easier access to the core
+        final CMMCore core = studio.core();
         while (!stop_flag) {
-            CMMCore core = studio.core();
+            
+            // draw the next image from the core or from the display
             try {
                 if (draw_from_core) {
                     analyzer.processImage(studio.core().getLastImage(), (int) studio.core().getImageWidth(), (int) studio.core().getImageHeight(), studio.core().getPixelSizeUm(), last_time);
@@ -115,14 +150,21 @@ public class WorkerThread extends Thread {
             } catch (Exception ex) {
                 Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
             }
-            final int analysis_time_ms = (int) (System.currentTimeMillis() - last_time);
+            // log analysis time and increment FPS counter
+            final int analysis_time_ms = (int) (getTimeMillis() - last_time);
             fps_count++;
+            
+            // query analyzer for output, plot it in the graph, send the value
+            // to the controller, and get controller's output
             final double analyzer_output = analyzer.getCurrentOutput();
             grapher.addDataPoint(analyzer_output);
             controller.nextValue(analyzer_output, last_time);
             final double controller_output = controller.getCurrentOutput();
+            
             try {
+                // set the laser power to the controller's output
                 laser.setLaserPower(controller_output);
+                // update the displayed laser power value
                 javax.swing.SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
                         gui.updateLaserPowerDisplay(controller_output);
@@ -132,6 +174,7 @@ public class WorkerThread extends Thread {
                 Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
             }
             
+            // update general GUI elements
             javax.swing.SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
                     gui.updatePlot(grapher.getGraphData());
@@ -139,8 +182,10 @@ public class WorkerThread extends Thread {
                 }
             });
             
-            long time_now = System.currentTimeMillis();
+            // check if one second has elapsed since last FPS counter reset
+            long time_now = getTimeMillis();
             final int fps_disp = fps_count;
+            // if yes, display the FPS and reset FPS counter
             if (time_now-fps_time > 1000) {
                 javax.swing.SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
@@ -151,17 +196,16 @@ public class WorkerThread extends Thread {
                 fps_time = time_now;
             }
             
-                
+            // this limits the FPS
             if (time_now-last_time < time_delay_ms) {
                 try {
                     Thread.sleep(time_delay_ms - (time_now-last_time));
-                    
                 } catch (InterruptedException ex) {
                     Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
                 }
-                
             }
-            last_time = System.currentTimeMillis();
+            // 
+            last_time = getTimeMillis();
         }
     }
 }

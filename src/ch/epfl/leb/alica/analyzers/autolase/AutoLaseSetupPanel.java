@@ -24,8 +24,8 @@ import ch.epfl.leb.alica.Analyzer;
 import ch.epfl.leb.alica.analyzers.AnalyzerSetupPanel;
 
 /**
- *
- * @author stefko
+ * Setup panel for AutoLase, allows setup of thresholding and averaging.
+ * @author Marcel Stefko
  */
 public class AutoLaseSetupPanel extends AnalyzerSetupPanel {
 
@@ -36,10 +36,6 @@ public class AutoLaseSetupPanel extends AnalyzerSetupPanel {
         initComponents();
     }
     
-    /**
-     *
-     * @return
-     */
     @Override
     public Analyzer initAnalyzer() {
         int threshold = Integer.parseInt(e_threshold.getText());

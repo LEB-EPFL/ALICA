@@ -44,20 +44,33 @@ public class MonitorGUI extends javax.swing.JFrame {
      * @param laser_name name of the used laser
      */
     public MonitorGUI(WorkerThread worker, String analyzer_name, String controller_name, String laser_name) {
+        // check if worker is alive
         if (worker == null) {
             throw new NullPointerException();
         } else {
             this.worker = worker;
         }
+        
+        // initialize GUI
         initComponents();
+        
+        // set the labels
         l_analyzer.setText(analyzer_name);
         l_controller.setText(controller_name);
         l_laser.setText(laser_name);
         
+        // initialize the GraphPanel
         realtime_graph = new GraphPanel();
         realtime_graph.setBounds(5,5,370,170);
         realtime_graph.revalidate();
+        
+        // place the GraphPanel into its container
         p_realtime_plot.add(realtime_graph);
+        
+        // place the analyzer realtime control panel
+        p_realtime_analyzer_control.add(worker.getAnalyzerRealtimeControlPanel());
+        
+        p_realtime_controller_control.add(worker.getControllerRealtimeControlPanel());
     }
     
     /**
@@ -66,7 +79,9 @@ public class MonitorGUI extends javax.swing.JFrame {
      * @param value max laser power value
      */
     public void setLaserPowerDisplayMax(double value) {
+        // update GUI display
         l_laser_power_max.setText(String.format("%5.2f",value));
+        // update internal value
         laser_power_max = value;
     }
     
@@ -75,11 +90,14 @@ public class MonitorGUI extends javax.swing.JFrame {
      * @param value new value of laser power
      */
     public void updateLaserPowerDisplay(double value) {
+        // calculate how full should the progressbar be
         double pctage = 100.0 * value / laser_power_max;
+        // constrain the value between 0 and 100
         if (pctage>100.0)
             pctage = 100.0;
         if (pctage<0.0)
             pctage = 0.0;
+        
         pb_laser_power.setValue((int) pctage);
     }
 
@@ -104,10 +122,14 @@ public class MonitorGUI extends javax.swing.JFrame {
      * @param data data to be plotted
      */
     public void updatePlot(GraphData data) {
+        // set data to the graph
         realtime_graph.setData(data);
+        
+        // rescale y-bounds from 0 to 10% above historical max value
         GraphData.Bounds bounds = data.getBounds();
-        plot_max = (1.2*bounds.yMax > plot_max) ? 1.2*bounds.yMax : plot_max;
+        plot_max = (1.1*bounds.yMax > plot_max) ? 1.1*bounds.yMax : plot_max;
         realtime_graph.setBounds(bounds.xMin, bounds.xMax, 0.0, plot_max);
+        
         realtime_graph.repaint();
     }
     
@@ -144,6 +166,8 @@ public class MonitorGUI extends javax.swing.JFrame {
         l_last_analysis_duration = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         p_realtime_plot = new javax.swing.JPanel();
+        p_realtime_analyzer_control = new javax.swing.JPanel();
+        p_realtime_controller_control = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -167,19 +191,19 @@ public class MonitorGUI extends javax.swing.JFrame {
                     .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(l_laser_power_max, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pb_laser_power, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(pb_laser_power, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(19, 19, 19))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(pb_laser_power, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(l_laser_power_max)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel7))
-                    .addComponent(pb_laser_power, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jLabel7)))
                 .addContainerGap())
         );
 
@@ -194,11 +218,6 @@ public class MonitorGUI extends javax.swing.JFrame {
 
         e_new_setpoint.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
         e_new_setpoint.setText("1.0");
-        e_new_setpoint.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                e_new_setpointActionPerformed(evt);
-            }
-        });
 
         b_set_setpoint.setText("Set");
         b_set_setpoint.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -342,7 +361,7 @@ public class MonitorGUI extends javax.swing.JFrame {
                     .addComponent(jLabel9)
                     .addComponent(l_last_analysis_duration)
                     .addComponent(jLabel12))
-                .addContainerGap(55, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         p_realtime_plot.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -356,7 +375,35 @@ public class MonitorGUI extends javax.swing.JFrame {
         );
         p_realtime_plotLayout.setVerticalGroup(
             p_realtime_plotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
+        p_realtime_analyzer_control.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        p_realtime_analyzer_control.setPreferredSize(new java.awt.Dimension(180, 170));
+
+        javax.swing.GroupLayout p_realtime_analyzer_controlLayout = new javax.swing.GroupLayout(p_realtime_analyzer_control);
+        p_realtime_analyzer_control.setLayout(p_realtime_analyzer_controlLayout);
+        p_realtime_analyzer_controlLayout.setHorizontalGroup(
+            p_realtime_analyzer_controlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 176, Short.MAX_VALUE)
+        );
+        p_realtime_analyzer_controlLayout.setVerticalGroup(
+            p_realtime_analyzer_controlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 166, Short.MAX_VALUE)
+        );
+
+        p_realtime_controller_control.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        p_realtime_controller_control.setPreferredSize(new java.awt.Dimension(180, 170));
+
+        javax.swing.GroupLayout p_realtime_controller_controlLayout = new javax.swing.GroupLayout(p_realtime_controller_control);
+        p_realtime_controller_control.setLayout(p_realtime_controller_controlLayout);
+        p_realtime_controller_controlLayout.setHorizontalGroup(
+            p_realtime_controller_controlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 176, Short.MAX_VALUE)
+        );
+        p_realtime_controller_controlLayout.setVerticalGroup(
+            p_realtime_controller_controlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 166, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -370,9 +417,14 @@ public class MonitorGUI extends javax.swing.JFrame {
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(p_realtime_plot, javax.swing.GroupLayout.DEFAULT_SIZE, 384, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(p_realtime_plot, javax.swing.GroupLayout.PREFERRED_SIZE, 384, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(p_realtime_analyzer_control, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(p_realtime_controller_control, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -382,27 +434,26 @@ public class MonitorGUI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(p_realtime_plot, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(p_realtime_plot, javax.swing.GroupLayout.DEFAULT_SIZE, 186, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 66, Short.MAX_VALUE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(p_realtime_analyzer_control, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(p_realtime_controller_control, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void e_new_setpointActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_e_new_setpointActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_e_new_setpointActionPerformed
-
     private void b_set_setpointMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_b_set_setpointMouseClicked
         double setpoint;
+        // sanitize input
         try {
             setpoint = Double.parseDouble(e_new_setpoint.getText());
         } catch (NumberFormatException ex) {
@@ -413,6 +464,8 @@ public class MonitorGUI extends javax.swing.JFrame {
             IJ.showMessage("Setpoint can't be negative!");
             return;
         }
+        
+        // notify the worker and update display text
         worker.setSetpoint(setpoint);
         l_setpoint.setText(e_new_setpoint.getText());
     }//GEN-LAST:event_b_set_setpointMouseClicked
@@ -441,6 +494,8 @@ public class MonitorGUI extends javax.swing.JFrame {
     public javax.swing.JLabel l_laser_power_max;
     public javax.swing.JLabel l_last_analysis_duration;
     private javax.swing.JLabel l_setpoint;
+    private javax.swing.JPanel p_realtime_analyzer_control;
+    private javax.swing.JPanel p_realtime_controller_control;
     public javax.swing.JPanel p_realtime_plot;
     public javax.swing.JProgressBar pb_laser_power;
     // End of variables declaration//GEN-END:variables

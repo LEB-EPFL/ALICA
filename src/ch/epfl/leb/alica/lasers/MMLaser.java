@@ -55,6 +55,7 @@ public class MMLaser implements Laser {
 
     @Override
     public double setLaserPower(double desired_power) throws Exception {
+        // constrain the input value
         double actual_power;
         if (desired_power > max_power) {
             actual_power = max_power;
@@ -64,6 +65,7 @@ public class MMLaser implements Laser {
             actual_power = desired_power;
         }
         
+        // set the laser to this value
         //studio.core().setProperty(device_name, property_name, actual_power);
         Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, 
                 String.format("Setting power to: %8.4f\n", actual_power));

@@ -19,6 +19,8 @@
  */
 package ch.epfl.leb.alica;
 
+import ch.epfl.leb.alica.analyzers.AnalyzerRealtimeControlPanel;
+
 /**
  * An analyzer receives images from the WorkerThread, processes them, and
  * adjusts its internal state (and output) accordingly. The WorkerThread 
@@ -48,4 +50,6 @@ public interface Analyzer {
      * @return unique name of the analyzer.
      */
     public String getName();
+    
+    public AnalyzerRealtimeControlPanel getRealtimeControlPanel();
 }

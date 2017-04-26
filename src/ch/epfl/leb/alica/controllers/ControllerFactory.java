@@ -32,14 +32,16 @@ import ch.epfl.leb.alica.controllers.pid.PIDSetupPanel;
 public class ControllerFactory extends AbstractFactory<ControllerSetupPanel>{
     
     /**
-     * Add known Controllers
+     * Initialize the factory with known controllers
      */
     public ControllerFactory() {
         super();
+        // add known controllers
         addSetupPanel("PID",new PIDSetupPanel());
         addSetupPanel("Manual", new ManualSetupPanel());
         addSetupPanel("Inverter", new InverterSetupPanel());
         
+        // set up default choice
         selectProduct("Manual");
     }
     

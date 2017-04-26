@@ -20,28 +20,32 @@
 package ch.epfl.leb.alica.controllers.manual;
 
 import ch.epfl.leb.alica.controllers.AbstractController;
+import ch.epfl.leb.alica.controllers.ControllerRealtimeControlPanel;
 
 /**
  * Manual controller. Output is equal to setpoint value, any input is ignored.
  * @author Marcel Stefko
  */
 public class ManualController extends AbstractController {
-
+    private final ManualRealtimeControlPanel control_panel;
     /**
      * Initialize with maximal output value
      * @param maximum max output value
      */
     public ManualController(double maximum) {
         super(maximum);
+        this.control_panel = new ManualRealtimeControlPanel();
     }
 
     @Override
     public void nextValue(double value, long time_ms) {
+        // ignore any input
         return;
     }
 
     @Override
     public double getCurrentOutput() {
+        // don't return a value higher than maximum
         if (setpoint < maximum)
             return setpoint;
         else
@@ -51,6 +55,11 @@ public class ManualController extends AbstractController {
     @Override
     public String getName() {
         return "Manuals";
+    }
+
+    @Override
+    public ControllerRealtimeControlPanel getRealtimeControlPanel() {
+        return control_panel;
     }
     
 }

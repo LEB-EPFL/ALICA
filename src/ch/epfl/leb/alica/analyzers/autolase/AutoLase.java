@@ -21,6 +21,7 @@ package ch.epfl.leb.alica.analyzers.autolase;
 
 
 import ch.epfl.leb.alica.Analyzer;
+import ch.epfl.leb.alica.analyzers.AnalyzerRealtimeControlPanel;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 
@@ -31,6 +32,8 @@ import java.util.ArrayList;
 public class AutoLase implements Analyzer {
     private final AutoLaseAnalyzer analyzer;
     private ArrayList<Double> raw_value_history;
+    
+    private final AutoLaseRealtimeControlPanel control_panel;
 
     
     private final int threshold;
@@ -46,6 +49,7 @@ public class AutoLase implements Analyzer {
         this.threshold = threshold;
         this.averaging = averaging;
         analyzer = new AutoLaseAnalyzer(threshold, averaging);
+        this.control_panel = new AutoLaseRealtimeControlPanel();
     }
 
     @Override
@@ -61,6 +65,11 @@ public class AutoLase implements Analyzer {
     @Override
     public String getName() {
         return "AutoLase";
+    }
+
+    @Override
+    public AnalyzerRealtimeControlPanel getRealtimeControlPanel() {
+        return this.control_panel;
     }
 }
 

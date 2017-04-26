@@ -20,6 +20,7 @@
 package ch.epfl.leb.alica.controllers.inverter;
 
 import ch.epfl.leb.alica.controllers.AbstractController;
+import ch.epfl.leb.alica.controllers.ControllerRealtimeControlPanel;
 
 /**
  * Controller which inverts and scales the input using 1/x function. 
@@ -27,8 +28,10 @@ import ch.epfl.leb.alica.controllers.AbstractController;
  * @author Marcel Stefko
  */
 public class InvertController extends AbstractController {
-    private final double value_at_1_mw;
+    private double value_at_1_mw;
     private double last_input = 1.0;
+    
+    private final InverterRealtimeControlPanel control_panel;
     
     /**
      * Initializes the InvertController
@@ -39,6 +42,7 @@ public class InvertController extends AbstractController {
     public InvertController(double maximum, double value_at_1_mw) {
         super(maximum);
         this.value_at_1_mw = value_at_1_mw;
+        this.control_panel = new InverterRealtimeControlPanel(this);
     }
 
     @Override
@@ -48,18 +52,35 @@ public class InvertController extends AbstractController {
 
     @Override
     public double getCurrentOutput() {
+        // edge case of input being 0, return the maximal output value
         if (last_input == 0.0)
             return maximum;
         
+        // calculate the output
         double out = value_at_1_mw * (1/last_input);
-        if (out > maximum)
-            return maximum;
-        else
-            return out;
+        
+        // make sure we don't return more than the maximal possible value
+        out = (out > maximum) ? maximum : out;
+        return out;
     }
     
     @Override
     public String getName() {
         return "Inverter";
+    }
+    
+    public void setValueAt1Mw(double value) {
+        if (value<=0.0)
+            throw new IllegalArgumentException("Value must be positive!");
+        this.value_at_1_mw = value;
+    }
+    
+    public double getValueAt1Mw() {
+        return this.value_at_1_mw;
+    }
+
+    @Override
+    public ControllerRealtimeControlPanel getRealtimeControlPanel() {
+        return this.control_panel;
     }
 }
