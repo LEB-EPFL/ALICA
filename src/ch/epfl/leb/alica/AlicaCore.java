@@ -20,7 +20,7 @@
 package ch.epfl.leb.alica;
 
 import ch.epfl.leb.alica.analyzers.AnalyzerFactory;
-import ch.epfl.leb.alica.worker.WorkerThread;
+import ch.epfl.leb.alica.workers.Coordinator;
 import ch.epfl.leb.alica.controllers.ControllerFactory;
 import ch.epfl.leb.alica.lasers.LaserFactory;
 import ij.IJ;
@@ -31,15 +31,15 @@ import org.micromanager.Studio;
 
 /**
  * The core's settings are controlled by MainGUI, and the Core then produces
- * products from its factories, and initializes the WorkerThread, and later
- * terminates it.
+ products from its factories, and initializes the Coordinator, and later
+ terminates it.
  * @author stefko
  */
 public final class AlicaCore {
     private static AlicaCore instance = null;
     
     private final Studio studio;
-    private WorkerThread worker;
+    private Coordinator coordinator;
     
     private final AnalyzerFactory analyzer_factory;
     private final ControllerFactory controller_factory;
@@ -134,26 +134,20 @@ public final class AlicaCore {
      
     /**
      * Builds products from their factories using current settings, and
-     * starts the WorkerThread (analysis is started)
+ starts the Coordinator (analysis is started)
      * @param draw_from_core true if images should be drawn directly from the
      *  MMCore, false if the processing pipeline should be used
      */
-    public void startWorker(boolean draw_from_core, int max_analysis_FPS) {
-        worker = new WorkerThread(studio, analyzer_factory.build(), 
-                controller_factory.build(), laser_factory.build(), draw_from_core, max_analysis_FPS);
-        worker.start();
+    public void startWorkers(boolean draw_from_core) {
+        coordinator = new Coordinator(studio, analyzer_factory.build(), 
+                controller_factory.build(), laser_factory.build(), draw_from_core);
     }
     
     /**
-     * Requests the worker to stop and then waits for it to join.
+     * Requests the coordinator to stop and then waits for it to join.
      */
-    public void stopWorker() {
-        worker.requestStop();
-        try {
-            worker.join();
-        } catch (InterruptedException ex) {
-            Logger.getLogger(AlicaCore.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public void stopWorkers() {
+        coordinator.requestStop();
     }
     
     /**

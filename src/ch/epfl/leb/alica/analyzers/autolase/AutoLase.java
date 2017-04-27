@@ -55,7 +55,7 @@ public class AutoLase implements Analyzer {
     }
 
     @Override
-    public double getCurrentOutput() {
+    public double getIntermittentOutput() {
         return analyzer.getCurrentValue();
     }
 

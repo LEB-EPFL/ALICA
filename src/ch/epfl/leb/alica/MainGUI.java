@@ -161,8 +161,6 @@ public final class MainGUI extends JFrame {
         jLabel4 = new javax.swing.JLabel();
         cb_laser_setup = new javax.swing.JComboBox();
         cb_laser_properties = new javax.swing.JComboBox();
-        jLabel5 = new javax.swing.JLabel();
-        e_max_analysis_FPS = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setResizable(false);
@@ -283,11 +281,6 @@ public final class MainGUI extends JFrame {
             }
         });
 
-        jLabel5.setText("Max analysis FPS:");
-
-        e_max_analysis_FPS.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
-        e_max_analysis_FPS.setText("100");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -339,11 +332,7 @@ public final class MainGUI extends JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(rb_source_pipeline)
-                                    .addComponent(rb_source_mmcore)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel5)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(e_max_analysis_FPS, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(rb_source_mmcore))
                                 .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -377,9 +366,7 @@ public final class MainGUI extends JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(b_worker_stop)
-                            .addComponent(b_worker_start)
-                            .addComponent(jLabel5)
-                            .addComponent(e_max_analysis_FPS, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(b_worker_start))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(b_exit_plugin)
@@ -407,20 +394,8 @@ public final class MainGUI extends JFrame {
         b_worker_start.setEnabled(false);
         b_worker_stop.setEnabled(true);
         
-        int max_analysis_FPS;
-        try {
-            max_analysis_FPS = Integer.parseInt(e_max_analysis_FPS.getText());
-        } catch (NumberFormatException ex) {
-            IJ.showMessage("Illegal FPS number format.");
-            return;
-        }
-        if (max_analysis_FPS < 1) {
-            IJ.showMessage("FPS must be at least 1.");
-            return;
-        }
-        
         // launch the worker
-        alica_core.startWorker(rb_source_mmcore.isSelected(), max_analysis_FPS);
+        alica_core.startWorkers(rb_source_mmcore.isSelected());
     }//GEN-LAST:event_b_worker_startMouseClicked
 
     private void b_worker_stopMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_b_worker_stopMouseClicked
@@ -429,7 +404,7 @@ public final class MainGUI extends JFrame {
         b_worker_stop.setEnabled(false);
         
         // request the worker to stop
-        alica_core.stopWorker();
+        alica_core.stopWorkers();
     }//GEN-LAST:event_b_worker_stopMouseClicked
 
     private void cb_analyzer_setupPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_cb_analyzer_setupPopupMenuWillBecomeInvisible
@@ -464,12 +439,10 @@ public final class MainGUI extends JFrame {
     private javax.swing.JComboBox cb_laser_properties;
     private javax.swing.JComboBox cb_laser_setup;
     private javax.swing.JPanel controller_panel;
-    private javax.swing.JTextField e_max_analysis_FPS;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel l_title;
     private javax.swing.JLabel l_titletext;
     private javax.swing.JRadioButton rb_source_mmcore;

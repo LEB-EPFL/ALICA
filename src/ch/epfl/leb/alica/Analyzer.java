@@ -42,7 +42,9 @@ public interface Analyzer {
      * Return output of the analyzer based on current internal state.
      * @return output value of the analyzer to be passed to the controller
      */
-    public double getCurrentOutput();
+    public double getIntermittentOutput();
+    
+    public double getBatchOutput();
     
     /**
      * 

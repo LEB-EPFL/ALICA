@@ -52,7 +52,7 @@ public class SpotCounter implements Analyzer {
     
 
     @Override
-    public double getCurrentOutput() {
+    public double getIntermittentOutput() {
         return current_output;
     }
 

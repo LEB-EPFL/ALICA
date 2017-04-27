@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.epfl.leb.alica.worker;
+package ch.epfl.leb.alica.workers;
 
 import ij.IJ;
 import org.micromanager.internal.graph.GraphData;
@@ -26,25 +26,25 @@ import org.micromanager.internal.graph.GraphPanel;
 
 
 /**
- * Display for monitoring the current WorkerThread state. It is controlled
- * by the WorkerThread
+ * Display for monitoring the current Coordinator state. It is controlled
+ by the Coordinator
  * @author Marcel Stefko
  */
 public class MonitorGUI extends javax.swing.JFrame {
     private double laser_power_max;
     private double plot_max = 0.0;
-    private final WorkerThread worker;
+    private final Coordinator worker;
     private final GraphPanel realtime_graph;
     
     /**
      * Creates new form MonitorGUI
-     * @param worker WorkerThread parent
+     * @param worker Coordinator parent
      * @param analyzer_name name of the used analyzer
      * @param controller_name name of the used controller
      * @param laser_name name of the used laser
      * @param start_setpoint setpoint value to display at startup
      */
-    public MonitorGUI(WorkerThread worker, String analyzer_name, String controller_name, String laser_name, double start_setpoint) {
+    public MonitorGUI(Coordinator worker, String analyzer_name, String controller_name, String laser_name, double start_setpoint) {
         // check if worker is alive
         if (worker == null) {
             throw new NullPointerException();

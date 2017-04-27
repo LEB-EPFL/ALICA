@@ -46,6 +46,8 @@ public interface Controller {
      */
     public void nextValue(double value, long time_ms);
     
+    public void nextValue(double value);
+    
     /**
      * Produce an output value based on internal state (the output value is
      * fed into the laser)
