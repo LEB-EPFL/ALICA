@@ -26,13 +26,16 @@ import ch.epfl.leb.alica.controllers.AbstractController;
  * PID controller.
  * @author Marcel Stefko
  */
-public class PID_controller extends AbstractController {
+public class PID_controller implements Controller {
     private final MiniPID core;
     private final double P,I,D,F;
     
     private double current_output = 0.0;
     
-    
+    /**
+     * Maximal possible output value.
+     */
+    protected double maximum = 0.0;    
     
     /**
      * Initialize the PID controller
@@ -43,7 +46,11 @@ public class PID_controller extends AbstractController {
      * @param output_max maximal output value
      */
     public PID_controller(double P, double I, double D, double F, double output_max) {
-        super(output_max);
+        if (output_max<=0.0) {
+            throw new IllegalArgumentException("Maximum must be positive.");
+        }
+        this.maximum = output_max;
+        
         this.P = P; this.I = I; this.D = D; this.F = F; 
         this.core = new MiniPID(P,I,D,F);
         this.core.setOutputLimits(0.0, maximum);
@@ -54,7 +61,7 @@ public class PID_controller extends AbstractController {
         core.setSetpoint(target);
     }
 
-    @Override
+    @Deprecated
     public void nextValue(double value, long time_ms) {
         current_output = core.getOutput(value);
     }
@@ -67,6 +74,17 @@ public class PID_controller extends AbstractController {
     @Override
     public String getName() {
         return "PID";
+    }
+
+    @Override
+    public double nextValue(double value) {
+        current_output = core.getOutput(value);
+        return current_output;
+    }
+
+    @Override
+    public double getSetpoint() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

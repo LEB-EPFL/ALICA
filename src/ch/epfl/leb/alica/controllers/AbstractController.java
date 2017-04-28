@@ -27,35 +27,6 @@ import ch.epfl.leb.alica.Controller;
  */
 public abstract class AbstractController implements Controller {
 
-    /**
-     * Current input setpoint value.
-     */
-    protected double setpoint = 0.0;
 
-    /**
-     * Maximal possible output value.
-     */
-    protected double maximum = 0.0;
-    
-    /**
-     * Initialize the controller with a maximal output value.
-     * @param maximum max output value
-     */
-    public AbstractController(double maximum) {
-        if (maximum<=0.0) {
-            throw new IllegalArgumentException("Maximum must be positive.");
-        }
-        this.maximum = maximum;
-    }
-    
-    @Override
-    public void setSetpoint(double new_setpoint) {
-        setpoint = new_setpoint;
-    }
-    
-    @Override
-    public double getSetpoint() {
-        return this.setpoint;
-    }
     
 }

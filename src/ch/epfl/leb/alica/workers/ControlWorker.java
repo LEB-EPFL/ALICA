@@ -32,6 +32,7 @@ import java.util.logging.Logger;
  */
 
 public class ControlWorker extends Timer {
+    
     private final ControlTask control_task;
     
     public ControlWorker(AnalysisWorker analysis_worker, Controller controller, Laser laser) {
@@ -71,8 +72,12 @@ class ControlTask extends TimerTask {
     @Override
     public void run() {
         synchronized(this) {
-            last_analyzer_output = analysis_worker.queryAnalyzerForBatchOutput();
-            controller.nextValue(last_analyzer_output);
+            double analyzer_output = analysis_worker.queryAnalyzerForBatchOutput();
+            if (Double.isNaN(analyzer_output))
+                analyzer_output = last_analyzer_output;
+            else
+                last_analyzer_output = analyzer_output;
+            controller.nextValue(analyzer_output);
             last_controller_output = controller.getCurrentOutput();
             try {
                 laser.setLaserPower(last_controller_output);

@@ -48,10 +48,13 @@ public class AnalysisWorker extends Thread {
     private int last_fps_count = 0;
     
     public AnalysisWorker(Coordinator coordinator, Studio studio, Analyzer analyzer, boolean draw_from_core) {
+        this.setName("Continual analysis worker");
+        
         this.coordinator = coordinator;
         this.studio = studio;
         this.analyzer = analyzer;
         this.draw_from_core = draw_from_core;
+        
         
         this.new_image_watcher = new NewImageWatcher(this.analyzer, this);
     }
@@ -77,7 +80,7 @@ public class AnalysisWorker extends Thread {
             synchronized(analyzer) {
                 if (this.last_image_coords==null) {
                     try {
-                        this.wait();
+                        analyzer.wait();
                     } catch (InterruptedException ex) {
                         // if we get interrupted, exit disgracefully
                         Logger.getLogger(Coordinator.class.getName()).log(Level.SEVERE, null, ex);
@@ -106,7 +109,7 @@ public class AnalysisWorker extends Thread {
             last_analysis_time_ms = coordinator.getTimeMillis() - image_acquisition_time;
             fps_count++;
             
-            if (coordinator.getTimeMillis() - fps_time > 1000) {
+            if ((coordinator.getTimeMillis() - fps_time) > 1000) {
                 last_fps_count = fps_count;
                 fps_count = 0;
                 fps_time = coordinator.getTimeMillis();
@@ -153,7 +156,7 @@ class NewImageWatcher {
     public void newImageAcquired(NewImageEvent evt) {
         synchronized(object_to_lock) {
             // notify thread that it can wake up
-            thread_to_notify.notify();
+            object_to_lock.notify();
             // store the last image coords
             thread_to_notify.setLastImageCoords(evt.getCoords());
         }

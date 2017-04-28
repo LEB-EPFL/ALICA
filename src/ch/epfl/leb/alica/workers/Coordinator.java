@@ -63,6 +63,8 @@ public class Coordinator {
      *  (true), or from the end of the processing pipeline (false)
      */
     public Coordinator(Studio studio, Analyzer analyzer, Controller controller, Laser laser, boolean draw_from_core) {
+        // log the start time
+        this.thread_start_time_ms = System.currentTimeMillis();
         // sanitize input
         if (studio == null)
             throw new NullPointerException("You need to set a studio!");
@@ -106,8 +108,7 @@ public class Coordinator {
             }
         });
         
-        // log the start time
-        this.thread_start_time_ms = System.currentTimeMillis();
+
     }
     
     

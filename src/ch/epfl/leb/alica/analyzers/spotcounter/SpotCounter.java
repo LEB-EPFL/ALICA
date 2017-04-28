@@ -23,6 +23,7 @@ import ch.epfl.leb.alica.Analyzer;
 import ij.measure.ResultsTable;
 import ij.process.ShortProcessor;
 import java.awt.image.ColorModel;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
@@ -36,8 +37,10 @@ public class SpotCounter implements Analyzer {
     private final int box_size;
     private final SpotCounterCore core;
     
+    private final ArrayList<Double> intermittent_outputs;
     
-    private double current_output = 0.0;
+    
+    private double intermittent_output = 0.0;
     
     /**
      * Initialize the analyzer
@@ -45,6 +48,8 @@ public class SpotCounter implements Analyzer {
      * @param box_size size of the scanning box in pixels
      */
     public SpotCounter(int noise_tolerance, int box_size) {
+        intermittent_outputs = new ArrayList<Double>();
+        
         this.noise_tolerance = noise_tolerance;
         this.box_size = box_size;
         this.core = new SpotCounterCore(noise_tolerance, box_size);
@@ -53,7 +58,7 @@ public class SpotCounter implements Analyzer {
 
     @Override
     public double getIntermittentOutput() {
-        return current_output;
+        return intermittent_output;
     }
 
 
@@ -69,7 +74,22 @@ public class SpotCounter implements Analyzer {
         ShortProcessor sp = new ShortProcessor(image_width, image_height);
         sp.setPixels(image);
         ResultsTable results = core.analyze(sp.duplicate());
-        current_output = results.getValue("n", results.getCounter()-1) ;// fov_area;
-        Logger.getLogger(this.getName()).log(Level.SEVERE, String.format("Image: %d, Density: %10.5f\n", results.getCounter(), current_output));
+        intermittent_output = results.getValue("n", results.getCounter()-1) ;// fov_area;
+        Logger.getLogger(this.getName()).log(Level.SEVERE, String.format("Image: %d, Density: %10.5f\n", results.getCounter(), intermittent_output));
+        intermittent_outputs.add(intermittent_output);
+    }
+
+    @Override
+    public double getBatchOutput() {
+        if (intermittent_outputs.size() == 0)
+            return Double.NaN;
+        double mean_output = 0.0;
+        for (double d: intermittent_outputs) {
+            mean_output += d;
+        }
+        mean_output /= intermittent_outputs.size();
+        
+        intermittent_outputs.clear();
+        return mean_output;
     }
 }

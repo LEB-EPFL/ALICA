@@ -64,6 +64,11 @@ public class AutoLase implements Analyzer {
         return "AutoLase";
     }
 
+    @Override
+    public double getBatchOutput() {
+        return analyzer.getCurrentValue();
+    }
+
 }
 
 

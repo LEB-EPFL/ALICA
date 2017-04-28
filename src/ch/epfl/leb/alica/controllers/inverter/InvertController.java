@@ -19,17 +19,25 @@
  */
 package ch.epfl.leb.alica.controllers.inverter;
 
+import ch.epfl.leb.alica.Controller;
 import ch.epfl.leb.alica.controllers.AbstractController;
+import ij.IJ;
 
 /**
  * Controller which inverts and scales the input using 1/x function. 
  * (high input -> low output, low input -> high output)
  * @author Marcel Stefko
  */
-public class InvertController extends AbstractController {
+public class InvertController implements Controller {
     private double value_at_1_mw;
     private double last_input = 1.0;
-    
+
+    /**
+     * Maximal possible output value.
+     */
+    protected double maximum = 0.0;
+
+
     
     /**
      * Initializes the InvertController
@@ -38,7 +46,10 @@ public class InvertController extends AbstractController {
      *  an output value of 1.0 (scaling constant)
      */
     public InvertController(double maximum, double value_at_1_mw) {
-        super(maximum);
+        if (maximum<=0.0) {
+            throw new IllegalArgumentException("Maximum must be positive.");
+        }
+        this.maximum = maximum;
         this.value_at_1_mw = value_at_1_mw;
     }
     
@@ -49,12 +60,14 @@ public class InvertController extends AbstractController {
      */
     @Override
     public void setSetpoint(double value) {
-        if (value<=0.0)
-            throw new IllegalArgumentException("Setpoint must be positive!");
+        if (value<=0.0) {
+            IJ.showMessage("Setpoint must be positive!");
+            return;
+        }
         this.value_at_1_mw = value;
     }
 
-    @Override
+    @Deprecated
     public void nextValue(double value, long time_ms) {
         last_input = value;
     }
@@ -84,7 +97,13 @@ public class InvertController extends AbstractController {
         this.value_at_1_mw = value;
     }
     
-    public double getValueAt1Mw() {
+    public double getSetpoint() {
         return this.value_at_1_mw;
+    }
+
+    @Override
+    public double nextValue(double value) {
+        last_input = value;
+        return getCurrentOutput();
     }
 }

@@ -44,9 +44,10 @@ public interface Controller {
      * @param value input to be processed
      * @param time_ms time at which the input was acquired in ms
      */
+    @Deprecated
     public void nextValue(double value, long time_ms);
     
-    public void nextValue(double value);
+    public double nextValue(double value);
     
     /**
      * Produce an output value based on internal state (the output value is

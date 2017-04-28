@@ -19,19 +19,31 @@
  */
 package ch.epfl.leb.alica.controllers.manual;
 
+import ch.epfl.leb.alica.Controller;
 import ch.epfl.leb.alica.controllers.AbstractController;
 
 /**
  * Manual controller. Output is equal to setpoint value, any input is ignored.
  * @author Marcel Stefko
  */
-public class ManualController extends AbstractController {
+public class ManualController implements Controller {
+    
+    /**
+     * Maximal possible output value.
+     */
+    protected double maximum = 0.0;
+    
+    protected double setpoint;
+    
     /**
      * Initialize with maximal output value
      * @param maximum max output value
      */
     public ManualController(double maximum, double initial_output) {
-        super(maximum);
+        if (maximum<=0.0) {
+            throw new IllegalArgumentException("Maximum must be positive.");
+        }
+        this.maximum = maximum;
         if (initial_output<0.0 || initial_output>maximum)
             throw new IllegalArgumentException("Initial output must not be negative or higher than maximum.");
         setSetpoint(initial_output);
@@ -46,15 +58,31 @@ public class ManualController extends AbstractController {
     @Override
     public double getCurrentOutput() {
         // don't return a value higher than maximum
-        if (setpoint < maximum)
-            return setpoint;
-        else
-            return maximum;
+        return getSetpoint();
     }
     
     @Override
     public String getName() {
         return "Manuals";
+    }
+
+    @Override
+    public double nextValue(double value) {
+        return getCurrentOutput();
+    }
+
+    @Override
+    public void setSetpoint(double new_setpoint) {
+        if (new_setpoint>maximum)
+            throw new IllegalArgumentException("New setpoint can't be higher than maximum!");
+        if (new_setpoint<=0.0)
+            throw new IllegalArgumentException("New setpoint must be positive!");
+        setpoint = new_setpoint;
+    }
+
+    @Override
+    public double getSetpoint() {
+        return setpoint;
     }
 
     
