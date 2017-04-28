@@ -161,6 +161,9 @@ public final class MainGUI extends JFrame {
         jLabel4 = new javax.swing.JLabel();
         cb_laser_setup = new javax.swing.JComboBox();
         cb_laser_properties = new javax.swing.JComboBox();
+        chkb_laser_is_virtual = new javax.swing.JCheckBox();
+        jLabel5 = new javax.swing.JLabel();
+        e_laser_max_power = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setResizable(false);
@@ -281,6 +284,13 @@ public final class MainGUI extends JFrame {
             }
         });
 
+        chkb_laser_is_virtual.setText("Virtual");
+
+        jLabel5.setText("Max power:");
+
+        e_laser_max_power.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
+        e_laser_max_power.setText("50");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -328,7 +338,16 @@ public final class MainGUI extends JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(controller_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(cb_laser_properties, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(cb_laser_properties, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(chkb_laser_is_virtual)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel5)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(e_laser_max_power, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addGap(0, 0, Short.MAX_VALUE))))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(rb_source_pipeline)
@@ -374,7 +393,13 @@ public final class MainGUI extends JFrame {
                         .addGap(11, 11, 11))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(cb_laser_properties, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel5)
+                            .addComponent(e_laser_max_power, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(chkb_laser_is_virtual)
+                        .addContainerGap(160, Short.MAX_VALUE))))
         );
 
         pack();
@@ -409,6 +434,15 @@ public final class MainGUI extends JFrame {
     }//GEN-LAST:event_cb_laser_propertiesPopupMenuWillBecomeInvisible
 
     private void b_worker_startActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_worker_startActionPerformed
+        double max_laser_power;
+        try {
+            max_laser_power = Double.parseDouble(e_laser_max_power.getText());
+        } catch (NumberFormatException ex) {
+            IJ.showMessage("Error in parsing laser power value.");
+            return;
+        }
+        alica_core.setMaxLaserPower(max_laser_power);
+        alica_core.setLaserVirtual(chkb_laser_is_virtual.isSelected());
         // launch the worker
         try {
             alica_core.startWorkers(rb_source_mmcore.isSelected());
@@ -430,8 +464,6 @@ public final class MainGUI extends JFrame {
         // change button states back to original
         b_worker_start.setEnabled(true);
         b_worker_stop.setEnabled(false);
-        
-        
     }//GEN-LAST:event_b_worker_stopActionPerformed
 
 
@@ -446,11 +478,14 @@ public final class MainGUI extends JFrame {
     private javax.swing.JComboBox cb_controller_setup;
     private javax.swing.JComboBox cb_laser_properties;
     private javax.swing.JComboBox cb_laser_setup;
+    private javax.swing.JCheckBox chkb_laser_is_virtual;
     private javax.swing.JPanel controller_panel;
+    private javax.swing.JTextField e_laser_max_power;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel l_title;
     private javax.swing.JLabel l_titletext;
     private javax.swing.JRadioButton rb_source_mmcore;

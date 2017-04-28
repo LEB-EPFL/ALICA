@@ -30,6 +30,8 @@ import ch.epfl.leb.alica.controllers.pid.PIDSetupPanel;
  * @author Marcel Stefko
  */
 public class ControllerFactory extends AbstractFactory<ControllerSetupPanel>{
+    private double max_controller_output = 0.0;
+    
     
     /**
      * Initialize the factory with known controllers
@@ -45,11 +47,15 @@ public class ControllerFactory extends AbstractFactory<ControllerSetupPanel>{
         selectProduct("Manual");
     }
     
+    public void setMaxControllerOutput(double max_controller_output) {
+        this.max_controller_output = max_controller_output; 
+    }
+    
     /**
      * Build the selected controller using current settings
      * @return initialized controller
      */
     public Controller build() {
-        return getSelectedSetupPanel().initController();
+        return getSelectedSetupPanel().initController(max_controller_output);
     }
 }

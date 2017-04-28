@@ -48,12 +48,10 @@ public class PIDSetupPanel extends ControllerSetupPanel {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
         e_p = new javax.swing.JTextField();
         e_i = new javax.swing.JTextField();
         e_d = new javax.swing.JTextField();
         e_f = new javax.swing.JTextField();
-        e_max_output = new javax.swing.JTextField();
 
         jLabel1.setText("P:");
 
@@ -62,8 +60,6 @@ public class PIDSetupPanel extends ControllerSetupPanel {
         jLabel3.setText("D:");
 
         jLabel4.setText("F:");
-
-        jLabel5.setText("Max. output:");
 
         e_p.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
         e_p.setText("0.05");
@@ -81,18 +77,13 @@ public class PIDSetupPanel extends ControllerSetupPanel {
         e_f.setText("0.0");
         e_f.setToolTipText("");
 
-        e_max_output.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
-        e_max_output.setText("50");
-        e_max_output.setToolTipText("");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(62, 62, 62)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5)
                     .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -102,8 +93,7 @@ public class PIDSetupPanel extends ControllerSetupPanel {
                     .addComponent(e_p, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(e_i, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(e_d, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(e_f, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(e_max_output, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(e_f, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(29, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -125,11 +115,7 @@ public class PIDSetupPanel extends ControllerSetupPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(e_f, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(e_max_output, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap(41, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -138,22 +124,19 @@ public class PIDSetupPanel extends ControllerSetupPanel {
     private javax.swing.JTextField e_d;
     private javax.swing.JTextField e_f;
     private javax.swing.JTextField e_i;
-    private javax.swing.JTextField e_max_output;
     private javax.swing.JTextField e_p;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     // End of variables declaration//GEN-END:variables
 
     @Override
-    public Controller initController() {
+    public Controller initController(double max_controller_output) {
         double P = Double.parseDouble(e_p.getText());
         double I = Double.parseDouble(e_i.getText());
         double D = Double.parseDouble(e_d.getText());
         double F = Double.parseDouble(e_f.getText());
-        double max_output = Double.parseDouble(e_max_output.getText());
-        return new PID_controller(P, I, D, F, max_output);
+        return new PID_controller(P, I, D, F, max_controller_output);
     }
 }

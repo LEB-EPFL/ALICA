@@ -28,7 +28,7 @@ import org.micromanager.Studio;
  *
  * @author stefko
  */
-public class MMLaser implements Laser {
+public class VirtualLaser implements Laser {
     private final Studio studio;
     
     private final String device_name;
@@ -44,7 +44,7 @@ public class MMLaser implements Laser {
      * @param min_power minimal allowed property value
      * @param max_power maximal allowed property value
      */
-    public MMLaser(Studio studio, String device_name, String property_name, 
+    public VirtualLaser(Studio studio, String device_name, String property_name, 
             double min_power, double max_power) {
         this.studio = studio;
         this.device_name = device_name;
@@ -90,7 +90,7 @@ public class MMLaser implements Laser {
 
     @Override
     public String getDeviceName() {
-        return device_name;
+        return "V:"+device_name;
     }
 
     @Override

@@ -31,12 +31,15 @@ public final class LaserFactory {
     private final Studio studio;
     private String selected_name;
     private String selected_property;
+    private boolean is_laser_virtual;
+    private double max_laser_power;
 
     /**
      * Initialize the factory with the MM studio
      * @param studio
      */
     public LaserFactory(Studio studio) {
+        is_laser_virtual = true;
         this.studio = studio;
         selected_name = getPossibleLasers().get(0);
     }
@@ -82,11 +85,19 @@ public final class LaserFactory {
         selected_property = property;
     }
     
+    public void setLaserVirtual(boolean is_laser_virtual) {
+        this.is_laser_virtual = is_laser_virtual;
+    }
+    
+    public void setMaxLaserPower(double max_laser_power) {
+        this.max_laser_power = max_laser_power;
+    }
+    
     /**
      * Build the laser using the current state
      * @return initialized Laser
      */
     public Laser build() {
-        return new MMLaser(studio, selected_name, selected_property, 0.0, 42.0);
+        return new VirtualLaser(studio, selected_name, selected_property, 0.0, max_laser_power);
     }
 }

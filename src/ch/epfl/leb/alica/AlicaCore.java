@@ -108,6 +108,15 @@ public final class AlicaCore {
         Logger.getLogger(this.getClass().getName()).log(Level.FINE, out);
     }
     
+    public void setMaxLaserPower(double max_laser_power) {
+        this.controller_factory.setMaxControllerOutput(max_laser_power);
+        this.laser_factory.setMaxLaserPower(max_laser_power);
+    }
+    
+    public void setLaserVirtual(boolean is_laser_virtual) {
+        this.laser_factory.setLaserVirtual(is_laser_virtual);
+    }
+    
     /**
      *
      * @return AnalyzerFactory
