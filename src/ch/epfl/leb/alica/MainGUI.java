@@ -185,17 +185,17 @@ public final class MainGUI extends JFrame {
         });
 
         b_worker_start.setText("Start");
-        b_worker_start.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                b_worker_startMouseClicked(evt);
+        b_worker_start.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                b_worker_startActionPerformed(evt);
             }
         });
 
         b_worker_stop.setText("Stop");
         b_worker_stop.setEnabled(false);
-        b_worker_stop.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                b_worker_stopMouseClicked(evt);
+        b_worker_stop.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                b_worker_stopActionPerformed(evt);
             }
         });
 
@@ -389,24 +389,6 @@ public final class MainGUI extends JFrame {
         alica_core.printLoadedDevices();
     }//GEN-LAST:event_b_print_loaded_devicesMouseClicked
 
-    private void b_worker_startMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_b_worker_startMouseClicked
-        // change button state
-        b_worker_start.setEnabled(false);
-        b_worker_stop.setEnabled(true);
-        
-        // launch the worker
-        alica_core.startWorkers(rb_source_mmcore.isSelected());
-    }//GEN-LAST:event_b_worker_startMouseClicked
-
-    private void b_worker_stopMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_b_worker_stopMouseClicked
-        // change button states back to original
-        b_worker_start.setEnabled(true);
-        b_worker_stop.setEnabled(false);
-        
-        // request the worker to stop
-        alica_core.stopWorkers();
-    }//GEN-LAST:event_b_worker_stopMouseClicked
-
     private void cb_analyzer_setupPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_cb_analyzer_setupPopupMenuWillBecomeInvisible
         alica_core.getAnalyzerFactory().selectProduct((String) cb_analyzer_setup.getSelectedItem());
         updateAnalyzerSetupPanel();
@@ -425,6 +407,32 @@ public final class MainGUI extends JFrame {
     private void cb_laser_propertiesPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_cb_laser_propertiesPopupMenuWillBecomeInvisible
         alica_core.getLaserFactory().selectProperty((String) cb_laser_properties.getSelectedItem());
     }//GEN-LAST:event_cb_laser_propertiesPopupMenuWillBecomeInvisible
+
+    private void b_worker_startActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_worker_startActionPerformed
+        // launch the worker
+        try {
+            alica_core.startWorkers(rb_source_mmcore.isSelected());
+        } catch (RuntimeException ex) {
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+            IJ.showMessage("Error in worker initialization. See log.");
+            return;
+        }
+        
+        // change button state
+        b_worker_start.setEnabled(false);
+        b_worker_stop.setEnabled(true);
+    }//GEN-LAST:event_b_worker_startActionPerformed
+
+    private void b_worker_stopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_worker_stopActionPerformed
+        // request the worker to stop
+        alica_core.stopWorkers();
+
+        // change button states back to original
+        b_worker_start.setEnabled(true);
+        b_worker_stop.setEnabled(false);
+        
+        
+    }//GEN-LAST:event_b_worker_stopActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

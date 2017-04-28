@@ -39,7 +39,7 @@ public class ManualController implements Controller {
      * @param maximum max output value
      */
     public ManualController(double maximum, double initial_output) {
-        if (maximum<=0.0) {
+        if (maximum<0.0) {
             throw new IllegalArgumentException("Maximum must be positive.");
         }
         this.maximum = maximum;
@@ -68,7 +68,7 @@ public class ManualController implements Controller {
     public void setSetpoint(double new_setpoint) {
         if (new_setpoint>maximum)
             throw new IllegalArgumentException("New setpoint can't be higher than maximum!");
-        if (new_setpoint<=0.0)
+        if (new_setpoint<0.0)
             throw new IllegalArgumentException("New setpoint must be positive!");
         setpoint = new_setpoint;
     }
