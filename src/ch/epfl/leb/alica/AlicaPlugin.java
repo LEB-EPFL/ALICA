@@ -54,7 +54,6 @@ public class AlicaPlugin implements MenuPlugin, SciJavaPlugin {
                     MainGUI.initialize(AlicaCore.getInstance()).setVisible(true);
                 } catch (MainGUI.AlreadyInitializedException ex) {
                     MainGUI.getInstance().setVisible(true);
-                    Logger.getLogger(this.getClass().getName()).log(Level.WARNING, null, ex);
                 }
             }
         });
@@ -69,7 +68,7 @@ public class AlicaPlugin implements MenuPlugin, SciJavaPlugin {
         try {
             AlicaCore.initialize(studio);
         } catch (AlicaCore.AlreadyInitializedException ex) {
-            Logger.getLogger(this.getClass().getName()).log(Level.WARNING,"ALICA core was already initialized.",ex);
+
         }
     }
 

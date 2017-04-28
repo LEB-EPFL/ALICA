@@ -39,14 +39,10 @@ public interface Controller {
     public double getSetpoint();
     
     /**
-     * Receives next input from the WorkerThread (this is the output of the
+     * Receives next input from the WorkerThread (this is the batched output of the
      * analyzer)
      * @param value input to be processed
-     * @param time_ms time at which the input was acquired in ms
      */
-    @Deprecated
-    public void nextValue(double value, long time_ms);
-    
     public double nextValue(double value);
     
     /**

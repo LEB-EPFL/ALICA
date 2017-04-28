@@ -30,6 +30,7 @@ public class PID_controller implements Controller {
     private final double P,I,D,F;
     
     private double current_output = 0.0;
+    private double setpoint = 0.0;
     
     /**
      * Maximal possible output value.
@@ -57,12 +58,8 @@ public class PID_controller implements Controller {
     
     @Override
     public void setSetpoint(double target) {
+        this.setpoint = target;
         core.setSetpoint(target);
-    }
-
-    @Deprecated
-    public void nextValue(double value, long time_ms) {
-        current_output = core.getOutput(value);
     }
 
     @Override
@@ -83,7 +80,7 @@ public class PID_controller implements Controller {
 
     @Override
     public double getSetpoint() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return setpoint;
     }
     
 }

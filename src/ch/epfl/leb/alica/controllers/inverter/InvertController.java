@@ -45,11 +45,11 @@ public class InvertController implements Controller {
      *  an output value of 1.0 (scaling constant)
      */
     public InvertController(double maximum, double value_at_1_mw) {
-        if (maximum<=0.0) {
+        if (maximum<0.0) {
             throw new IllegalArgumentException("Maximum must be positive.");
         }
         this.maximum = maximum;
-        this.value_at_1_mw = value_at_1_mw;
+        this.setSetpoint(maximum);
     }
     
     /**
@@ -59,16 +59,11 @@ public class InvertController implements Controller {
      */
     @Override
     public void setSetpoint(double value) {
-        if (value<=0.0) {
+        if (value<0.0) {
             IJ.showMessage("Setpoint must be positive!");
             return;
         }
         this.value_at_1_mw = value;
-    }
-
-    @Deprecated
-    public void nextValue(double value, long time_ms) {
-        last_input = value;
     }
 
     @Override
@@ -90,18 +85,16 @@ public class InvertController implements Controller {
         return "Inverter";
     }
     
-    public void setValueAt1Mw(double value) {
-        if (value<=0.0)
-            throw new IllegalArgumentException("Value must be positive!");
-        this.value_at_1_mw = value;
-    }
-    
     public double getSetpoint() {
         return this.value_at_1_mw;
     }
 
     @Override
     public double nextValue(double value) {
+        if (Double.isNaN(value)) {
+            // do nothing
+            return getCurrentOutput();
+        }
         last_input = value;
         return getCurrentOutput();
     }

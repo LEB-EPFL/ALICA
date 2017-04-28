@@ -122,11 +122,19 @@ public class Coordinator {
         control_worker.cancel();
        
         try {
-            analysis_worker.join();
+            analysis_worker.join(3000);
         } catch (InterruptedException ex) {
             // exit ungracefully
             Logger.getLogger(Coordinator.class.getName()).log(Level.SEVERE, null, ex);
             throw new RuntimeException("Analysis worker shutdown was interrupted.");
+        }
+        // if after 3 seconds the thread hasn't died, interrupt it
+        if (analysis_worker.isAlive()) {
+            try {
+                analysis_worker.interrupt();
+            } catch (RuntimeException ex) {
+                Logger.getLogger(Coordinator.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         
     }

@@ -49,12 +49,6 @@ public class ManualController implements Controller {
     }
 
     @Override
-    public void nextValue(double value, long time_ms) {
-        // ignore any input
-        return;
-    }
-
-    @Override
     public double getCurrentOutput() {
         // don't return a value higher than maximum
         return getSetpoint();
