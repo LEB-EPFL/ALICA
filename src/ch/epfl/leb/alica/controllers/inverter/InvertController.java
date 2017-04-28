@@ -20,7 +20,6 @@
 package ch.epfl.leb.alica.controllers.inverter;
 
 import ch.epfl.leb.alica.Controller;
-import ch.epfl.leb.alica.controllers.AbstractController;
 import ij.IJ;
 
 /**

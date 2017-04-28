@@ -20,7 +20,6 @@
 package ch.epfl.leb.alica.controllers.manual;
 
 import ch.epfl.leb.alica.Controller;
-import ch.epfl.leb.alica.controllers.AbstractController;
 
 /**
  * Manual controller. Output is equal to setpoint value, any input is ignored.
