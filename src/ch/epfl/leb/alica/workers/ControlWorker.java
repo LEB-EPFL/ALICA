@@ -27,33 +27,50 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author stefko
+ * A Timer which schedules a task that regularly queries the AnalysisWorker
+ * for batched output, and passes it on to the controller, then gets the
+ * controller's output and passes it on to the laser.
+ * @author Marcel Stefko
  */
 
 public class ControlWorker extends Timer {
     
     private final ControlTask control_task;
     
+    /**
+     * Initialize the ControlWorker
+     * @param analysis_worker AnalysisWorker which will be queried for output
+     * @param controller Controller to which output of AnalysisWorker is fed
+     * @param laser Laser to which output of Controller is fed
+     */
     public ControlWorker(AnalysisWorker analysis_worker, Controller controller, Laser laser) {
         super();
+        // initialize the task
         this.control_task = new ControlTask(analysis_worker, controller, laser);
     }
     
+    /**
+     * The task of this worker will be executed regularly.
+     * @param delay_ms initial delay
+     * @param period_ms period of the task
+     */
     public void scheduleExecution(long delay_ms, long period_ms) {
         this.scheduleAtFixedRate(control_task, delay_ms, period_ms);
     }
     
-    public double getLastAnalyzerOutput() {
-        return control_task.getLastAnalyzerOutput();
-    }
-    
+    /**
+     * 
+     * @return last controller output
+     */
     public double getLastControllerOutput() {
         return control_task.getLastControllerOutput();
     }
 }
 
-
+/**
+ * This TimerTask is run periodically by the ControlWorker
+ * @author Marcel Stefko
+ */
 class ControlTask extends TimerTask {
     private final AnalysisWorker analysis_worker;
     private final Controller controller;
@@ -62,6 +79,12 @@ class ControlTask extends TimerTask {
     private double last_analyzer_output = 0.0;
     private double last_controller_output = 0.0;
 
+    /**
+     * Initialize the ControlTask
+     * @param analysis_worker AnalysisWorker which will be queried for output
+     * @param controller Controller to which output of AnalysisWorker is fed
+     * @param laser Laser to which output of Controller is fed
+     */
     public ControlTask(AnalysisWorker analysis_worker, Controller controller, Laser laser) {
         super();
         this.analysis_worker = analysis_worker;
@@ -72,13 +95,16 @@ class ControlTask extends TimerTask {
     @Override
     public void run() {
         synchronized(this) {
+            // get batch output of the analyzer
             double analyzer_output = analysis_worker.queryAnalyzerForBatchOutput();
+            // sanitize output
             if (Double.isNaN(analyzer_output))
                 analyzer_output = last_analyzer_output;
             else
                 last_analyzer_output = analyzer_output;
-            controller.nextValue(analyzer_output);
-            last_controller_output = controller.getCurrentOutput();
+            // pass output to the controller and get next output
+            last_controller_output = controller.nextValue(analyzer_output);
+            // adjust the laser power
             try {
                 laser.setLaserPower(last_controller_output);
             } catch (Exception ex) {
@@ -87,12 +113,10 @@ class ControlTask extends TimerTask {
         }
     }
     
-    public double getLastAnalyzerOutput() {
-        synchronized(this) {
-            return last_analyzer_output;
-        }
-    }
-    
+    /**
+     * 
+     * @return last controller output
+     */
     public double getLastControllerOutput() {
         synchronized(this) {
             return last_controller_output;

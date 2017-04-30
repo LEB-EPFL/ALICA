@@ -29,6 +29,8 @@ public abstract class ControllerSetupPanel extends javax.swing.JPanel{
 
     /**
      * Initialize and return the controller based on GUI information.
+     * @param max_controller_output maximal output value, this is passed from
+     *  different part of the GUI
      * @return initialized controller
      */
     public abstract Controller initController(double max_controller_output);

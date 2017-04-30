@@ -30,8 +30,12 @@ import org.micromanager.data.NewImageEvent;
 import org.micromanager.events.LiveModeEvent;
 
 /**
- *
- * @author stefko
+ * This thread continuously queries either the MMCore, or the processing pipeline
+ * of the live mode for new images, and calls the analyzer's processImage() method
+ * on them as fast as it can. Always the latest image is taken for analysis, so
+ * it is possible for images to be skipped. It also gathers some statistics for
+ * display by the GUI.
+ * @author Marcel Stefko
  */
 public class AnalysisWorker extends Thread {
     private boolean stop_flag = false;
@@ -41,29 +45,49 @@ public class AnalysisWorker extends Thread {
     private final Analyzer analyzer;
     private final boolean draw_from_core;
     
+    // recieves signals from the live view Datastore, and passes the latest
+    // Coords to last_live_image_coords
     private final NewLiveImageWatcher new_image_watcher;
     private Coords last_live_image_coords = null;
+    // for comparison with newly acquired images, to see if the image has
+    // changed
     private Object last_core_image = null;
     
+    // for GUI output
     private long last_analysis_time_ms = 0;
     private int last_fps_count = 0;
     
+    /**
+     * Initialize the worker.
+     * @param coordinator parent Coordinator
+     * @param studio for logging and image queries
+     * @param analyzer this Analyzer's processImage() method is called on gathered images
+     * @param draw_from_core if true, draw from core, otherwise from live mode Datastore
+     */
     public AnalysisWorker(Coordinator coordinator, Studio studio, Analyzer analyzer, boolean draw_from_core) {
-        this.setName("Continual analysis worker");
+        this.setName("Analysis Worker");
         
         this.coordinator = coordinator;
         this.studio = studio;
         this.analyzer = analyzer;
         this.draw_from_core = draw_from_core;
         
-        
         this.new_image_watcher = new NewLiveImageWatcher(this.analyzer, this);
     }
     
-    public void setLastImageCoords(Coords coords) {
+    /**
+     * Called by the NewImageWatcher to update last coords
+     * @param coords new Coords
+     */
+    void setLastImageCoords(Coords coords) {
         this.last_live_image_coords = coords;
     }
     
+    /**
+     * Called by the MMCore to signalize there is a new live mode, so that we
+     * can registerForEvents the NewImageWatcher.
+     * @param evt new live mode event
+     */
     @Subscribe
     public void liveModeStarted(LiveModeEvent evt) {
         if (evt.getIsOn() && !draw_from_core) {
@@ -75,15 +99,20 @@ public class AnalysisWorker extends Thread {
     
     @Override
     public void run() {
+        // FPS counters
         long fps_time = coordinator.getTimeMillis();
         int fps_count = 0;
+        // loop while asked to stop
         while (!this.stop_flag) {
-            if (!draw_from_core)
-                getNewImageFromLiveAndAnalyze();
-            else
+            // either draw from core or live mode datastore
+            if (draw_from_core)
                 getNewImageFromCoreAndAnalyze();
+            else
+                getNewImageFromLiveAndAnalyze();
+            // increment fps counter after each image
             fps_count++;
             
+            // if a second has passed, store value and reset FPS counters
             if ((coordinator.getTimeMillis() - fps_time) > 1000) {
                 last_fps_count = fps_count;
                 fps_count = 0;
@@ -92,6 +121,10 @@ public class AnalysisWorker extends Thread {
         }
     }
     
+    /**
+     * Grabs new images from the Datastore associated with Live mode, analyzes
+     * it.
+     */
     public void getNewImageFromLiveAndAnalyze() {
         Coords current_coords;
         // wait for image acquisition by NewLiveImageWatcher
@@ -122,14 +155,19 @@ public class AnalysisWorker extends Thread {
         last_analysis_time_ms = coordinator.getTimeMillis() - image_acquisition_time;
     }
     
+    /**
+     * Acquire the new image directly from MMCore and send for analysis.
+     */
     public void getNewImageFromCoreAndAnalyze() {
         long image_acquisition_time = coordinator.getTimeMillis();
         Object new_image = null;
+        // query core for new image, if failed, just log it and enter loop
         try {
             new_image = studio.core().getLastImage();
         } catch (Exception ex) {
-            Logger.getLogger(AnalysisWorker.class.getName()).log(Level.SEVERE, null, ex);
+            studio.core().logMessage("Failure by AnalysisWorker to recieve image from MMCore.", true);
         }
+        // if no image was detected, or is the same as last analyzed, wait 1ms and query again
         while (new_image==null || new_image.equals(this.last_core_image)) {
             try {
                 sleep(1);
@@ -137,43 +175,70 @@ public class AnalysisWorker extends Thread {
                 throw new RuntimeException("Analysis worker interrupted while waiting for new core image.");
             }
             try {
+                // also update acq time value
                 image_acquisition_time = coordinator.getTimeMillis();
                 new_image = studio.core().getLastImage();
             } catch (Exception ex) {
-                Logger.getLogger(AnalysisWorker.class.getName()).log(Level.SEVERE, null, ex);
+                studio.core().logMessage("Failure by AnalysisWorker to recieve image from MMCore.", true);
             }
         }
+        // so we have a new image, now we process it and store for later comparison
         synchronized(analyzer) {
             analyzer.processImage(new_image, (int) studio.core().getImageWidth(), (int) studio.core().getImageHeight(), studio.core().getPixelSizeUm(), image_acquisition_time);
+            this.last_core_image = new_image;
         }
     }
     
+    /**
+     * Used for GUI rendering.
+     * @return intermittent output of the analyzer
+     */
     public double queryAnalyzerForIntermittentOutput() {
         synchronized(this.analyzer) {
             return this.analyzer.getIntermittentOutput();
         }
     }
     
+    /**
+     * Analyzer's internal state might change, and the output is passed on
+     * to the controller.
+     * @return batched output of analyzer
+     */
     public double queryAnalyzerForBatchOutput() {
         synchronized(this.analyzer) {
             return this.analyzer.getBatchOutput();
         }
     }
     
+    /**
+     * 
+     * @return duration of last analysis in milliseconds
+     */
     public long getLastAnalysisTime() {
         return last_analysis_time_ms;
     }
     
+    /**
+     *
+     * @return number of analyzed frames in the last second
+     */
     public int getCurrentFPS() {
         return last_fps_count;
     }
     
-    
+    /**
+     * Stops the analyzer after finalizing the current analysis.
+     */
     public void requestStop() {
         this.stop_flag = true;
     }
 }
 
+/**
+ * The watcher is subscribed to a Datastore by the AnalysisWorker, and then it
+ * informs the AnalysisWorker of any new images in the Datastore.
+ * @author Marcel Stefko
+ */
 class NewLiveImageWatcher {
     private final Object object_to_lock;
     private final AnalysisWorker thread_to_notify;
@@ -183,6 +248,10 @@ class NewLiveImageWatcher {
         this.thread_to_notify = thread_to_notify;
     }
     
+    /**
+     * Notify the thread that new image is available and send it the coords.
+     * @param evt event containing coords
+     */
     @Subscribe
     public void newImageAcquired(NewImageEvent evt) {
         synchronized(object_to_lock) {

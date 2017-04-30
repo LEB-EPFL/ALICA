@@ -22,7 +22,10 @@ package ch.epfl.leb.alica.analyzers.spotcounter;
 import ch.epfl.leb.alica.Analyzer;
 import ch.epfl.leb.alica.analyzers.AnalyzerSetupPanel;
 
-
+/**
+ * Setup panel to initialize the SpotCounter
+ * @author Marcel Stefko
+ */
 public class SpotCounterSetupPanel extends AnalyzerSetupPanel {
 
     /**

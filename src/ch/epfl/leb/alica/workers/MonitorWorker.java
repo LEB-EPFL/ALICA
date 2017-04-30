@@ -23,22 +23,37 @@ import java.util.Timer;
 import java.util.TimerTask;
 import org.micromanager.internal.graph.GraphData;
 
+/**
+ * Updates GUI with recent information from other workers
+ * @author Marcel Stefko
+ */
 public class MonitorWorker extends Timer {
     private final MonitorTask monitor_task;
     
+    /**
+     * Initialize new worker for monitoring
+     * @param gui MonitorGUI to be updated
+     * @param analysis_worker
+     * @param control_worker
+     */
     public MonitorWorker(MonitorGUI gui, AnalysisWorker analysis_worker, ControlWorker control_worker) {
         super();
         monitor_task = new MonitorTask(gui, analysis_worker, control_worker);
     }
     
+    /**
+     * The task of this worker will be executed regularly.
+     * @param delay_ms initial delay
+     * @param period_ms period of the task
+     */
     public void scheduleExecution(long delay_ms, long period_ms) {
         this.scheduleAtFixedRate(monitor_task, delay_ms, period_ms);
     }
 }
 
 /**
- *
- * @author stefko
+ * This TimerTask updates GUI with recent information from other workers
+ * @author Marcel Stefko
  */
 class MonitorTask extends TimerTask {
     private final AnalysisWorker analysis_worker;
@@ -47,23 +62,32 @@ class MonitorTask extends TimerTask {
     
     private final Grapher grapher;
     
+    /**
+     * Initialize new task with relevant members
+     * @param gui MonitorGUI to be updated
+     * @param analysis_worker
+     * @param control_worker
+     */
     public MonitorTask(MonitorGUI gui, AnalysisWorker analysis_worker, ControlWorker control_worker) {
         super();
         this.gui = gui;
         this.analysis_worker = analysis_worker;
         this.control_worker = control_worker;
-        
         this.grapher = new Grapher(100);
     }
     
     @Override
     public void run() {
+        // gather relevant data from workers
         final double laser_power = control_worker.getLastControllerOutput();
         final double analyzer_output = analysis_worker.queryAnalyzerForIntermittentOutput();
         final int FPS = analysis_worker.getCurrentFPS();
         final int last_analysis_time = (int) analysis_worker.getLastAnalysisTime();
         
+        // update the grapher
         grapher.addDataPoint(analyzer_output);
+        
+        // display data in MonitorGUI
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 gui.updateLaserPowerDisplay(laser_power);
@@ -73,9 +97,12 @@ class MonitorTask extends TimerTask {
             }
         });
     }
-    
 }
 
+/** 
+ * Wrapped around GraphData for easier processing
+ * @author Marcel Stefko
+ */
 class Grapher {
     private final GraphData graph_data;
     private int n_max;

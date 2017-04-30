@@ -47,6 +47,10 @@ public class ControllerFactory extends AbstractFactory<ControllerSetupPanel>{
         selectProduct("Manual");
     }
     
+    /**
+     * Set maximal output value of the constructed controller
+     * @param max_controller_output
+     */
     public void setMaxControllerOutput(double max_controller_output) {
         this.max_controller_output = max_controller_output; 
     }

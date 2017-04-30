@@ -85,10 +85,19 @@ public final class LaserFactory {
         selected_property = property;
     }
     
+    /**
+     * If true, create a VirtualLaser, otherwise a MMLaser
+     * @param is_laser_virtual
+     */
     public void setLaserVirtual(boolean is_laser_virtual) {
         this.is_laser_virtual = is_laser_virtual;
     }
     
+    /**
+     * Sets upper boundary for laser output, higher inputs from controller will
+     * be constrained.
+     * @param max_laser_power
+     */
     public void setMaxLaserPower(double max_laser_power) {
         this.max_laser_power = max_laser_power;
     }

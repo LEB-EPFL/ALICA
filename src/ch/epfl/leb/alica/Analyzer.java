@@ -39,11 +39,19 @@ public interface Analyzer {
     public void processImage(Object image, int image_width, int image_height, double pixel_size_um, long time_ms);
     
     /**
-     * Return output of the analyzer based on current internal state.
-     * @return output value of the analyzer to be passed to the controller
+     * Return intermittent output of the analyzer based on current internal state.
+     * Internal state of the controller should stay the same. Use
+     *  getBatchOutput() for values to be passed to the controller.
+     * @return output value of the analyzer to be plotted by the GUI.
      */
     public double getIntermittentOutput();
     
+    /**
+     * Returns output of the analyzer to be used by a controller. This can also
+     * modify the internal state of the analyzer (such as flushing intermittent
+     * value cache).
+     * @return output value of the analyzer to be used by the controller
+     */
     public double getBatchOutput();
     
     /**

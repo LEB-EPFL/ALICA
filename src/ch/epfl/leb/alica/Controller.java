@@ -42,6 +42,7 @@ public interface Controller {
      * Receives next input from the WorkerThread (this is the batched output of the
      * analyzer)
      * @param value input to be processed
+     * @return output of the controller as a response to the input
      */
     public double nextValue(double value);
     

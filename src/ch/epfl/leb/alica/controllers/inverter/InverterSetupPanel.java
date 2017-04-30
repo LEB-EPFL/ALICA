@@ -80,10 +80,7 @@ public class InverterSetupPanel extends ControllerSetupPanel {
     private javax.swing.JLabel jLabel2;
     // End of variables declaration//GEN-END:variables
 
-    /**
-     *
-     * @return
-     */
+
     @Override
     public Controller initController(double max_controller_output) {
         double input_at_1mw = Double.parseDouble(e_input_at_1mw.getText());

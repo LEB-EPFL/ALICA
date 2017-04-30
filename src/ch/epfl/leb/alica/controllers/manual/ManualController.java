@@ -32,11 +32,15 @@ public class ManualController implements Controller {
      */
     protected double maximum = 0.0;
     
+    /**
+     * Output value
+     */
     protected double setpoint;
     
     /**
      * Initialize with maximal output value
      * @param maximum max output value
+     * @param initial_output starting value of output
      */
     public ManualController(double maximum, double initial_output) {
         if (maximum<0.0) {

@@ -108,11 +108,20 @@ public final class AlicaCore {
         Logger.getLogger(this.getClass().getName()).log(Level.FINE, out);
     }
     
+    /**
+     * Inform factories of maximal laser power value.
+     * @param max_laser_power maximal laser power value
+     */
     public void setMaxLaserPower(double max_laser_power) {
         this.controller_factory.setMaxControllerOutput(max_laser_power);
         this.laser_factory.setMaxLaserPower(max_laser_power);
     }
     
+    /**
+     * Inform factories that the laser should only display its output, not
+     * really communicate with the hardware.
+     * @param is_laser_virtual true if virtual, false if real
+     */
     public void setLaserVirtual(boolean is_laser_virtual) {
         this.laser_factory.setLaserVirtual(is_laser_virtual);
     }

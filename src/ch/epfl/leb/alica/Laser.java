@@ -42,6 +42,13 @@ public interface Laser {
     public double getLaserPower() throws Exception;
     
     /**
+     * Returns cached value of laser power, without querying the hardware
+     * for actual value.
+     * @return cached laser power value
+     */
+    public double getLaserPowerCached();
+    
+    /**
      * 
      * @return maximal allowed value of laser power
      */

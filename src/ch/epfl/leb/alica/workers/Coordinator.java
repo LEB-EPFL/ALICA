@@ -22,23 +22,12 @@ package ch.epfl.leb.alica.workers;
 import ch.epfl.leb.alica.Analyzer;
 import ch.epfl.leb.alica.Controller;
 import ch.epfl.leb.alica.Laser;
-import com.google.common.eventbus.Subscribe;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import mmcorej.CMMCore;
 import org.micromanager.Studio;
-import org.micromanager.data.Coords;
-import org.micromanager.data.Image;
-import org.micromanager.data.NewImageEvent;
-import org.micromanager.events.LiveModeEvent;
-import org.micromanager.internal.graph.GraphData;
 
 /**
- * The workhorse of the analysis. Grabs images from the MM core, analyzes them,
- * and controls the laser power while running.
+ * Coordinates workhorses of the analysis.
  * @author Marcel Stefko
  */
 public class Coordinator {
@@ -97,20 +86,13 @@ public class Coordinator {
         this.monitor_worker.scheduleExecution(2000, 100);
         this.analysis_worker.start();
         
-        
-        
-        
-        
         // display the GUI
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 gui.setVisible(true);
             }
         });
-        
-
     }
-    
     
     /**
      * Request the threads to stop.
