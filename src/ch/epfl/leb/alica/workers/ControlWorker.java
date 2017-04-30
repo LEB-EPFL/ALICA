@@ -82,7 +82,7 @@ class ControlTask extends TimerTask {
             try {
                 laser.setLaserPower(last_controller_output);
             } catch (Exception ex) {
-                Logger.getLogger(ControlWorker.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ControlWorker.class.getName()).log(Level.SEVERE, "Error in setting laser power.", ex);
             }
         }
     }

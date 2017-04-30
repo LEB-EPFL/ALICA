@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2017 Laboratory of Experimental Biophysics
  * Ecole Polytechnique Federale de Lausanne
  * 
@@ -23,11 +23,10 @@ import ch.epfl.leb.alica.Laser;
 import org.micromanager.Studio;
 
 /**
- * A virtual laser which does not actually output the values to the laser,
- * only to the GUI and the debug MM log.
+ * A MicroManager laser implementation
  * @author Marcel Stefko
  */
-public class VirtualLaser implements Laser {
+public class MMLaser implements Laser {
     private final Studio studio;
     
     private final String device_name;
@@ -37,14 +36,14 @@ public class VirtualLaser implements Laser {
     private double current_power_cached = 0.0;
     
     /**
-     * Initialize the virtual laser
+     * Initialize the MicroManager laser
      * @param studio MMStudio
      * @param device_name MM identifier of the device
      * @param property_name MM identifier of the property to be controlled
      * @param min_power minimal allowed property value
      * @param max_power maximal allowed property value
      */
-    public VirtualLaser(Studio studio, String device_name, String property_name, 
+    public MMLaser(Studio studio, String device_name, String property_name, 
             double min_power, double max_power) {
         this.studio = studio;
         this.device_name = device_name;
@@ -64,8 +63,10 @@ public class VirtualLaser implements Laser {
         } else {
             actual_power = desired_power;
         }
+
+        studio.core().logMessage(String.format("Setting laserpower to: %8.4f", actual_power), true);
+        studio.core().setProperty(device_name, property_name, actual_power);
         current_power_cached = actual_power;
-        studio.core().logMessage(String.format("Virtual: Setting power to: %8.4f", actual_power), true);
         return actual_power;
     }
 
@@ -74,7 +75,7 @@ public class VirtualLaser implements Laser {
         current_power_cached = Double.parseDouble(studio.core().getProperty(device_name, property_name));
         return current_power_cached;
     }
-    
+
     public double getLaserPowerCached() {
         return current_power_cached;
     }
@@ -98,4 +99,5 @@ public class VirtualLaser implements Laser {
     public String getPropertyName() {
         return property_name;
     }
+    
 }
