@@ -92,7 +92,7 @@ public class MMLaser implements Laser {
 
     @Override
     public String getDeviceName() {
-        return "V:"+device_name;
+        return device_name;
     }
 
     @Override

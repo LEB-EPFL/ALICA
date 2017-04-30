@@ -107,6 +107,9 @@ public final class LaserFactory {
      * @return initialized Laser
      */
     public Laser build() {
-        return new VirtualLaser(studio, selected_name, selected_property, 0.0, max_laser_power);
+        if (this.is_laser_virtual)
+            return new VirtualLaser(studio, selected_name, selected_property, 0.0, max_laser_power);
+        else
+            return new MMLaser(studio, selected_name, selected_property, 0.0, max_laser_power);
     }
 }
