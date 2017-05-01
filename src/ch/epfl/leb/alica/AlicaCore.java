@@ -45,6 +45,8 @@ public final class AlicaCore {
     private final ControllerFactory controller_factory;
     private final LaserFactory laser_factory;
     
+    private int controller_tick_rate_ms = 500;
+    
 
     
     // private constructor disables instantiation
@@ -126,6 +128,11 @@ public final class AlicaCore {
         this.laser_factory.setLaserVirtual(is_laser_virtual);
     }
     
+    public void setControlWorkerTickRate(int controller_tick_rate_ms) {
+        this.controller_tick_rate_ms = controller_tick_rate_ms;
+    }
+    
+    
     
     /**
      *
@@ -158,7 +165,8 @@ public final class AlicaCore {
      */
     public void startWorkers(ImagingMode imaging_mode) {
         coordinator = new Coordinator(studio, analyzer_factory.build(), 
-                controller_factory.build(), laser_factory.build(), imaging_mode);
+                controller_factory.build(), laser_factory.build(), imaging_mode,
+                controller_tick_rate_ms);
     }
     
     /**

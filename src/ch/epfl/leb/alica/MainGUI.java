@@ -165,6 +165,8 @@ public final class MainGUI extends JFrame {
         jLabel5 = new javax.swing.JLabel();
         e_laser_max_power = new javax.swing.JTextField();
         rb_source_acquisition = new javax.swing.JRadioButton();
+        jLabel6 = new javax.swing.JLabel();
+        e_controller_tickrate = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setResizable(false);
@@ -295,45 +297,34 @@ public final class MainGUI extends JFrame {
         buttonGroup_imaging_mode.add(rb_source_acquisition);
         rb_source_acquisition.setText("Next acquisition");
 
+        jLabel6.setText("Controller tick rate [ms]:");
+
+        e_controller_tickrate.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
+        e_controller_tickrate.setText("1000");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(440, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(b_worker_start)
+                .addGap(31, 31, 31)
+                .addComponent(b_worker_stop)
+                .addGap(62, 62, 62)
                 .addComponent(b_print_loaded_devices)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(b_exit_plugin)
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(l_title)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(b_worker_start)
-                        .addGap(18, 18, 18)
-                        .addComponent(b_worker_stop)
-                        .addGap(75, 75, 75))))
+                .addComponent(l_title)
+                .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel1)
                     .addComponent(l_titletext)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(18, 18, 18)
-                        .addComponent(cb_analyzer_setup, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(77, 77, 77)
-                        .addComponent(jLabel3)
-                        .addGap(18, 18, 18)
-                        .addComponent(cb_controller_setup, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(80, 80, 80)
-                        .addComponent(jLabel4)
-                        .addGap(18, 18, 18)
-                        .addComponent(cb_laser_setup, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -357,8 +348,26 @@ public final class MainGUI extends JFrame {
                                     .addComponent(rb_source_live_pipeline)
                                     .addComponent(rb_source_mmcore)
                                     .addComponent(rb_source_acquisition))
-                                .addGap(0, 0, Short.MAX_VALUE)))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(18, 18, 18)
+                        .addComponent(cb_analyzer_setup, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(77, 77, 77)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel6)
+                                .addGap(18, 18, 18)
+                                .addComponent(e_controller_tickrate, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addGap(18, 18, 18)
+                                .addComponent(cb_controller_setup, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(80, 80, 80)
+                                .addComponent(jLabel4)
+                                .addGap(18, 18, 18)
+                                .addComponent(cb_laser_setup, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -374,7 +383,10 @@ public final class MainGUI extends JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(rb_source_live_pipeline)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(rb_source_acquisition)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(rb_source_acquisition)
+                    .addComponent(jLabel6)
+                    .addComponent(e_controller_tickrate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(13, 13, 13)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
@@ -389,14 +401,12 @@ public final class MainGUI extends JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(controller_panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(analyzer_panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(b_worker_stop)
-                            .addComponent(b_worker_start))
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(b_exit_plugin)
-                            .addComponent(b_print_loaded_devices))
+                            .addComponent(b_print_loaded_devices)
+                            .addComponent(b_worker_start)
+                            .addComponent(b_worker_stop))
                         .addGap(11, 11, 11))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(cb_laser_properties, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -406,7 +416,7 @@ public final class MainGUI extends JFrame {
                             .addComponent(e_laser_max_power, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(chkb_laser_is_virtual)
-                        .addContainerGap(160, Short.MAX_VALUE))))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
         pack();
@@ -446,7 +456,7 @@ public final class MainGUI extends JFrame {
         try {
             max_laser_power = Double.parseDouble(e_laser_max_power.getText());
         } catch (NumberFormatException ex) {
-            IJ.showMessage("Error in parsing laser power value.");
+            MMStudio.getInstance().logs().showError("Error in parsing laser power value.");
             return;
         }
         alica_core.setMaxLaserPower(max_laser_power);
@@ -460,6 +470,20 @@ public final class MainGUI extends JFrame {
             imaging_mode = ImagingMode.LIVE;
         else
             imaging_mode = ImagingMode.NEXT_ACQUISITION;
+        
+        // parse controller tick rate
+        int controller_tick_rate;
+        try {
+            controller_tick_rate = Integer.parseInt(e_controller_tickrate.getText());
+        } catch (NumberFormatException ex) {
+            MMStudio.getInstance().logs().showError("Error in parsing controller tick rate.");
+            return;
+        }
+        if (controller_tick_rate<100) {
+            MMStudio.getInstance().logs().showError("Controller tick rate must be at least 100ms.");
+            return;
+        }
+        alica_core.setControlWorkerTickRate(controller_tick_rate);
         
         // launch the worker
         try {
@@ -497,12 +521,14 @@ public final class MainGUI extends JFrame {
     private javax.swing.JComboBox cb_laser_setup;
     private javax.swing.JCheckBox chkb_laser_is_virtual;
     private javax.swing.JPanel controller_panel;
+    private javax.swing.JTextField e_controller_tickrate;
     private javax.swing.JTextField e_laser_max_power;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel l_title;
     private javax.swing.JLabel l_titletext;
     private javax.swing.JRadioButton rb_source_acquisition;

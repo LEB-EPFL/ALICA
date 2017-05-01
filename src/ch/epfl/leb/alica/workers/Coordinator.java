@@ -53,7 +53,8 @@ public class Coordinator {
      * @param draw_from_core whether the images should be drawn from the MMCore
      *  (true), or from the end of the processing pipeline (false)
      */
-    public Coordinator(Studio studio, Analyzer analyzer, Controller controller, Laser laser, ImagingMode imaging_mode) {
+    public Coordinator(Studio studio, Analyzer analyzer, Controller controller, 
+            Laser laser, ImagingMode imaging_mode, int controller_tick_rate_ms) {
         // log the start time
         this.thread_start_time_ms = System.currentTimeMillis();
         // sanitize input
@@ -74,7 +75,7 @@ public class Coordinator {
         
         // this is a Timer which executes its internal task periodically
         this.control_worker = new ControlWorker(analysis_worker, controller, laser);
-        this.control_worker.scheduleExecution(5000, 500);
+        this.control_worker.scheduleExecution(1000, controller_tick_rate_ms);
         
         // initialize the GUI
         gui = new MonitorGUI(this, 
@@ -86,7 +87,7 @@ public class Coordinator {
         
         // this updates the GUI with info from the workers
         this.monitor_worker = new MonitorWorker(gui, analysis_worker, control_worker);
-        this.monitor_worker.scheduleExecution(2000, 100);
+        this.monitor_worker.scheduleExecution(500, 100);
         this.analysis_worker.start();
         
         // display the GUI
