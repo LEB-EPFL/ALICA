@@ -20,8 +20,12 @@
 package ch.epfl.leb.alica;
 
 /**
- *
- * @author stefko
+ * Possible ways for the plugin to grab images from micromanager.
+ *  - GRAB_FROM_CORE: Query directly the MMCore getLastImage() method
+ *  - LIVE: Get images from the Datastore associated with live() mode.
+ *  - NEXT_ACQUISITION: Get images from the Datastore which is associated
+ *  with the next acquisition that will be started.
+ * @author Marcel Stefko
  */
 public enum ImagingMode {
     GRAB_FROM_CORE,
