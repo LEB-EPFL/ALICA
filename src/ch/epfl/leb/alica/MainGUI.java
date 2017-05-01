@@ -434,6 +434,7 @@ public final class MainGUI extends JFrame {
     }//GEN-LAST:event_cb_laser_propertiesPopupMenuWillBecomeInvisible
 
     private void b_worker_startActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_worker_startActionPerformed
+        // parse laser power entry
         double max_laser_power;
         try {
             max_laser_power = Double.parseDouble(e_laser_max_power.getText());
@@ -443,9 +444,19 @@ public final class MainGUI extends JFrame {
         }
         alica_core.setMaxLaserPower(max_laser_power);
         alica_core.setLaserVirtual(chkb_laser_is_virtual.isSelected());
+        
+        // parse imaging mode
+        ImagingMode imaging_mode;
+        if (rb_source_mmcore.isSelected())
+            imaging_mode = ImagingMode.GRAB_FROM_CORE;
+        else if (rb_source_pipeline.isSelected())
+            imaging_mode = ImagingMode.LIVE;
+        else
+            imaging_mode = ImagingMode.NEXT_ACQUISITION;
+        
         // launch the worker
         try {
-            alica_core.startWorkers(rb_source_mmcore.isSelected());
+            alica_core.startWorkers(imaging_mode);
         } catch (RuntimeException ex) {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
             IJ.showMessage("Error in worker initialization. See log.");

@@ -126,6 +126,7 @@ public final class AlicaCore {
         this.laser_factory.setLaserVirtual(is_laser_virtual);
     }
     
+    
     /**
      *
      * @return AnalyzerFactory
@@ -153,12 +154,11 @@ public final class AlicaCore {
     /**
      * Builds products from their factories using current settings, and
  starts the Coordinator (analysis is started)
-     * @param draw_from_core true if images should be drawn directly from the
-     *  MMCore, false if the processing pipeline should be used
+     * @param imaging_mode
      */
-    public void startWorkers(boolean draw_from_core) {
+    public void startWorkers(ImagingMode imaging_mode) {
         coordinator = new Coordinator(studio, analyzer_factory.build(), 
-                controller_factory.build(), laser_factory.build(), draw_from_core);
+                controller_factory.build(), laser_factory.build(), imaging_mode);
     }
     
     /**

@@ -21,6 +21,7 @@ package ch.epfl.leb.alica.workers;
 
 import ch.epfl.leb.alica.Analyzer;
 import ch.epfl.leb.alica.Controller;
+import ch.epfl.leb.alica.ImagingMode;
 import ch.epfl.leb.alica.Laser;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -51,7 +52,7 @@ public class Coordinator {
      * @param draw_from_core whether the images should be drawn from the MMCore
      *  (true), or from the end of the processing pipeline (false)
      */
-    public Coordinator(Studio studio, Analyzer analyzer, Controller controller, Laser laser, boolean draw_from_core) {
+    public Coordinator(Studio studio, Analyzer analyzer, Controller controller, Laser laser, ImagingMode imaging_mode) {
         // log the start time
         this.thread_start_time_ms = System.currentTimeMillis();
         // sanitize input
@@ -66,7 +67,7 @@ public class Coordinator {
         this.controller = controller;
         
         // analysis worker is a thread which runs continuously
-        this.analysis_worker = new AnalysisWorker(this, studio, analyzer, draw_from_core);
+        this.analysis_worker = new AnalysisWorker(this, studio, analyzer, imaging_mode);
         studio.events().registerForEvents(this.analysis_worker);
         
         // this is a Timer which executes its internal task periodically

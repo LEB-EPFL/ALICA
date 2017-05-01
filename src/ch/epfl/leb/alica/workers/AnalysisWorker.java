@@ -20,6 +20,7 @@
 package ch.epfl.leb.alica.workers;
 
 import ch.epfl.leb.alica.Analyzer;
+import ch.epfl.leb.alica.ImagingMode;
 import com.google.common.eventbus.Subscribe;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,7 +44,7 @@ public class AnalysisWorker extends Thread {
     private final Coordinator coordinator;
     private final Studio studio;
     private final Analyzer analyzer;
-    private final boolean draw_from_core;
+    private final ImagingMode imaging_mode;
     
     // recieves signals from the live view Datastore, and passes the latest
     // Coords to last_live_image_coords
@@ -62,15 +63,15 @@ public class AnalysisWorker extends Thread {
      * @param coordinator parent Coordinator
      * @param studio for logging and image queries
      * @param analyzer this Analyzer's processImage() method is called on gathered images
-     * @param draw_from_core if true, draw from core, otherwise from live mode Datastore
+     * @param imaging_mode
      */
-    public AnalysisWorker(Coordinator coordinator, Studio studio, Analyzer analyzer, boolean draw_from_core) {
+    public AnalysisWorker(Coordinator coordinator, Studio studio, Analyzer analyzer, ImagingMode imaging_mode) {
         this.setName("Analysis Worker");
         
         this.coordinator = coordinator;
         this.studio = studio;
         this.analyzer = analyzer;
-        this.draw_from_core = draw_from_core;
+        this.imaging_mode = imaging_mode;
         
         this.new_image_watcher = new NewLiveImageWatcher(this.analyzer, this);
     }
@@ -90,7 +91,7 @@ public class AnalysisWorker extends Thread {
      */
     @Subscribe
     public void liveModeStarted(LiveModeEvent evt) {
-        if (evt.getIsOn() && !draw_from_core) {
+        if (evt.getIsOn() && imaging_mode.equals(ImagingMode.LIVE)) {
             this.studio.live().getDisplay().getDatastore().registerForEvents(this.new_image_watcher);
         }
     }
@@ -105,7 +106,7 @@ public class AnalysisWorker extends Thread {
         // loop while asked to stop
         while (!this.stop_flag) {
             // either draw from core or live mode datastore
-            if (draw_from_core)
+            if (imaging_mode.equals(ImagingMode.GRAB_FROM_CORE))
                 getNewImageFromCoreAndAnalyze();
             else
                 getNewImageFromLiveAndAnalyze();
