@@ -54,6 +54,9 @@ public class MMLaser implements Laser {
 
     @Override
     public double setLaserPower(double desired_power) throws Exception {
+        // if NaN is recieved, do nothing
+        if (Double.isNaN(desired_power))
+            return current_power_cached;
         // constrain the input value
         double actual_power;
         if (desired_power > max_power) {
@@ -64,7 +67,12 @@ public class MMLaser implements Laser {
             actual_power = desired_power;
         }
 
-        studio.core().logMessage(String.format("Setting laserpower to: %8.4f", actual_power), true);
+        if (current_power_cached == actual_power) {
+            // do nothing
+            return current_power_cached;
+        }
+        
+        studio.logs().logMessage(String.format("Setting laser power to: %8.4f", actual_power));
         studio.core().setProperty(device_name, property_name, actual_power);
         current_power_cached = actual_power;
         return actual_power;

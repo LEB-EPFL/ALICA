@@ -29,8 +29,7 @@ import ij.IJ;
  */
 public class InvertController implements Controller {
     private double value_at_1_mw;
-    private double last_input = 1.0;
-
+    private double last_input = Double.NaN;
     /**
      * Maximal possible output value.
      */
@@ -71,6 +70,8 @@ public class InvertController implements Controller {
         // edge case of input being 0, return the maximal output value
         if (last_input == 0.0)
             return maximum;
+        if (Double.isNaN(last_input))
+            return Double.NaN;
         
         // calculate the output
         double out = value_at_1_mw * (1/last_input);
@@ -91,10 +92,6 @@ public class InvertController implements Controller {
 
     @Override
     public double nextValue(double value) {
-        if (Double.isNaN(value)) {
-            // do nothing
-            return getCurrentOutput();
-        }
         last_input = value;
         return getCurrentOutput();
     }

@@ -64,8 +64,14 @@ public class VirtualLaser implements Laser {
         } else {
             actual_power = desired_power;
         }
+        
+        if (current_power_cached == actual_power) {
+            // do nothing
+            return current_power_cached;
+        }
+        
         current_power_cached = actual_power;
-        studio.core().logMessage(String.format("Virtual: Setting power to: %8.4f", actual_power), true);
+        studio.logs().logMessage(String.format("Virtual: Setting power to: %8.4f", actual_power));
         return actual_power;
     }
 

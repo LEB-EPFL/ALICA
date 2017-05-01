@@ -96,11 +96,7 @@ class ControlTask extends TimerTask {
         synchronized(this) {
             // get batch output of the analyzer
             double analyzer_output = analysis_worker.queryAnalyzerForBatchOutput();
-            // sanitize output
-            if (Double.isNaN(analyzer_output))
-                analyzer_output = last_analyzer_output;
-            else
-                last_analyzer_output = analyzer_output;
+            last_analyzer_output = analyzer_output;
             // pass output to the controller and get next output
             last_controller_output = controller.nextValue(analyzer_output);
             // adjust the laser power

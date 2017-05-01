@@ -71,8 +71,8 @@ public class SpotCounter implements Analyzer {
         ShortProcessor sp = new ShortProcessor(image_width, image_height);
         sp.setPixels(image);
         ResultsTable results = core.analyze(sp.duplicate());
-        intermittent_output = results.getValue("n", results.getCounter()-1) ;// fov_area;
-        MMStudio.getInstance().logs().logDebugMessage(String.format("SpotCounter: Image: %d, Density: %10.5f\n", results.getCounter(), intermittent_output));
+        intermittent_output = results.getValue("n", results.getCounter()-1) / fov_area;
+        MMStudio.getInstance().logs().logDebugMessage(String.format("SpotCounter: Image: %d, Density: %10.5f\n per um", results.getCounter(), intermittent_output));
         intermittent_outputs.add(intermittent_output);
     }
 
