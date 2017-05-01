@@ -23,6 +23,7 @@ import ij.IJ;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
+import org.micromanager.internal.MMStudio;
 
 /**
  * Main controlling GUI for the ALICA plugin. This is a singleton which
@@ -126,8 +127,7 @@ public final class MainGUI extends JFrame {
                 cb_laser_properties.addItem(s);
             }
         } catch (Exception ex) {
-            IJ.error("Error in getting selected device properties.");
-            Logger.getLogger(MainGUI.class.getName()).log(Level.SEVERE, null, ex);
+            MMStudio.getInstance().logs().logError(ex, "Error in getting selected device properties.");
             return;
         }
         cb_laser_properties.setSelectedIndex(0);
@@ -142,7 +142,7 @@ public final class MainGUI extends JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        buttonGroup_source = new javax.swing.ButtonGroup();
+        buttonGroup_imaging_mode = new javax.swing.ButtonGroup();
         l_title = new javax.swing.JLabel();
         b_exit_plugin = new javax.swing.JButton();
         l_titletext = new javax.swing.JLabel();
@@ -151,7 +151,7 @@ public final class MainGUI extends JFrame {
         b_worker_stop = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         rb_source_mmcore = new javax.swing.JRadioButton();
-        rb_source_pipeline = new javax.swing.JRadioButton();
+        rb_source_live_pipeline = new javax.swing.JRadioButton();
         analyzer_panel = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         cb_analyzer_setup = new javax.swing.JComboBox();
@@ -164,6 +164,7 @@ public final class MainGUI extends JFrame {
         chkb_laser_is_virtual = new javax.swing.JCheckBox();
         jLabel5 = new javax.swing.JLabel();
         e_laser_max_power = new javax.swing.JTextField();
+        rb_source_acquisition = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setResizable(false);
@@ -204,12 +205,12 @@ public final class MainGUI extends JFrame {
 
         jLabel1.setText("Image source");
 
-        buttonGroup_source.add(rb_source_mmcore);
+        buttonGroup_imaging_mode.add(rb_source_mmcore);
         rb_source_mmcore.setSelected(true);
         rb_source_mmcore.setText("MM Core");
 
-        buttonGroup_source.add(rb_source_pipeline);
-        rb_source_pipeline.setText("Pipeline");
+        buttonGroup_imaging_mode.add(rb_source_live_pipeline);
+        rb_source_live_pipeline.setText("Live mode");
 
         analyzer_panel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         analyzer_panel.setPreferredSize(new java.awt.Dimension(210, 160));
@@ -291,6 +292,9 @@ public final class MainGUI extends JFrame {
         e_laser_max_power.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
         e_laser_max_power.setText("50");
 
+        buttonGroup_imaging_mode.add(rb_source_acquisition);
+        rb_source_acquisition.setText("Next acquisition");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -350,8 +354,9 @@ public final class MainGUI extends JFrame {
                                         .addGap(0, 0, Short.MAX_VALUE))))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(rb_source_pipeline)
-                                    .addComponent(rb_source_mmcore))
+                                    .addComponent(rb_source_live_pipeline)
+                                    .addComponent(rb_source_mmcore)
+                                    .addComponent(rb_source_acquisition))
                                 .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -367,8 +372,10 @@ public final class MainGUI extends JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(rb_source_mmcore)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(rb_source_pipeline)
-                .addGap(18, 18, 18)
+                .addComponent(rb_source_live_pipeline)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(rb_source_acquisition)
+                .addGap(13, 13, 13)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(cb_analyzer_setup, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -449,7 +456,7 @@ public final class MainGUI extends JFrame {
         ImagingMode imaging_mode;
         if (rb_source_mmcore.isSelected())
             imaging_mode = ImagingMode.GRAB_FROM_CORE;
-        else if (rb_source_pipeline.isSelected())
+        else if (rb_source_live_pipeline.isSelected())
             imaging_mode = ImagingMode.LIVE;
         else
             imaging_mode = ImagingMode.NEXT_ACQUISITION;
@@ -458,8 +465,7 @@ public final class MainGUI extends JFrame {
         try {
             alica_core.startWorkers(imaging_mode);
         } catch (RuntimeException ex) {
-            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-            IJ.showMessage("Error in worker initialization. See log.");
+            MMStudio.getInstance().logs().showError(ex, "Error in worker initialization.");
             return;
         }
         
@@ -484,7 +490,7 @@ public final class MainGUI extends JFrame {
     private javax.swing.JButton b_print_loaded_devices;
     private javax.swing.JButton b_worker_start;
     private javax.swing.JButton b_worker_stop;
-    private javax.swing.ButtonGroup buttonGroup_source;
+    private javax.swing.ButtonGroup buttonGroup_imaging_mode;
     private javax.swing.JComboBox cb_analyzer_setup;
     private javax.swing.JComboBox cb_controller_setup;
     private javax.swing.JComboBox cb_laser_properties;
@@ -499,8 +505,9 @@ public final class MainGUI extends JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel l_title;
     private javax.swing.JLabel l_titletext;
+    private javax.swing.JRadioButton rb_source_acquisition;
+    private javax.swing.JRadioButton rb_source_live_pipeline;
     private javax.swing.JRadioButton rb_source_mmcore;
-    private javax.swing.JRadioButton rb_source_pipeline;
     // End of variables declaration//GEN-END:variables
 
     /**

@@ -22,11 +22,8 @@ package ch.epfl.leb.alica.analyzers.spotcounter;
 import ch.epfl.leb.alica.Analyzer;
 import ij.measure.ResultsTable;
 import ij.process.ShortProcessor;
-import java.awt.image.ColorModel;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JPanel;
+import org.micromanager.internal.MMStudio;
 
 /**
  *
@@ -75,7 +72,7 @@ public class SpotCounter implements Analyzer {
         sp.setPixels(image);
         ResultsTable results = core.analyze(sp.duplicate());
         intermittent_output = results.getValue("n", results.getCounter()-1) ;// fov_area;
-        Logger.getLogger(this.getName()).log(Level.SEVERE, String.format("Image: %d, Density: %10.5f\n", results.getCounter(), intermittent_output));
+        MMStudio.getInstance().logs().logDebugMessage(String.format("SpotCounter: Image: %d, Density: %10.5f\n", results.getCounter(), intermittent_output));
         intermittent_outputs.add(intermittent_output);
     }
 

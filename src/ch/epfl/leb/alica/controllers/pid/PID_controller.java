@@ -74,6 +74,10 @@ public class PID_controller implements Controller {
 
     @Override
     public double nextValue(double value) {
+        if (Double.isNaN(value)) {
+            // do nothing
+            return current_output;
+        }
         current_output = core.getOutput(value);
         return current_output;
     }

@@ -2,7 +2,7 @@
 
 <Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <NonVisualComponents>
-    <Component class="javax.swing.ButtonGroup" name="buttonGroup_source">
+    <Component class="javax.swing.ButtonGroup" name="buttonGroup_imaging_mode">
     </Component>
   </NonVisualComponents>
   <Properties>
@@ -94,8 +94,9 @@
                           </Group>
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="rb_source_pipeline" min="-2" max="-2" attributes="0"/>
+                                  <Component id="rb_source_live_pipeline" min="-2" max="-2" attributes="0"/>
                                   <Component id="rb_source_mmcore" min="-2" max="-2" attributes="0"/>
+                                  <Component id="rb_source_acquisition" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
@@ -118,8 +119,10 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="rb_source_mmcore" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="rb_source_pipeline" min="-2" max="-2" attributes="0"/>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="rb_source_live_pipeline" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="rb_source_acquisition" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="cb_analyzer_setup" alignment="3" min="-2" pref="20" max="-2" attributes="0"/>
@@ -218,18 +221,18 @@
     <Component class="javax.swing.JRadioButton" name="rb_source_mmcore">
       <Properties>
         <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
-          <ComponentRef name="buttonGroup_source"/>
+          <ComponentRef name="buttonGroup_imaging_mode"/>
         </Property>
         <Property name="selected" type="boolean" value="true"/>
         <Property name="text" type="java.lang.String" value="MM Core"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JRadioButton" name="rb_source_pipeline">
+    <Component class="javax.swing.JRadioButton" name="rb_source_live_pipeline">
       <Properties>
         <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
-          <ComponentRef name="buttonGroup_source"/>
+          <ComponentRef name="buttonGroup_imaging_mode"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Pipeline"/>
+        <Property name="text" type="java.lang.String" value="Live mode"/>
       </Properties>
     </Component>
     <Container class="javax.swing.JPanel" name="analyzer_panel">
@@ -348,6 +351,14 @@
       <Properties>
         <Property name="horizontalAlignment" type="int" value="11"/>
         <Property name="text" type="java.lang.String" value="50"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JRadioButton" name="rb_source_acquisition">
+      <Properties>
+        <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+          <ComponentRef name="buttonGroup_imaging_mode"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="Next acquisition"/>
       </Properties>
     </Component>
   </SubComponents>

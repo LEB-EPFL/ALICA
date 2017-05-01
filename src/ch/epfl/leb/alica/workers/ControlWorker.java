@@ -23,8 +23,7 @@ import ch.epfl.leb.alica.Controller;
 import ch.epfl.leb.alica.Laser;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.micromanager.internal.MMStudio;
 
 /**
  * A Timer which schedules a task that regularly queries the AnalysisWorker
@@ -108,7 +107,7 @@ class ControlTask extends TimerTask {
             try {
                 laser.setLaserPower(last_controller_output);
             } catch (Exception ex) {
-                Logger.getLogger(ControlWorker.class.getName()).log(Level.SEVERE, "Error in setting laser power.", ex);
+                MMStudio.getInstance().logs().showError(ex, "Error in setting laser power to "+ last_controller_output);
             }
         }
     }

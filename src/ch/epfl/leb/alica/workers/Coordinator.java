@@ -35,6 +35,7 @@ public class Coordinator {
     private boolean stop_flag = false;
     private final long thread_start_time_ms;
     
+    private final Studio studio;
     private final Controller controller;
     
     private final AnalysisWorker analysis_worker;
@@ -64,6 +65,7 @@ public class Coordinator {
             throw new NullPointerException("You need to set a controller!");
         if (laser == null)
             throw new NullPointerException("You need to set a laser!");
+        this.studio = studio;
         this.controller = controller;
         
         // analysis worker is a thread which runs continuously
@@ -108,15 +110,16 @@ public class Coordinator {
             analysis_worker.join(3000);
         } catch (InterruptedException ex) {
             // exit ungracefully
-            Logger.getLogger(Coordinator.class.getName()).log(Level.SEVERE, null, ex);
+            studio.logs().logError(ex, "Analysis worker shutdown was interrupted.");
             throw new RuntimeException("Analysis worker shutdown was interrupted.");
         }
         // if after 3 seconds the thread hasn't died, interrupt it
         if (analysis_worker.isAlive()) {
+            studio.logs().logError("Analysis worker is still alive after 3 seconds, interrupting.");
             try {
                 analysis_worker.interrupt();
             } catch (RuntimeException ex) {
-                Logger.getLogger(Coordinator.class.getName()).log(Level.SEVERE, null, ex);
+                studio.logs().logError(ex);
             }
         }
         

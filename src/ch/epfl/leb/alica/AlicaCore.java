@@ -101,11 +101,11 @@ public final class AlicaCore {
                     out = out.concat("  - "+property+": "+propValue+"\n");
                 }
             } catch (Exception ex) {
-                Logger.getLogger(AlicaCore.class.getName()).log(Level.SEVERE, null, ex);
+                studio.logs().logError(ex, "Error in printing loaded devices.");
             }
         }
-        IJ.log(out);
-        Logger.getLogger(this.getClass().getName()).log(Level.FINE, out);
+        studio.logs().showMessage(out);
+        studio.logs().logMessage(out);
     }
     
     /**

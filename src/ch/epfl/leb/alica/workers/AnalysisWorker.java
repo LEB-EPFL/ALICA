@@ -26,8 +26,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.micromanager.Studio;
 import org.micromanager.data.Coords;
+import org.micromanager.data.Datastore;
 import org.micromanager.data.Image;
 import org.micromanager.data.NewImageEvent;
+import org.micromanager.events.AcquisitionStartedEvent;
 import org.micromanager.events.LiveModeEvent;
 
 /**
@@ -48,7 +50,7 @@ public class AnalysisWorker extends Thread {
     
     // recieves signals from the live view Datastore, and passes the latest
     // Coords to last_live_image_coords
-    private final NewLiveImageWatcher new_image_watcher;
+    private final NewImageWatcher new_image_watcher;
     private Coords last_live_image_coords = null;
     // for comparison with newly acquired images, to see if the image has
     // changed
@@ -73,7 +75,7 @@ public class AnalysisWorker extends Thread {
         this.analyzer = analyzer;
         this.imaging_mode = imaging_mode;
         
-        this.new_image_watcher = new NewLiveImageWatcher(this.analyzer, this);
+        this.new_image_watcher = new NewImageWatcher(this.analyzer, this);
     }
     
     /**
@@ -85,14 +87,26 @@ public class AnalysisWorker extends Thread {
     }
     
     /**
-     * Called by the MMCore to signalize there is a new live mode, so that we
-     * can registerForEvents the NewImageWatcher.
+     * Called by the MMCore to signalize there is a new live mode. 
+     * If the imaging mode is LIVE, the NewImageWatcher will be informed.
      * @param evt new live mode event
      */
     @Subscribe
     public void liveModeStarted(LiveModeEvent evt) {
         if (evt.getIsOn() && imaging_mode.equals(ImagingMode.LIVE)) {
-            this.studio.live().getDisplay().getDatastore().registerForEvents(this.new_image_watcher);
+            this.new_image_watcher.setLatestDatastore(this.studio.live().getDisplay().getDatastore());
+        }
+    }
+    
+    /**
+     * Called by the MMCore to signalize there is a new acquisition.
+     * If the imaging mode is NEXT_ACQUISITION, the NewImageWatcher will be informed.
+     * @param evt new acquisition started event
+     */
+    @Subscribe
+    public void acquisitionStarted(AcquisitionStartedEvent evt) {
+        if (imaging_mode.equals(ImagingMode.NEXT_ACQUISITION)) {
+            this.new_image_watcher.setLatestDatastore(evt.getDatastore());
         }
     }
     
@@ -109,7 +123,7 @@ public class AnalysisWorker extends Thread {
             if (imaging_mode.equals(ImagingMode.GRAB_FROM_CORE))
                 getNewImageFromCoreAndAnalyze();
             else
-                getNewImageFromLiveAndAnalyze();
+                getNewImageFromWatcherAndAnalyze();
             // increment fps counter after each image
             fps_count++;
             
@@ -123,12 +137,12 @@ public class AnalysisWorker extends Thread {
     }
     
     /**
-     * Grabs new images from the Datastore associated with Live mode, analyzes
+     * Grabs new images from the Datastore associated with the NewImageWatcher, analyzes
      * it.
      */
-    public void getNewImageFromLiveAndAnalyze() {
+    public void getNewImageFromWatcherAndAnalyze() {
         Coords current_coords;
-        // wait for image acquisition by NewLiveImageWatcher
+        // wait for image acquisition by NewImageWatcher
         synchronized(analyzer) {
             if (this.last_live_image_coords==null) {
                 try {
@@ -145,10 +159,10 @@ public class AnalysisWorker extends Thread {
         // we don't want the last_live_image_coords to change during this operation
         synchronized(analyzer) {
             try {
-                Image img = studio.live().getDisplay().getDatastore().getImage(last_live_image_coords);
+                Image img = this.new_image_watcher.getLatestDatastore().getImage(current_coords);
                 analyzer.processImage(img.getRawPixels(), img.getWidth(), img.getHeight(), studio.core().getPixelSizeUm(), image_acquisition_time);
             } catch (Exception ex) {
-                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+                studio.logs().logError(ex, "Error in image retrieval from datastore or processing by analyzer.");
             }
             // clear last image coords pointer
             this.last_live_image_coords = null;
@@ -166,7 +180,7 @@ public class AnalysisWorker extends Thread {
         try {
             new_image = studio.core().getLastImage();
         } catch (Exception ex) {
-            studio.core().logMessage("Failure by AnalysisWorker to recieve image from MMCore.", true);
+            studio.logs().logDebugMessage("Failure by AnalysisWorker to recieve image from MMCore.");
         }
         // if no image was detected, or is the same as last analyzed, wait 1ms and query again
         while (new_image==null || new_image.equals(this.last_core_image)) {
@@ -180,7 +194,7 @@ public class AnalysisWorker extends Thread {
                 image_acquisition_time = coordinator.getTimeMillis();
                 new_image = studio.core().getLastImage();
             } catch (Exception ex) {
-                studio.core().logMessage("Failure by AnalysisWorker to recieve image from MMCore.", true);
+                studio.logs().logDebugMessage("Failure by AnalysisWorker to recieve image from MMCore.");
             }
         }
         // so we have a new image, now we process it and store for later comparison
@@ -240,13 +254,39 @@ public class AnalysisWorker extends Thread {
  * informs the AnalysisWorker of any new images in the Datastore.
  * @author Marcel Stefko
  */
-class NewLiveImageWatcher {
+class NewImageWatcher {
     private final Object object_to_lock;
     private final AnalysisWorker thread_to_notify;
+    private Datastore latest_datastore;
     
-    public NewLiveImageWatcher(Object object_to_lock, AnalysisWorker thread_to_notify) {
+    public NewImageWatcher(Object object_to_lock, AnalysisWorker thread_to_notify) {
         this.object_to_lock = object_to_lock;
         this.thread_to_notify = thread_to_notify;
+        this.latest_datastore = null;
+    }
+    
+    public Datastore getLatestDatastore() {
+        if (latest_datastore==null) {
+            throw new NullPointerException("No datastore associated with watcher!");
+        }
+        return latest_datastore;
+    }
+    
+    /**
+     * Sets the latest datastore, and registers for its events.
+     * @param store 
+     */
+    public void setLatestDatastore(Datastore store) {
+        // try unregistering from previous datastore
+        if (latest_datastore != null) {
+            try {
+                latest_datastore.unregisterForEvents(this);
+            } catch (Exception ex) {
+                org.micromanager.internal.MMStudio.getInstance().logs().logError(ex, "Failure in unsubscribing NewImageWatcher from events.");
+            }
+        }
+        store.registerForEvents(this);
+        this.latest_datastore = store;
     }
     
     /**
