@@ -33,6 +33,7 @@ public final class LaserFactory {
     private String selected_property;
     private boolean is_laser_virtual;
     private double max_laser_power;
+    private double laser_power_deadzone = 0.0;
 
     /**
      * Initialize the factory with the MM studio
@@ -103,6 +104,16 @@ public final class LaserFactory {
     }
     
     /**
+     * Sets the deadzone of change of laser power output. For example, if set
+     * to 0.1, the laser would ignore requests for change of power that would
+     * be different by less than 10% from current output power.
+     * @param laser_power_deadzone deadzone size (NOT in percent)
+     */
+    public void setLaserPowerDeadzone(double laser_power_deadzone) {
+        this.laser_power_deadzone = laser_power_deadzone;
+    }
+    
+    /**
      * Build the laser using the current state
      * @return initialized Laser
      */
@@ -110,6 +121,6 @@ public final class LaserFactory {
         if (this.is_laser_virtual)
             return new VirtualLaser(studio, selected_name, selected_property, 0.0, max_laser_power);
         else
-            return new MMLaser(studio, selected_name, selected_property, 0.0, max_laser_power);
+            return new MMLaser(studio, selected_name, selected_property, 0.0, max_laser_power, laser_power_deadzone);
     }
 }

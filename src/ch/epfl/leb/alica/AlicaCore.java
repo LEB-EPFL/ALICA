@@ -120,6 +120,16 @@ public final class AlicaCore {
     }
     
     /**
+     * Sets the deadzone of change of laser power output. For example, if set
+     * to 0.1, the laser would ignore requests for change of power that would
+     * be different by less than 10% from current output power.
+     * @param laser_power_deadzone deadzone size (NOT in percent)
+     */
+    public void setLaserPowerDeadzone(double laser_power_deadzone) {
+        this.laser_factory.setLaserPowerDeadzone(laser_power_deadzone);
+    }
+    
+    /**
      * Inform factories that the laser should only display its output, not
      * really communicate with the hardware.
      * @param is_laser_virtual true if virtual, false if real

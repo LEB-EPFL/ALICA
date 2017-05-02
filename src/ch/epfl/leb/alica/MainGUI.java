@@ -168,6 +168,8 @@ public final class MainGUI extends JFrame {
         jLabel6 = new javax.swing.JLabel();
         e_controller_tickrate = new javax.swing.JTextField();
         b_save_last_run_log = new javax.swing.JButton();
+        jLabel7 = new javax.swing.JLabel();
+        e_laser_deadzone_pct = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setResizable(false);
@@ -310,6 +312,11 @@ public final class MainGUI extends JFrame {
             }
         });
 
+        jLabel7.setText("Deadzone [%]:");
+
+        e_laser_deadzone_pct.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
+        e_laser_deadzone_pct.setText("10");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -347,12 +354,17 @@ public final class MainGUI extends JFrame {
                                     .addComponent(cb_laser_properties, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addGroup(layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(chkb_laser_is_virtual)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jLabel5)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(e_laser_max_power, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                        .addGap(0, 0, Short.MAX_VALUE))))
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                .addGroup(layout.createSequentialGroup()
+                                                    .addComponent(jLabel5)
+                                                    .addGap(18, 18, 18)
+                                                    .addComponent(e_laser_max_power, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addGroup(layout.createSequentialGroup()
+                                                    .addComponent(jLabel7)
+                                                    .addGap(18, 18, 18)
+                                                    .addComponent(e_laser_deadzone_pct)))
+                                            .addComponent(chkb_laser_is_virtual))
+                                        .addGap(0, 10, Short.MAX_VALUE))))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(rb_source_live_pipeline)
@@ -377,7 +389,7 @@ public final class MainGUI extends JFrame {
                                 .addComponent(jLabel4)
                                 .addGap(18, 18, 18)
                                 .addComponent(cb_laser_setup, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addContainerGap(13, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -426,8 +438,12 @@ public final class MainGUI extends JFrame {
                             .addComponent(jLabel5)
                             .addComponent(e_laser_max_power, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel7)
+                            .addComponent(e_laser_deadzone_pct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(chkb_laser_is_virtual)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addContainerGap(93, Short.MAX_VALUE))))
         );
 
         pack();
@@ -467,10 +483,32 @@ public final class MainGUI extends JFrame {
         try {
             max_laser_power = Double.parseDouble(e_laser_max_power.getText());
         } catch (NumberFormatException ex) {
-            MMStudio.getInstance().logs().showError("Error in parsing laser power value.");
+            MMStudio.getInstance().logs().showError("Error in parsing max laser power value.");
+            return;
+        }
+        if (max_laser_power<=0.0) {
+            MMStudio.getInstance().logs().showError("Max laser power must be positive.");
             return;
         }
         alica_core.setMaxLaserPower(max_laser_power);
+        
+        // parse laser power change deadzone
+        double laser_power_deadzone_pct;
+        try {
+            laser_power_deadzone_pct = Double.parseDouble(e_laser_deadzone_pct.getText());
+        } catch (NumberFormatException ex) {
+            MMStudio.getInstance().logs().showError("Error in parsing laser power value.");
+            return;
+        }
+        // value sanity check
+        if (laser_power_deadzone_pct>50 || laser_power_deadzone_pct<0) {
+            MMStudio.getInstance().logs().showError("Laser power deadzone must be between 0% and 50%.");
+            return;
+        }
+        // convert from percentage
+        alica_core.setLaserPowerDeadzone(laser_power_deadzone_pct/100);
+        
+        // parse laser virtual
         alica_core.setLaserVirtual(chkb_laser_is_virtual.isSelected());
         
         // parse imaging mode
@@ -490,8 +528,8 @@ public final class MainGUI extends JFrame {
             MMStudio.getInstance().logs().showError("Error in parsing controller tick rate.");
             return;
         }
-        if (controller_tick_rate<100) {
-            MMStudio.getInstance().logs().showError("Controller tick rate must be at least 100ms.");
+        if (controller_tick_rate<50) {
+            MMStudio.getInstance().logs().showError("Controller tick rate must be at least 50ms.");
             return;
         }
         alica_core.setControlWorkerTickRate(controller_tick_rate);
@@ -538,6 +576,7 @@ public final class MainGUI extends JFrame {
     private javax.swing.JCheckBox chkb_laser_is_virtual;
     private javax.swing.JPanel controller_panel;
     private javax.swing.JTextField e_controller_tickrate;
+    private javax.swing.JTextField e_laser_deadzone_pct;
     private javax.swing.JTextField e_laser_max_power;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -545,6 +584,7 @@ public final class MainGUI extends JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel l_title;
     private javax.swing.JLabel l_titletext;
     private javax.swing.JRadioButton rb_source_acquisition;

@@ -20,6 +20,7 @@
 package ch.epfl.leb.alica.lasers;
 
 import ch.epfl.leb.alica.Laser;
+import static java.lang.Math.abs;
 import org.micromanager.Studio;
 
 /**
@@ -33,6 +34,7 @@ public class MMLaser implements Laser {
     private final String property_name;
     private final double min_power;
     private final double max_power;
+    private final double laser_power_deadzone;
     private double current_power_cached = 0.0;
     
     /**
@@ -42,14 +44,16 @@ public class MMLaser implements Laser {
      * @param property_name MM identifier of the property to be controlled
      * @param min_power minimal allowed property value
      * @param max_power maximal allowed property value
+     * @param laser_power_deadzone deadzone of laser power change requests
      */
     public MMLaser(Studio studio, String device_name, String property_name, 
-            double min_power, double max_power) {
+            double min_power, double max_power, double laser_power_deadzone) {
         this.studio = studio;
         this.device_name = device_name;
         this.property_name = property_name;
         this.min_power = min_power;
         this.max_power = max_power;
+        this.laser_power_deadzone = laser_power_deadzone;
     }
 
     @Override
@@ -57,6 +61,11 @@ public class MMLaser implements Laser {
         // if NaN is recieved, do nothing
         if (Double.isNaN(desired_power))
             return current_power_cached;
+        
+        // if power change is within deadzone, do nothing
+        if (abs(current_power_cached-desired_power)/current_power_cached < laser_power_deadzone) {
+            return current_power_cached;
+        }
         // constrain the input value
         double actual_power;
         if (desired_power > max_power) {
@@ -67,11 +76,7 @@ public class MMLaser implements Laser {
             actual_power = desired_power;
         }
 
-        if (current_power_cached == actual_power) {
-            // do nothing
-            return current_power_cached;
-        }
-        
+
         studio.logs().logMessage(String.format("Setting laser power to: %8.4f", actual_power));
         studio.core().setProperty(device_name, property_name, actual_power);
         current_power_cached = actual_power;
