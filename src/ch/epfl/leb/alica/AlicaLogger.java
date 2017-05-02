@@ -24,9 +24,6 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.micromanager.internal.MMStudio;
@@ -45,7 +42,10 @@ public class AlicaLogger {
         clear();
     }
     
-    public void clear() {
+    /**
+     * Resets logger, removes all data.
+     */
+    public final void clear() {
         log_map = new LinkedHashMap<Integer, LinkedHashMap<String,Double>>();
         parameter_set = new LinkedHashSet<String>();
     }
@@ -57,22 +57,47 @@ public class AlicaLogger {
         return instance;
     }
     
+    /**
+     * Add intermittent output of analyzer into log
+     * @param frame_no
+     * @param value value of the output
+     */
     public void addIntermittentOutput(int frame_no, double value) {
         addToLog(frame_no,"analyzer_intermittent_output",value);
     }
-    
+    /**
+     * Add batched output of analyzer into log
+     * @param frame_no
+     * @param value value of the output
+     */
     public void addBatchedOutput(int frame_no, double value) {
         addToLog(frame_no,"analyzer_batched_output",value);
     }
     
+    /**
+     * Add output of controller into log
+     * @param frame_no
+     * @param value value of the output
+     */
     public void addControllerOutput(int frame_no, double value) {
         addToLog(frame_no,"controller_output",value);
     }
     
+    /**
+     * Add setpoint of controller into log
+     * @param frame_no
+     * @param value value of the output
+     */
     public void addSetpoint(int frame_no, double setpoint) {
         addToLog(frame_no,"setpoint", setpoint);
     }
     
+    /**
+     * Add an arbitrary parameter into log
+     * @param frame_no
+     * @param value_name name of parameter
+     * @param value value of parameter
+     */
     public void addToLog(int frame_no, String value_name, double value) {
         parameter_set.add(value_name);
         if (!log_map.containsKey(frame_no))
@@ -80,6 +105,9 @@ public class AlicaLogger {
         log_map.get(frame_no).put(value_name, value);
     }
     
+    /**
+     * Saves the log into a csv file chosen by file selection dialog.
+     */
     public void saveLog() {
         if (log_map.isEmpty()) {
             MMStudio.getInstance().logs().showError("Log is empty!");
@@ -97,7 +125,6 @@ public class AlicaLogger {
         JFileChooser fc = new JFileChooser();
         int returnVal;
         
-        //*
         // File chooser dialog for saving output csv
         fc.setDialogType(JFileChooser.SAVE_DIALOG);
         //set a default filename 
@@ -142,5 +169,6 @@ public class AlicaLogger {
             writer.print("\n");
         }
         writer.close();
+        this.clear();
     }
 }

@@ -30,6 +30,7 @@ import org.micromanager.data.Coords;
 import org.micromanager.data.Datastore;
 import org.micromanager.data.Image;
 import org.micromanager.data.NewImageEvent;
+import org.micromanager.events.AcquisitionEndedEvent;
 import org.micromanager.events.AcquisitionStartedEvent;
 import org.micromanager.events.LiveModeEvent;
 
@@ -105,7 +106,6 @@ public class AnalysisWorker extends Thread {
     }
     
     /**
-     * Called by the MMCore to signalize there is a new acquisition.
      * If the imaging mode is NEXT_ACQUISITION, the NewImageWatcher will be informed.
      * @param evt new acquisition started event
      */
@@ -115,6 +115,19 @@ public class AnalysisWorker extends Thread {
             this.new_image_watcher.setLatestDatastore(evt.getDatastore());
             this.image_counter = 0;
             AlicaLogger.getInstance().clear();
+        }
+    }
+    
+    /**
+     * If the imaging mode is NEXT_ACQUISITION, the coordinator will 
+     * asked to stop.
+     * @param evt acquisition stopped
+     */
+    @Subscribe
+    public void acquisitionEnded(AcquisitionEndedEvent evt) {
+        if (imaging_mode.equals(ImagingMode.NEXT_ACQUISITION)) {
+            this.new_image_watcher.setLatestDatastore(null);
+            this.coordinator.requestStop();
         }
     }
     
@@ -216,15 +229,17 @@ public class AnalysisWorker extends Thread {
     }
     
     private boolean areTwoImagesEqual(short[] img1, short[] img2) {
+        // if any of these images is null, they are marked as not equal
         if ((img1==null) || (img2==null)) {
             return false;
         }
-        for (int i=0; i<5; i++) {
+        for (int i=0; i<10; i++) {
             try {
                 if (img1[i]!=img2[i]) {
                     return false;
                 }
-            } catch (Exception ex) {
+            } catch (ArrayIndexOutOfBoundsException ex) {
+                // we reached the end of the array without finding a difference
                 studio.logs().logError(ex);
                 return true;
             }
@@ -272,6 +287,11 @@ public class AnalysisWorker extends Thread {
         return last_fps_count;
     }
     
+    /**
+     * 
+     * @return number of analyzed frames since last counter reset,
+     *  which could be either caused by live mode start, or acquisition start.
+     */
     public int getCurrentImageCount() {
         return this.image_counter;
     }

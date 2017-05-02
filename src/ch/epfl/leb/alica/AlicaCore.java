@@ -128,6 +128,10 @@ public final class AlicaCore {
         this.laser_factory.setLaserVirtual(is_laser_virtual);
     }
     
+    /**
+     * Sets the tick rate for the controller.
+     * @param controller_tick_rate_ms delay between two runs of the ControlTask
+     */
     public void setControlWorkerTickRate(int controller_tick_rate_ms) {
         this.controller_tick_rate_ms = controller_tick_rate_ms;
     }

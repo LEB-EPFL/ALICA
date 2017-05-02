@@ -101,13 +101,17 @@ public class Coordinator {
      * Request the threads to stop.
      */
     public void requestStop() {
+        // check if something other already requested the stop
+        if (stop_flag == true) {
+            return;
+        }
         stop_flag = true;
         analysis_worker.requestStop();
         monitor_worker.cancel();
         control_worker.cancel();
        
         try {
-            analysis_worker.join(3000);
+            analysis_worker.join(1000);
         } catch (InterruptedException ex) {
             // exit ungracefully
             studio.logs().logError(ex, "Analysis worker shutdown was interrupted.");

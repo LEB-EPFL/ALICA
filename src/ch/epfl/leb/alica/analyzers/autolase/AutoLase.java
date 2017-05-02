@@ -33,7 +33,6 @@ public class AutoLase implements Analyzer {
     private ArrayList<Double> raw_value_history;
     
 
-    
     private final int threshold;
     private final int averaging;
     
