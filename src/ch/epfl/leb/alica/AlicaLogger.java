@@ -35,7 +35,7 @@ import org.micromanager.internal.MMStudio;
 public class AlicaLogger {
     private static AlicaLogger instance = null;
     
-    private LinkedHashMap<Integer, LinkedHashMap<String,Double>> log_map;
+    private LinkedHashMap<Integer, LinkedHashMap<String,Object>> log_map;
     private LinkedHashSet<String> parameter_set;
     
     private AlicaLogger() {
@@ -46,7 +46,7 @@ public class AlicaLogger {
      * Resets logger, removes all data.
      */
     public final void clear() {
-        log_map = new LinkedHashMap<Integer, LinkedHashMap<String,Double>>();
+        log_map = new LinkedHashMap<Integer, LinkedHashMap<String,Object>>();
         parameter_set = new LinkedHashSet<String>();
     }
     
@@ -92,8 +92,9 @@ public class AlicaLogger {
         addToLog(frame_no,"setpoint", setpoint);
     }
     
+    
     /**
-     * Add an arbitrary parameter into log
+     * Add a parameter into log
      * @param frame_no
      * @param value_name name of parameter
      * @param value value of parameter
@@ -101,7 +102,14 @@ public class AlicaLogger {
     public void addToLog(int frame_no, String value_name, double value) {
         parameter_set.add(value_name);
         if (!log_map.containsKey(frame_no))
-            log_map.put(frame_no, new LinkedHashMap<String,Double>());
+            log_map.put(frame_no, new LinkedHashMap<String,Object>());
+        log_map.get(frame_no).put(value_name, Double.valueOf(value));
+    }
+    
+    public void addToLog(int frame_no, String value_name, String value) {
+        parameter_set.add(value_name);
+        if (!log_map.containsKey(frame_no))
+            log_map.put(frame_no, new LinkedHashMap<String,Object>());
         log_map.get(frame_no).put(value_name, value);
     }
     
@@ -154,17 +162,17 @@ public class AlicaLogger {
         for (int i=1; i<=max_frame_no; i++) {
             writer.print(i);
             
-            LinkedHashMap<String,Double> frame_map = log_map.get(i);
+            LinkedHashMap<String,Object> frame_map = log_map.get(i);
             if (frame_map == null)
-                frame_map = new LinkedHashMap<String,Double>();
+                frame_map = new LinkedHashMap<String,Object>();
             
             for (String s: parameter_set) {
-                Double output_value = frame_map.get(s);
-                if (output_value==null) {
-                    output_value = Double.NaN;
+                Object output = frame_map.get(s);
+                if (output==null) {
+                    output = Double.NaN;
                 }
                 writer.print(",");
-                writer.print(output_value);
+                writer.print(output.toString());
             }
             writer.print("\n");
         }
