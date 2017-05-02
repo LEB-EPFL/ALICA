@@ -317,26 +317,21 @@ public class MiniPID{
 
 		// And, finally, we can just add the terms up
 		output=Foutput + Poutput + Ioutput + Doutput;
-
+                
 		// Figure out what we're doing with the error.
-		if((errorSum) > 4*setpoint ){
-			errorSum=4*setpoint; 
-			// reset the error sum to a sane level
-			// Setting to current error ensures a smooth transition when the P term 
-			// decreases enough for the I term to start acting upon the controller
-			// From that point the I term will build up as would be expected
-		}
-		else if(outputRampRate!=0 && !bounded(output, lastOutput-outputRampRate,lastOutput+outputRampRate) ){
-			errorSum=error; 
-		}
-		else if(maxIOutput!=0){
-			errorSum=constrain(errorSum+error,-maxError,maxError);
-			// In addition to output limiting directly, we also want to prevent I term 
-			// buildup, so restrict the error directly
-		}
-		else{
-			errorSum+=error;
-		}
+		// I error term should only be enough to set the output to its
+                // max value, anything more is just windup which slows down
+                // the response
+                double desiredMaxIoutput = maxOutput - Foutput - Poutput - Doutput;
+                if (errorSum*I>desiredMaxIoutput)
+                    errorSum = desiredMaxIoutput/I;
+                // for minimum, it should be just enough to set the output to minOutput
+                double desiredMinIoutput = minOutput - Foutput - Poutput - Doutput;
+                if (errorSum*I<desiredMinIoutput)
+                    errorSum = desiredMinIoutput/I;
+                
+                // add the error term
+                errorSum += error;
 
 		// Restrict output to our specified output and ramp limits
 		if(outputRampRate!=0){
