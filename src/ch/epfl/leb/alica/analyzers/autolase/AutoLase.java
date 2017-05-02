@@ -22,6 +22,7 @@ package ch.epfl.leb.alica.analyzers.autolase;
 
 import ch.epfl.leb.alica.Analyzer;
 import ij.process.ShortProcessor;
+import static java.lang.Math.sqrt;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 
@@ -86,13 +87,15 @@ public class AutoLase implements Analyzer {
  */
 class AutoLaseAnalyzer {
     public final int threshold;
+    private final int sqrt_threshold;
     public final int averaging;
     
     boolean running = true;
     boolean stopping = false;
     
     double currentDensity = 0;
-    int[][] accumulator = null;
+    private int[][] accumulator = null;
+    private boolean[][] is_always_on = null; 
     long lastTime;
 
     ArrayDeque<Double> density_fifo;
@@ -102,6 +105,7 @@ class AutoLaseAnalyzer {
         this.threshold = threshold;
         this.averaging = averaging;
         lastTime = System.currentTimeMillis();
+        sqrt_threshold = (int) sqrt(threshold);
     }
     
     /**
@@ -113,31 +117,33 @@ class AutoLaseAnalyzer {
         int height = sp.getHeight();
         if (accumulator == null) {
             accumulator = new int[width][height];
-        }
-        
-        if (accumulator.length!=width || accumulator[0].length!=height)
-            accumulator = new int[width][height];
-        // Threshold the image
-        boolean[][] curMask = new boolean[width][height];
-        for (int i=0; i<width; i++) {
-            for (int j=0; j<height; j++) {
-                curMask[i][j]=sp.getPixel(i, j)>threshold;
-            }
-        }// A_i = (I_i > t) (1 + A_i-1)
-        for (int i=0; i<width; i++) {
-            for (int j=0; j<height; j++) {
-                if (!curMask[i][j]) {
-                    accumulator[i][j] = 0;
-                } else {
-                    accumulator[i][j]++;
+            is_always_on = new boolean[width][height];
+            for (int i=0; i<width; i++) {
+                for (int j=0; j<height; j++) {
+                    is_always_on[i][j] = true;
                 }
             }
         }
-        // Density measure: max(A_i)
+
+        
+        for (int i=0; i<width; i++) {
+            for (int j=0; j<height; j++) {
+                if (sp.getPixel(i,j)>threshold) {
+                    accumulator[i][j]++;
+                } else {
+                    accumulator[i][j] = 0;
+                }
+                if ((is_always_on[i][j]) && sp.getPixel(i,j)<(threshold - sqrt_threshold)) {
+                    is_always_on[i][j] = false;
+                }
+            }
+        }
+
+        // Density measure
         double curd = 0;
         for (int i=0; i<width; i++) {
             for (int j=0; j<height; j++) {
-                if (accumulator[i][j]>curd)
+                if (!is_always_on[i][j] && accumulator[i][j]>curd)
                     curd = accumulator[i][j];
             }
         }
