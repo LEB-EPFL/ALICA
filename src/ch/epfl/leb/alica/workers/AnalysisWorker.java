@@ -100,6 +100,7 @@ public class AnalysisWorker extends Thread {
         if (evt.getIsOn() && imaging_mode.equals(ImagingMode.LIVE)) {
             this.new_image_watcher.setLatestDatastore(this.studio.live().getDisplay().getDatastore());
             this.image_counter = 0;
+            AlicaLogger.getInstance().clear();
         }
     }
     
@@ -113,6 +114,7 @@ public class AnalysisWorker extends Thread {
         if (imaging_mode.equals(ImagingMode.NEXT_ACQUISITION)) {
             this.new_image_watcher.setLatestDatastore(evt.getDatastore());
             this.image_counter = 0;
+            AlicaLogger.getInstance().clear();
         }
     }
     
@@ -133,6 +135,8 @@ public class AnalysisWorker extends Thread {
             // increment fps counter after each image
             fps_count++;
             image_counter++;
+            // log the intermittent output
+            AlicaLogger.getInstance().addIntermittentOutput(image_counter, this.queryAnalyzerForIntermittentOutput());
             
             // if a second has passed, store value and reset FPS counters
             if ((coordinator.getTimeMillis() - fps_time) > 1000) {
@@ -235,7 +239,6 @@ public class AnalysisWorker extends Thread {
     public double queryAnalyzerForIntermittentOutput() {
         synchronized(this.analyzer) {
             double out = this.analyzer.getIntermittentOutput();
-            AlicaLogger.getInstance().addIntermittentOutput(image_counter, out);
             return out;
         }
     }

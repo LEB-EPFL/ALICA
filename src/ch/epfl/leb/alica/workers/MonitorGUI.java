@@ -33,23 +33,23 @@ import org.micromanager.internal.graph.GraphPanel;
 public class MonitorGUI extends javax.swing.JFrame {
     private double laser_power_max;
     private double plot_max = 0.0;
-    private final Coordinator worker;
+    private final Coordinator coordinator;
     private final GraphPanel realtime_graph;
     
     /**
      * Creates new form MonitorGUI
-     * @param worker Coordinator parent
+     * @param coordinator Coordinator parent
      * @param analyzer_name name of the used analyzer
      * @param controller_name name of the used controller
      * @param laser_name name of the used laser
      * @param start_setpoint setpoint value to display at startup
      */
-    public MonitorGUI(Coordinator worker, String analyzer_name, String controller_name, String laser_name, double start_setpoint) {
-        // check if worker is alive
-        if (worker == null) {
+    public MonitorGUI(Coordinator coordinator, String analyzer_name, String controller_name, String laser_name, double start_setpoint) {
+        // check if coordinator is alive
+        if (coordinator == null) {
             throw new NullPointerException();
         } else {
-            this.worker = worker;
+            this.coordinator = coordinator;
         }
         
         // initialize GUI
@@ -218,9 +218,9 @@ public class MonitorGUI extends javax.swing.JFrame {
         e_new_setpoint.setText("1.0");
 
         b_set_setpoint.setText("Set");
-        b_set_setpoint.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                b_set_setpointMouseClicked(evt);
+        b_set_setpoint.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                b_set_setpointActionPerformed(evt);
             }
         });
 
@@ -413,7 +413,7 @@ public class MonitorGUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void b_set_setpointMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_b_set_setpointMouseClicked
+    private void b_set_setpointActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_set_setpointActionPerformed
         double setpoint;
         // sanitize input
         try {
@@ -427,10 +427,10 @@ public class MonitorGUI extends javax.swing.JFrame {
             return;
         }
         
-        // notify the worker and update display text
-        worker.setSetpoint(setpoint);
+        // notify the coordinator and update display text
+        coordinator.setSetpoint(setpoint);
         l_setpoint.setText(e_new_setpoint.getText());
-    }//GEN-LAST:event_b_set_setpointMouseClicked
+    }//GEN-LAST:event_b_set_setpointActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

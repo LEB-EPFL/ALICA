@@ -23,6 +23,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
@@ -36,18 +38,16 @@ import org.micromanager.internal.MMStudio;
 public class AlicaLogger {
     private static AlicaLogger instance = null;
     
-    private LinkedHashMap<Integer, Double> analyzer_intermittent_output;
-    private LinkedHashMap<Integer, Double> analyzer_batched_output;
-    private LinkedHashMap<Integer, Double> controller_output;
+    private LinkedHashMap<Integer, LinkedHashMap<String,Double>> log_map;
+    private LinkedHashSet<String> parameter_set;
     
     private AlicaLogger() {
         clear();
     }
     
-    private void clear() {
-        analyzer_intermittent_output = new LinkedHashMap<Integer, Double>();
-        analyzer_batched_output = new LinkedHashMap<Integer, Double>();
-        controller_output = new LinkedHashMap<Integer, Double>();
+    public void clear() {
+        log_map = new LinkedHashMap<Integer, LinkedHashMap<String,Double>>();
+        parameter_set = new LinkedHashSet<String>();
     }
     
     public static AlicaLogger getInstance() {
@@ -58,19 +58,30 @@ public class AlicaLogger {
     }
     
     public void addIntermittentOutput(int frame_no, double value) {
-        analyzer_intermittent_output.put(frame_no, value);
+        addToLog(frame_no,"analyzer_intermittent_output",value);
     }
     
     public void addBatchedOutput(int frame_no, double value) {
-        analyzer_batched_output.put(frame_no, value);
+        addToLog(frame_no,"analyzer_batched_output",value);
     }
     
     public void addControllerOutput(int frame_no, double value) {
-        controller_output.put(frame_no, value);
+        addToLog(frame_no,"controller_output",value);
+    }
+    
+    public void addSetpoint(int frame_no, double setpoint) {
+        addToLog(frame_no,"setpoint", setpoint);
+    }
+    
+    public void addToLog(int frame_no, String value_name, double value) {
+        parameter_set.add(value_name);
+        if (!log_map.containsKey(frame_no))
+            log_map.put(frame_no, new LinkedHashMap<String,Double>());
+        log_map.get(frame_no).put(value_name, value);
     }
     
     public void saveLog() {
-        if (analyzer_intermittent_output.isEmpty()) {
+        if (log_map.isEmpty()) {
             MMStudio.getInstance().logs().showError("Log is empty!");
             return;
         }
@@ -78,7 +89,7 @@ public class AlicaLogger {
         
         int max_frame_no = 0;
         // intermittent output should have the largest value
-        for (int key: analyzer_intermittent_output.keySet()) {
+        for (int key: log_map.keySet()) {
             if (max_frame_no < key)
                 max_frame_no = key;
         }
@@ -107,27 +118,27 @@ public class AlicaLogger {
             return;
         }
         
-        writer.println("#Frame no.,Analyzer intermittent output, Analyzer batched output, Controller output");
+        writer.print("#frame_no");
+        for (String s: parameter_set) {
+            writer.print(','+s);
+        }
+        writer.print("\n");
+
         for (int i=1; i<=max_frame_no; i++) {
             writer.print(i);
-            writer.print(",");
             
-            Double intermittent_output = analyzer_intermittent_output.get(i);
-            if (intermittent_output == null)
-                intermittent_output = Double.NaN;
-            writer.print(intermittent_output);
-            writer.print(",");
+            LinkedHashMap<String,Double> frame_map = log_map.get(i);
+            if (frame_map == null)
+                frame_map = new LinkedHashMap<String,Double>();
             
-            Double batched_output = analyzer_batched_output.get(i);
-            if (batched_output == null)
-                batched_output = Double.NaN;
-            writer.print(batched_output);
-            writer.print(",");
-            
-            Double controller_output = this.controller_output.get(i);
-            if (controller_output == null)
-                controller_output = Double.NaN;
-            writer.print(controller_output);
+            for (String s: parameter_set) {
+                Double output_value = frame_map.get(s);
+                if (output_value==null) {
+                    output_value = Double.NaN;
+                }
+                writer.print(",");
+                writer.print(output_value);
+            }
             writer.print("\n");
         }
         writer.close();

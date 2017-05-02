@@ -19,12 +19,11 @@
  */
 package ch.epfl.leb.alica.workers;
 
+import ch.epfl.leb.alica.AlicaLogger;
 import ch.epfl.leb.alica.Analyzer;
 import ch.epfl.leb.alica.Controller;
 import ch.epfl.leb.alica.ImagingMode;
 import ch.epfl.leb.alica.Laser;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.micromanager.Studio;
 
 /**
@@ -50,8 +49,8 @@ public class Coordinator {
      * @param analyzer
      * @param controller
      * @param laser
-     * @param draw_from_core whether the images should be drawn from the MMCore
-     *  (true), or from the end of the processing pipeline (false)
+     * @param imaging_mode
+     * @param controller_tick_rate_ms
      */
     public Coordinator(Studio studio, Analyzer analyzer, Controller controller, 
             Laser laser, ImagingMode imaging_mode, int controller_tick_rate_ms) {
@@ -132,6 +131,7 @@ public class Coordinator {
      */
     public void setSetpoint(double value) {
         controller.setSetpoint(value);
+        AlicaLogger.getInstance().addSetpoint(analysis_worker.getCurrentImageCount(), value);
     }
     
     /**
