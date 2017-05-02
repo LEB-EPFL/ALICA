@@ -190,7 +190,7 @@ public class AnalysisWorker extends Thread {
             studio.logs().logDebugMessage("Failure by AnalysisWorker to recieve image from MMCore.");
         }
         // if no image was detected, or is the same as last analyzed, wait 1ms and query again
-        while (new_image==null || new_image.equals(this.last_core_image)) {
+        while (new_image==null || areTwoImagesEqual((short[]) new_image, (short[]) this.last_core_image)) {
             try {
                 sleep(1);
             } catch (InterruptedException ex) {
@@ -209,6 +209,23 @@ public class AnalysisWorker extends Thread {
             analyzer.processImage(new_image, (int) studio.core().getImageWidth(), (int) studio.core().getImageHeight(), studio.core().getPixelSizeUm(), image_acquisition_time);
             this.last_core_image = new_image;
         }
+    }
+    
+    private boolean areTwoImagesEqual(short[] img1, short[] img2) {
+        if ((img1==null) || (img2==null)) {
+            return false;
+        }
+        for (int i=0; i<5; i++) {
+            try {
+                if (img1[i]!=img2[i]) {
+                    return false;
+                }
+            } catch (Exception ex) {
+                studio.logs().logError(ex);
+                return true;
+            }
+        }
+        return true;
     }
     
     /**
