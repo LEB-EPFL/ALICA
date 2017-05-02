@@ -21,6 +21,7 @@ package ch.epfl.leb.alica.analyzers.autolase;
 
 
 import ch.epfl.leb.alica.Analyzer;
+import ij.process.ShortProcessor;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 
@@ -29,7 +30,7 @@ import java.util.ArrayList;
  * @author Marcel Stefko
  */
 public class AutoLase implements Analyzer {
-    private final AutoLaseAnalyzer analyzer;
+    private final AutoLaseAnalyzer autolase_core;
     private ArrayList<Double> raw_value_history;
     
 
@@ -45,17 +46,19 @@ public class AutoLase implements Analyzer {
     public AutoLase(int threshold, int averaging) {
         this.threshold = threshold;
         this.averaging = averaging;
-        analyzer = new AutoLaseAnalyzer(threshold, averaging);
+        autolase_core = new AutoLaseAnalyzer(threshold, averaging);
     }
 
     @Override
     public void processImage(Object image, int image_width, int image_height, double pixel_size_um, long time_ms) {
-        analyzer.nextImage((short[]) image);
+        ShortProcessor sp = new ShortProcessor(image_width, image_height, true);
+        sp.setPixels(image);
+        autolase_core.nextImage(sp);
     }
 
     @Override
     public double getIntermittentOutput() {
-        return analyzer.getCurrentValue();
+        return autolase_core.getCurrentValue();
     }
 
     @Override
@@ -65,7 +68,7 @@ public class AutoLase implements Analyzer {
 
     @Override
     public double getBatchOutput() {
-        return analyzer.getCurrentValue();
+        return autolase_core.getCurrentValue();
     }
 
 }
@@ -89,7 +92,7 @@ class AutoLaseAnalyzer {
     boolean stopping = false;
     
     double currentDensity = 0;
-    float[] accumulator = null;
+    int[][] accumulator = null;
     long lastTime;
 
     ArrayDeque<Double> density_fifo;
@@ -105,48 +108,39 @@ class AutoLaseAnalyzer {
      * Analyzes next image and adjusts internal state.
      * @param image image to be analyzed
      */
-    public void nextImage(short[] image) {
-
-        // Reset accumulator if image size has changed
-        if (image!=null && accumulator!=null && (image.length != accumulator.length))
-            accumulator = null;
-
-        // Threshold the image
-        boolean[] curMask = new boolean[image.length];
-        // Mask which warns about short overflow
-        boolean[] overflowMask = new boolean[image.length];
-        for (int i=0; i<curMask.length; i++) {
-            curMask[i]=image[i]>threshold;
-            overflowMask[i]=image[i]<0;
-        }
-        int overflow_counter = 0;
-        // Calculate accumulator
+    public void nextImage(ShortProcessor sp) {
+        int width = sp.getWidth();
+        int height = sp.getHeight();
         if (accumulator == null) {
-            // A_0 = I_0 > t; 
-            accumulator = new float[image.length];
-            for(int i=0; i<accumulator.length; i++)
-                if (curMask[i])
-                    accumulator[i] = 1;
-        } else {
-            // A_i = (I_i > t) (1 + A_i-1)
-            for(int i=0; i<accumulator.length; i++) {
-                if (!curMask[i]) {
-                    accumulator[i] = 0;
+            accumulator = new int[width][height];
+        }
+        
+        if (accumulator.length!=width || accumulator[0].length!=height)
+            accumulator = new int[width][height];
+        // Threshold the image
+        boolean[][] curMask = new boolean[width][height];
+        for (int i=0; i<width; i++) {
+            for (int j=0; j<height; j++) {
+                curMask[i][j]=sp.getPixel(i, j)>threshold;
+            }
+        }// A_i = (I_i > t) (1 + A_i-1)
+        for (int i=0; i<width; i++) {
+            for (int j=0; j<height; j++) {
+                if (!curMask[i][j]) {
+                    accumulator[i][j] = 0;
                 } else {
-                    accumulator[i]++;
-                }
-                // If we have overflow, assign a special value
-                if (overflowMask[i])  {
-                    overflow_counter++;
-                    accumulator[i] = -1.0f;
+                    accumulator[i][j]++;
                 }
             }
         }
         // Density measure: max(A_i)
         double curd = 0;
-        for (int i=0; i<image.length; i++)
-            if (accumulator[i]>curd)
-                curd = accumulator[i];
+        for (int i=0; i<width; i++) {
+            for (int j=0; j<height; j++) {
+                if (accumulator[i][j]>curd)
+                    curd = accumulator[i][j];
+            }
+        }
 
         // Moving average estimate
         if (density_fifo.size() == averaging)
