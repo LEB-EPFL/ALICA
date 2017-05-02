@@ -99,6 +99,7 @@ public class AnalysisWorker extends Thread {
     @Subscribe
     public void liveModeStarted(LiveModeEvent evt) {
         if (evt.getIsOn() && imaging_mode.equals(ImagingMode.LIVE)) {
+            studio.logs().logDebugMessage("Live mode start detected. Alica analyzer thread will now begin analyzing images from pipeline.");
             this.new_image_watcher.setLatestDatastore(this.studio.live().getDisplay().getDatastore());
             this.image_counter = 0;
             AlicaLogger.getInstance().clear();
@@ -112,6 +113,7 @@ public class AnalysisWorker extends Thread {
     @Subscribe
     public void acquisitionStarted(AcquisitionStartedEvent evt) {
         if (imaging_mode.equals(ImagingMode.NEXT_ACQUISITION)) {
+            studio.logs().logDebugMessage("Acquisition start detected. Alica analyzer thread will now begin analyzing images from pipeline.");
             this.new_image_watcher.setLatestDatastore(evt.getDatastore());
             this.image_counter = 0;
             AlicaLogger.getInstance().clear();
@@ -126,6 +128,7 @@ public class AnalysisWorker extends Thread {
     @Subscribe
     public void acquisitionEnded(AcquisitionEndedEvent evt) {
         if (imaging_mode.equals(ImagingMode.NEXT_ACQUISITION)) {
+            studio.logs().logDebugMessage("Acquisition end detected. Alica worker threads will now terminate.");
             this.new_image_watcher.setLatestDatastore(null);
             this.coordinator.requestStop();
         }
@@ -188,7 +191,7 @@ public class AnalysisWorker extends Thread {
             } catch (Exception ex) {
                 studio.logs().logError(ex, "Error in image retrieval from datastore or processing by analyzer.");
             }
-            // log coords of the image
+            // log coords of the image, offset by 1 because counter was not yet incremented
             AlicaLogger.getInstance().addToLog(image_counter+1, "Coords", current_coords.toString());
             // clear last image coords pointer
             this.last_live_image_coords = null;

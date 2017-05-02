@@ -303,7 +303,7 @@ public final class MainGUI extends JFrame {
         jLabel6.setText("Controller tick rate [ms]:");
 
         e_controller_tickrate.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
-        e_controller_tickrate.setText("1000");
+        e_controller_tickrate.setText("500");
 
         b_save_last_run_log.setText("Save last run log");
         b_save_last_run_log.addActionListener(new java.awt.event.ActionListener() {

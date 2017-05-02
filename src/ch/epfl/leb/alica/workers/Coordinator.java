@@ -68,6 +68,7 @@ public class Coordinator {
         this.studio = studio;
         this.controller = controller;
         
+        studio.logs().logDebugMessage("Alica Coordinator started with imaging mode " + imaging_mode.toString());
         // analysis worker is a thread which runs continuously
         this.analysis_worker = new AnalysisWorker(this, studio, analyzer, imaging_mode);
         studio.events().registerForEvents(this.analysis_worker);
