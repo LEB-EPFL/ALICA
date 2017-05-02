@@ -115,6 +115,7 @@ class AutoLaseAnalyzer {
     public void nextImage(ShortProcessor sp) {
         int width = sp.getWidth();
         int height = sp.getHeight();
+        // in case of first run, initialize arrays
         if (accumulator == null) {
             accumulator = new int[width][height];
             is_always_on = new boolean[width][height];
@@ -125,14 +126,17 @@ class AutoLaseAnalyzer {
             }
         }
 
-        
+        // scan over whole image
         for (int i=0; i<width; i++) {
             for (int j=0; j<height; j++) {
+                // if pixel over threshold, increment accumulator, otherwise
+                // reset it
                 if (sp.getPixel(i,j)>threshold) {
                     accumulator[i][j]++;
                 } else {
                     accumulator[i][j] = 0;
                 }
+                // if pixel is marked as always on, check if it didnt dip below the threshold
                 if ((is_always_on[i][j]) && sp.getPixel(i,j)<(threshold - sqrt_threshold)) {
                     is_always_on[i][j] = false;
                 }
@@ -143,6 +147,7 @@ class AutoLaseAnalyzer {
         double curd = 0;
         for (int i=0; i<width; i++) {
             for (int j=0; j<height; j++) {
+                // only take into account pixels that are not always on
                 if (!is_always_on[i][j] && accumulator[i][j]>curd)
                     curd = accumulator[i][j];
             }
