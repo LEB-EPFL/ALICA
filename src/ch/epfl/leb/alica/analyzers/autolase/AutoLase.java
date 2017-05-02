@@ -137,7 +137,7 @@ class AutoLaseAnalyzer {
                     accumulator[i][j] = 0;
                 }
                 // if pixel is marked as always on, check if it didnt dip below the threshold
-                if ((is_always_on[i][j]) && sp.getPixel(i,j)<(threshold - sqrt_threshold)) {
+                if ((is_always_on[i][j]) && sp.getPixel(i,j)<(threshold - 3*sqrt_threshold)) {
                     is_always_on[i][j] = false;
                 }
             }
