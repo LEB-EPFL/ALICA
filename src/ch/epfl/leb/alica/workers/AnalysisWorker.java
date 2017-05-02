@@ -19,6 +19,7 @@
  */
 package ch.epfl.leb.alica.workers;
 
+import ch.epfl.leb.alica.AlicaLogger;
 import ch.epfl.leb.alica.Analyzer;
 import ch.epfl.leb.alica.ImagingMode;
 import com.google.common.eventbus.Subscribe;
@@ -60,6 +61,9 @@ public class AnalysisWorker extends Thread {
     private long last_analysis_time_ms = 0;
     private int last_fps_count = 0;
     
+    // for logging
+    private int image_counter = 0;
+    
     /**
      * Initialize the worker.
      * @param coordinator parent Coordinator
@@ -95,6 +99,7 @@ public class AnalysisWorker extends Thread {
     public void liveModeStarted(LiveModeEvent evt) {
         if (evt.getIsOn() && imaging_mode.equals(ImagingMode.LIVE)) {
             this.new_image_watcher.setLatestDatastore(this.studio.live().getDisplay().getDatastore());
+            this.image_counter = 0;
         }
     }
     
@@ -107,6 +112,7 @@ public class AnalysisWorker extends Thread {
     public void acquisitionStarted(AcquisitionStartedEvent evt) {
         if (imaging_mode.equals(ImagingMode.NEXT_ACQUISITION)) {
             this.new_image_watcher.setLatestDatastore(evt.getDatastore());
+            this.image_counter = 0;
         }
     }
     
@@ -126,6 +132,7 @@ public class AnalysisWorker extends Thread {
                 getNewImageFromWatcherAndAnalyze();
             // increment fps counter after each image
             fps_count++;
+            image_counter++;
             
             // if a second has passed, store value and reset FPS counters
             if ((coordinator.getTimeMillis() - fps_time) > 1000) {
@@ -210,7 +217,9 @@ public class AnalysisWorker extends Thread {
      */
     public double queryAnalyzerForIntermittentOutput() {
         synchronized(this.analyzer) {
-            return this.analyzer.getIntermittentOutput();
+            double out = this.analyzer.getIntermittentOutput();
+            AlicaLogger.getInstance().addIntermittentOutput(image_counter, out);
+            return out;
         }
     }
     
@@ -221,7 +230,9 @@ public class AnalysisWorker extends Thread {
      */
     public double queryAnalyzerForBatchOutput() {
         synchronized(this.analyzer) {
-            return this.analyzer.getBatchOutput();
+            double out = this.analyzer.getBatchOutput();
+            AlicaLogger.getInstance().addBatchedOutput(image_counter, out);
+            return out;
         }
     }
     
@@ -239,6 +250,10 @@ public class AnalysisWorker extends Thread {
      */
     public int getCurrentFPS() {
         return last_fps_count;
+    }
+    
+    public int getCurrentImageCount() {
+        return this.image_counter;
     }
     
     /**

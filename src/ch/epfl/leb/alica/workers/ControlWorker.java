@@ -19,6 +19,7 @@
  */
 package ch.epfl.leb.alica.workers;
 
+import ch.epfl.leb.alica.AlicaLogger;
 import ch.epfl.leb.alica.Controller;
 import ch.epfl.leb.alica.Laser;
 import java.util.Timer;
@@ -99,6 +100,9 @@ class ControlTask extends TimerTask {
             last_analyzer_output = analyzer_output;
             // pass output to the controller and get next output
             last_controller_output = controller.nextValue(analyzer_output);
+            
+            AlicaLogger.getInstance().addControllerOutput(analysis_worker.getCurrentImageCount(), last_controller_output);
+            
             // adjust the laser power
             try {
                 laser.setLaserPower(last_controller_output);

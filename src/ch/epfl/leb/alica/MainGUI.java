@@ -167,6 +167,7 @@ public final class MainGUI extends JFrame {
         rb_source_acquisition = new javax.swing.JRadioButton();
         jLabel6 = new javax.swing.JLabel();
         e_controller_tickrate = new javax.swing.JTextField();
+        b_save_last_run_log = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setResizable(false);
@@ -302,12 +303,21 @@ public final class MainGUI extends JFrame {
         e_controller_tickrate.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
         e_controller_tickrate.setText("1000");
 
+        b_save_last_run_log.setText("Save last run log");
+        b_save_last_run_log.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                b_save_last_run_logActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
+                .addComponent(b_save_last_run_log)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(b_worker_start)
                 .addGap(31, 31, 31)
                 .addComponent(b_worker_stop)
@@ -406,7 +416,8 @@ public final class MainGUI extends JFrame {
                             .addComponent(b_exit_plugin)
                             .addComponent(b_print_loaded_devices)
                             .addComponent(b_worker_start)
-                            .addComponent(b_worker_stop))
+                            .addComponent(b_worker_stop)
+                            .addComponent(b_save_last_run_log))
                         .addGap(11, 11, 11))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(cb_laser_properties, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -507,11 +518,16 @@ public final class MainGUI extends JFrame {
         b_worker_stop.setEnabled(false);
     }//GEN-LAST:event_b_worker_stopActionPerformed
 
+    private void b_save_last_run_logActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_save_last_run_logActionPerformed
+        AlicaLogger.getInstance().saveLog();
+    }//GEN-LAST:event_b_save_last_run_logActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel analyzer_panel;
     private javax.swing.JButton b_exit_plugin;
     private javax.swing.JButton b_print_loaded_devices;
+    private javax.swing.JButton b_save_last_run_log;
     private javax.swing.JButton b_worker_start;
     private javax.swing.JButton b_worker_stop;
     private javax.swing.ButtonGroup buttonGroup_imaging_mode;
