@@ -130,7 +130,11 @@ public final class MainGUI extends JFrame {
             MMStudio.getInstance().logs().logError(ex, "Error in getting selected device properties.");
             return;
         }
-        cb_laser_properties.setSelectedIndex(0);
+        try {
+            cb_laser_properties.setSelectedIndex(0);
+        } catch (IllegalArgumentException ex) {
+            return;
+        }
     }
 
     /**

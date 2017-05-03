@@ -114,7 +114,7 @@ class ControlTask extends TimerTask {
                             last_controller_output + ". Further errors will not be displayed.");
                     laser_error_displayed = true;
                 } else {
-                    MMStudio.getInstance().logs().showError(ex, "Error in setting laser power to " + 
+                    MMStudio.getInstance().logs().logError(ex, "Error in setting laser power to " + 
                             last_controller_output);
                 }
             }
