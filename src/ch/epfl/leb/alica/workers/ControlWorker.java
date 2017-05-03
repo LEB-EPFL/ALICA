@@ -78,6 +78,8 @@ class ControlTask extends TimerTask {
     
     private double last_analyzer_output = 0.0;
     private double last_controller_output = 0.0;
+    
+    private boolean laser_error_displayed = false;
 
     /**
      * Initialize the ControlTask
@@ -107,7 +109,14 @@ class ControlTask extends TimerTask {
             try {
                 laser.setLaserPower(last_controller_output);
             } catch (Exception ex) {
-                MMStudio.getInstance().logs().showError(ex, "Error in setting laser power to "+ last_controller_output);
+                if (!laser_error_displayed) {
+                    MMStudio.getInstance().logs().showError(ex, "Error in setting laser power to " + 
+                            last_controller_output + ". Further errors will not be displayed.");
+                    laser_error_displayed = true;
+                } else {
+                    MMStudio.getInstance().logs().showError(ex, "Error in setting laser power to " + 
+                            last_controller_output);
+                }
             }
         }
     }

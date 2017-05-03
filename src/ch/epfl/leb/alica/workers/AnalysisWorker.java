@@ -192,7 +192,7 @@ public class AnalysisWorker extends Thread {
                 studio.logs().logError(ex, "Error in image retrieval from datastore or processing by analyzer.");
             }
             // log coords of the image, offset by 1 because counter was not yet incremented
-            AlicaLogger.getInstance().addToLog(image_counter+1, "Coords", current_coords.toString());
+            AlicaLogger.getInstance().addToLog(image_counter+1, "coords_time", Integer.toString(current_coords.getTime()));
             // clear last image coords pointer
             this.last_live_image_coords = null;
         }
