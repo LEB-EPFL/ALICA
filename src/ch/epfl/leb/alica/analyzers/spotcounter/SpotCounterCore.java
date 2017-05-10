@@ -78,26 +78,9 @@ public class SpotCounterCore {
      * @param ip - image to be analyzed
      * @return ResultsTable which contains information about analysis results.
      */
-    public ResultsTable analyze(ImageProcessor ip) {
-
+    public HashMap<String,Double> analyze(ImageProcessor ip) {
         Overlay ov = getSpotOverlay(ip);
-        if (start_) {
-            res_ = new ResultsTable();
-            if (outputAllSpots_) {
-                res2_ = new ResultsTable();
-            }
-            res_.setPrecision(1);
-            pasN_ = 0;
-            start_ = false;
-        }
-        res_.incrementCounter();
-        pasN_ += 1;
-        res_.addValue("n", ov.size());
-        
-        HashMap<String, Double> map = getFrameStats(ov);
-        for (String key: map.keySet())
-            res_.addValue(key, map.get(key));
-        return res_;
+        return getFrameStats(ov);
 
     }
     
@@ -145,6 +128,7 @@ public class SpotCounterCore {
         map.put("mean-distance", mean);
         int p10 = (int) floor((double) ov.size() / 10.0);
         map.put("p10-distance", min_distances[p10]);
+        map.put("spot-count", (double)ov.size());
         return map;
     }
     

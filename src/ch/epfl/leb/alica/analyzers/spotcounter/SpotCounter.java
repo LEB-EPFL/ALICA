@@ -20,10 +20,9 @@
 package ch.epfl.leb.alica.analyzers.spotcounter;
 
 import ch.epfl.leb.alica.Analyzer;
-import ij.measure.ResultsTable;
 import ij.process.ShortProcessor;
 import java.util.ArrayList;
-import org.micromanager.internal.MMStudio;
+import java.util.HashMap;
 
 /**
  *
@@ -70,9 +69,8 @@ public class SpotCounter implements Analyzer {
         double fov_area = pixel_size_um*pixel_size_um*image_width*image_height;
         ShortProcessor sp = new ShortProcessor(image_width, image_height);
         sp.setPixels(image);
-        ResultsTable results = core.analyze(sp.duplicate());
-        intermittent_output = results.getValue("n", results.getCounter()-1) / fov_area;
-        MMStudio.getInstance().logs().logDebugMessage(String.format("SpotCounter: Image: %d, Density: %10.5f\n per um", results.getCounter(), intermittent_output));
+        HashMap<String,Double> results = core.analyze(sp.duplicate());
+        intermittent_output = results.get("spot-count")/ fov_area * 100;
         intermittent_outputs.add(intermittent_output);
     }
 
