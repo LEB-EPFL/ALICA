@@ -75,7 +75,7 @@ public class AutoLase implements Analyzer {
 
     @Override
     public void setROI(Roi roi) {
-        
+        autolase_core.setROI(roi);
     }
 
 }
@@ -96,6 +96,8 @@ class AutoLaseAnalyzer {
     private final int sqrt_threshold;
     public final int averaging;
     
+    private Roi roi;
+    
     boolean running = true;
     boolean stopping = false;
     
@@ -114,14 +116,31 @@ class AutoLaseAnalyzer {
         sqrt_threshold = (int) sqrt(threshold);
     }
     
+    public void setROI(Roi roi) {
+        this.roi = roi;
+        this.accumulator = null;
+    }
+    
     /**
      * Analyzes next image and adjusts internal state.
      * @param image image to be analyzed
      */
     public void nextImage(ShortProcessor sp) {
-        int width = sp.getWidth();
-        int height = sp.getHeight();
-        // in case of first run, initialize arrays
+        int width, height;
+        int x_start, y_start;
+        if (roi == null) {
+            width = sp.getWidth();
+            height = sp.getHeight();
+            x_start = 0;
+            y_start = 0;
+        } else {
+            width = roi.getBounds().width;
+            height = roi.getBounds().height;
+            x_start = roi.getBounds().x;
+            y_start = roi.getBounds().y;
+        }
+        
+        // in case of reset, initialize arrays
         if (accumulator == null) {
             accumulator = new int[width][height];
             is_always_on = new boolean[width][height];
@@ -137,13 +156,13 @@ class AutoLaseAnalyzer {
             for (int j=0; j<height; j++) {
                 // if pixel over threshold, increment accumulator, otherwise
                 // reset it
-                if (sp.getPixel(i,j)>threshold) {
+                if (sp.getPixel(i+x_start,j+y_start)>threshold) {
                     accumulator[i][j]++;
                 } else {
                     accumulator[i][j] = 0;
                 }
                 // if pixel is marked as always on, check if it didnt dip below the threshold
-                if ((is_always_on[i][j]) && sp.getPixel(i,j)<(threshold - 3*sqrt_threshold)) {
+                if ((is_always_on[i][j]) && sp.getPixel(i+x_start,j+y_start)<(threshold - 3*sqrt_threshold)) {
                     is_always_on[i][j] = false;
                 }
             }
