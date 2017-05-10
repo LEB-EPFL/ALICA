@@ -20,6 +20,7 @@
 package ch.epfl.leb.alica;
 
 import ij.IJ;
+import ij.gui.YesNoCancelDialog;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
@@ -32,6 +33,8 @@ import org.micromanager.internal.MMStudio;
  */
 public final class MainGUI extends JFrame {
     private static MainGUI instance = null;
+    
+    private boolean log_is_saved = true;
     
     private final AlicaCore alica_core;
     
@@ -483,6 +486,16 @@ public final class MainGUI extends JFrame {
     }//GEN-LAST:event_cb_laser_propertiesPopupMenuWillBecomeInvisible
 
     private void b_worker_startActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_worker_startActionPerformed
+        if (this.log_is_saved == false) {
+            YesNoCancelDialog dlg = new YesNoCancelDialog(this, "Save log?", "Log from previous run is unsaved and will be discarded. Save now?");
+            if (dlg.cancelPressed()) {
+                return;
+            } else if (dlg.yesPressed()) {
+                AlicaLogger.getInstance().saveLog();
+            } else {
+                this.log_is_saved = true;
+            }
+        }
         // parse laser power entry
         double max_laser_power;
         try {
@@ -539,6 +552,8 @@ public final class MainGUI extends JFrame {
         }
         alica_core.setControlWorkerTickRate(controller_tick_rate);
         
+
+        
         // launch the worker
         try {
             alica_core.startWorkers(imaging_mode);
@@ -550,6 +565,7 @@ public final class MainGUI extends JFrame {
         // change button state
         b_worker_start.setEnabled(false);
         b_worker_stop.setEnabled(true);
+        this.log_is_saved = false;
     }//GEN-LAST:event_b_worker_startActionPerformed
 
     private void b_worker_stopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_worker_stopActionPerformed
@@ -563,6 +579,7 @@ public final class MainGUI extends JFrame {
 
     private void b_save_last_run_logActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_save_last_run_logActionPerformed
         AlicaLogger.getInstance().saveLog();
+        this.log_is_saved = true;
     }//GEN-LAST:event_b_save_last_run_logActionPerformed
 
 

@@ -178,6 +178,9 @@ public final class AlicaCore {
      * @param imaging_mode
      */
     public void startWorkers(ImagingMode imaging_mode) {
+        if (coordinator != null) {
+            coordinator.dispose();
+        }
         coordinator = new Coordinator(studio, analyzer_factory.build(), 
                 controller_factory.build(), laser_factory.build(), imaging_mode,
                 controller_tick_rate_ms);

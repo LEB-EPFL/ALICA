@@ -131,6 +131,10 @@ public class Coordinator {
         
     }
     
+    public void dispose() {
+        this.gui.dispose();
+    }
+    
     /**
      * Set the controller setpoint to value
      * @param value new value of controller setpoint
