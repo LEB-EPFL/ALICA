@@ -38,8 +38,8 @@ public class QuickPalm implements Analyzer {
     private double intermittent_output = 0.0;
     private int counter = 0;
     
-    public QuickPalm() {
-        core = new QuickPalmCore();
+    public QuickPalm(boolean live_view) {
+        core = new QuickPalmCore(live_view);
         intermittent_outputs = new ArrayList<Double>();
     }
     

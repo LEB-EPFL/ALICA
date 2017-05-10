@@ -36,9 +36,9 @@ public class QuickPalmCore {
     /**
      * Initializes the core and launches a dialog for parameter setup.
      */
-    public QuickPalmCore() {
+    public QuickPalmCore(boolean live_view) {
         dg = new MyDialogs();
-        f = new MyFunctions();
+        f = new MyFunctions(live_view);
         
         f.ptable.reset(); // erase particle table
         if (!dg.analyseParticles(f))

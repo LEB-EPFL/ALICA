@@ -103,11 +103,11 @@ class MyDialogs
 		gd.addNumericField("Minimum SNR", prefs.get("QuickPALM.snr", 5), 2);
 		gd.addNumericField("Maximum FWHM (in px)", prefs.get("QuickPALM.fwhm", 4), 0);
 		gd.addNumericField("Image plane pixel size (nm)", prefs.get("QuickPALM.pixelsize", 106), 2);
-		gd.addCheckbox("Smart SNR", prefs.get("QuickPALM.smartsnr", true));
+		gd.addCheckbox("Smart SNR", prefs.get("QuickPALM.smartsnr", false));
 		gd.addCheckbox("3D PALM (astigmatism) - will require calibration file", prefs.get("QuickPALM.is3d", false));
-		gd.addCheckbox("Online rendering", prefs.get("QuickPALM.view", true));
+		gd.addCheckbox("Online rendering", prefs.get("QuickPALM.view", false));
 		gd.addCheckbox("Attach to running acquisition", prefs.get("QuickPALM.attach", false));
-		gd.addCheckbox("Stream particle info directly into file", prefs.get("QuickPALM.stream", true));
+		gd.addCheckbox("Stream particle info directly into file", prefs.get("QuickPALM.stream", false));
 		gd.addMessage("\n");
 		// -----------------------------------------
 		gd.addMessage("-- Online rendering settings (used only if selected) --");
