@@ -21,6 +21,7 @@ package ch.epfl.leb.alica.analyzers.autolase;
 
 
 import ch.epfl.leb.alica.Analyzer;
+import ij.gui.Roi;
 import ij.process.ShortProcessor;
 import static java.lang.Math.sqrt;
 import java.util.ArrayDeque;
@@ -70,6 +71,11 @@ public class AutoLase implements Analyzer {
     @Override
     public double getBatchOutput() {
         return autolase_core.getCurrentValue();
+    }
+
+    @Override
+    public void setROI(Roi roi) {
+        
     }
 
 }

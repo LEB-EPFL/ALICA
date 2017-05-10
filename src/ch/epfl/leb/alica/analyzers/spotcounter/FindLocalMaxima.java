@@ -19,6 +19,7 @@
 package ch.epfl.leb.alica.analyzers.spotcounter;
 
 import ij.ImagePlus;
+import ij.gui.Roi;
 import ij.plugin.ImageCalculator;
 import ij.process.ImageProcessor;
 import ij.plugin.filter.GaussianBlur;
@@ -96,13 +97,19 @@ public class FindLocalMaxima {
     * @return Polygon with maxima 
     */
    public static Polygon FindMax(
-           ImageProcessor iProc, 
+           ImageProcessor iProc,
+           Roi roi,
            int n, 
            int threshold, 
            FilterType filterType) {
       
       Polygon maxima = new Polygon();
-      Rectangle roi = iProc.getRoi();
+      Rectangle roi_rect;
+      if (roi!=null) {
+        roi_rect = roi.getBounds();
+      } else {
+        roi_rect = iProc.getRoi();
+      }
       
       // Prefilter if needed
       switch (filterType) {
@@ -124,12 +131,12 @@ public class FindLocalMaxima {
       // divide the image up in blocks of size n and find local maxima
       int n2 = 2*n + 1;
       // calculate borders once
-      int xRealEnd = roi.x + roi.width;
-      int xEnd = xRealEnd - n;
-      int yRealEnd = roi.y + roi.height;
-      int yEnd = yRealEnd - n;
-      for (int i=roi.x + n; i < xEnd; i+=n2) {
-         for (int j=roi.y + n; j < yEnd; j+=n2) {
+      int xRealEnd = roi_rect.x + roi_rect.width;
+      int xEnd = xRealEnd - 2*n2;
+      int yRealEnd = roi_rect.y + roi_rect.height;
+      int yEnd = yRealEnd - 2*n2;
+      for (int i=roi_rect.x + n; i < xEnd; i+=n2) {
+         for (int j=roi_rect.y + n; j < yEnd; j+=n2) {
             int mi = i;
             int mj = j;
             for (int i2=i; i2 < i + n2 && i2 < xRealEnd - n/2; i2++) {

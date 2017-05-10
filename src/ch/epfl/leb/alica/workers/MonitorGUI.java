@@ -152,6 +152,8 @@ public class MonitorGUI extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         e_new_setpoint = new javax.swing.JTextField();
         b_set_setpoint = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        b_set_ROI = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         l_analyzer = new javax.swing.JLabel();
@@ -224,6 +226,15 @@ public class MonitorGUI extends javax.swing.JFrame {
             }
         });
 
+        jLabel6.setText("ROI: Not set");
+
+        b_set_ROI.setText("Set ROI");
+        b_set_ROI.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                b_set_ROIActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -241,7 +252,11 @@ public class MonitorGUI extends javax.swing.JFrame {
                             .addComponent(e_new_setpoint, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(b_set_setpoint)))
+                        .addComponent(b_set_setpoint))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(b_set_ROI)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -257,7 +272,11 @@ public class MonitorGUI extends javax.swing.JFrame {
                     .addComponent(e_new_setpoint, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(b_set_setpoint)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(b_set_ROI)
+                    .addComponent(jLabel6))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -359,7 +378,7 @@ public class MonitorGUI extends javax.swing.JFrame {
                     .addComponent(jLabel9)
                     .addComponent(l_last_analysis_duration)
                     .addComponent(jLabel12))
-                .addContainerGap(121, Short.MAX_VALUE))
+                .addContainerGap(72, Short.MAX_VALUE))
         );
 
         p_realtime_plot.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -373,7 +392,7 @@ public class MonitorGUI extends javax.swing.JFrame {
         );
         p_realtime_plotLayout.setVerticalGroup(
             p_realtime_plotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 182, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -399,14 +418,14 @@ public class MonitorGUI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(p_realtime_plot, javax.swing.GroupLayout.DEFAULT_SIZE, 186, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(p_realtime_plot, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
@@ -432,8 +451,13 @@ public class MonitorGUI extends javax.swing.JFrame {
         l_setpoint.setText(e_new_setpoint.getText());
     }//GEN-LAST:event_b_set_setpointActionPerformed
 
+    private void b_set_ROIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_set_ROIActionPerformed
+        coordinator.setCurrentROI();
+    }//GEN-LAST:event_b_set_ROIActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton b_set_ROI;
     private javax.swing.JButton b_set_setpoint;
     private javax.swing.JTextField e_new_setpoint;
     private javax.swing.JLabel jLabel1;
@@ -442,6 +466,7 @@ public class MonitorGUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;

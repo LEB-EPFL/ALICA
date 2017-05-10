@@ -40,7 +40,8 @@ public class SpotCounterSetupPanel extends AnalyzerSetupPanel {
     public Analyzer initAnalyzer() {
         int noise_tolerance = Integer.parseInt(e_noise_tolerance.getText());
         int box_size = Integer.parseInt(e_box_size.getText());
-        return new SpotCounter(noise_tolerance, box_size);
+        boolean live_view = cb_live_view.isSelected();
+        return new SpotCounter(noise_tolerance, box_size, live_view);
     }
     
     /**
@@ -56,6 +57,7 @@ public class SpotCounterSetupPanel extends AnalyzerSetupPanel {
         e_noise_tolerance = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         e_box_size = new javax.swing.JTextField();
+        cb_live_view = new javax.swing.JCheckBox();
 
         setPreferredSize(new java.awt.Dimension(150, 150));
 
@@ -68,6 +70,8 @@ public class SpotCounterSetupPanel extends AnalyzerSetupPanel {
 
         e_box_size.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
         e_box_size.setText("5");
+
+        cb_live_view.setText("Live view");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -82,7 +86,11 @@ public class SpotCounterSetupPanel extends AnalyzerSetupPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(e_box_size)
                     .addComponent(e_noise_tolerance, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE))
-                .addContainerGap(66, Short.MAX_VALUE))
+                .addContainerGap(16, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(cb_live_view)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -95,12 +103,15 @@ public class SpotCounterSetupPanel extends AnalyzerSetupPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(e_box_size, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(88, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
+                .addComponent(cb_live_view)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox cb_live_view;
     private javax.swing.JTextField e_box_size;
     private javax.swing.JTextField e_noise_tolerance;
     private javax.swing.JLabel jLabel1;

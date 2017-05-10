@@ -139,6 +139,12 @@ public class Coordinator {
         AlicaLogger.getInstance().addSetpoint(analysis_worker.getCurrentImageCount(), value);
     }
     
+    public void setCurrentROI() {
+        analysis_worker.setROI(studio.displays().getCurrentWindow().getImagePlus().getRoi());
+        
+        
+    }
+    
     /**
      * Returns time in milliseconds since the worker was initialized
      * @return elapsed time in milliseconds

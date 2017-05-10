@@ -20,6 +20,7 @@ package ch.epfl.leb.alica.analyzers.spotcounter;
 
 ///////////////////////////////////////////////////////////////////////////////
 
+import ij.ImagePlus;
 import ij.gui.Overlay;
 import ij.gui.Roi;
 import ij.measure.ResultsTable;
@@ -39,7 +40,7 @@ import java.util.LinkedHashMap;
  * @author Nico Stuurman
  */
 public class SpotCounterCore {
-
+    private final ImagePlus live_view;
     private final int nPasses_ = 1;
     private int pasN_ = 0;
     private final String preFilterChoice_ = "";
@@ -51,15 +52,23 @@ public class SpotCounterCore {
             = FindLocalMaxima.FilterType.NONE;
     private int boxSize_;
     private int noiseTolerance_;
+    private Roi roi;
     
     /**
      *
      * @param noiseTolerance minimum peak value
      * @param boxSize size of scanning box
      */
-    public SpotCounterCore(int noiseTolerance, int boxSize) {
+    public SpotCounterCore(int noiseTolerance, int boxSize, boolean live_view) {
         boxSize_ = boxSize;
         noiseTolerance_ = noiseTolerance;
+        
+        if (live_view) {
+            this.live_view = new ImagePlus("SpotCounter live view");
+            this.live_view.show();
+        } else {
+            this.live_view = null;
+        }
     }
     
     /**
@@ -80,6 +89,12 @@ public class SpotCounterCore {
      */
     public HashMap<String,Double> analyze(ImageProcessor ip) {
         Overlay ov = getSpotOverlay(ip);
+        if (live_view != null) {
+            live_view.setProcessor(ip);
+            live_view.setOverlay(ov);
+            live_view.updateAndDraw();
+            live_view.show();
+        }
         return getFrameStats(ov);
 
     }
@@ -141,7 +156,7 @@ public class SpotCounterCore {
      */
     private Overlay getSpotOverlay(ImageProcessor ip) {
         Polygon pol = FindLocalMaxima.FindMax(
-                ip, boxSize_, noiseTolerance_, filter_);
+                ip, roi, boxSize_, noiseTolerance_, filter_);
         int halfSize = boxSize_ / 2;
         Overlay ov = new Overlay();
         for (int i = 0; i < pol.npoints; i++) {
@@ -155,5 +170,9 @@ public class SpotCounterCore {
             }
         }
         return ov;
+    }
+    
+    public void setROI(Roi roi) {
+        this.roi = roi;
     }
 }

@@ -20,6 +20,8 @@
 package ch.epfl.leb.alica.analyzers.spotcounter;
 
 import ch.epfl.leb.alica.Analyzer;
+import ij.ImagePlus;
+import ij.gui.Roi;
 import ij.process.ShortProcessor;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,13 +31,11 @@ import java.util.HashMap;
  * @author stefko
  */
 public class SpotCounter implements Analyzer {
-    private final int noise_tolerance;
-    private final int box_size;
     private final SpotCounterCore core;
     
     private final ArrayList<Double> intermittent_outputs;
     
-    
+    private Roi roi;
     private double intermittent_output = 0.0;
     
     /**
@@ -43,12 +43,11 @@ public class SpotCounter implements Analyzer {
      * @param noise_tolerance required height of peak around surroundings
      * @param box_size size of the scanning box in pixels
      */
-    public SpotCounter(int noise_tolerance, int box_size) {
+    public SpotCounter(int noise_tolerance, int box_size, boolean live_view) {
         intermittent_outputs = new ArrayList<Double>();
         
-        this.noise_tolerance = noise_tolerance;
-        this.box_size = box_size;
-        this.core = new SpotCounterCore(noise_tolerance, box_size);
+
+        this.core = new SpotCounterCore(noise_tolerance, box_size, live_view);
     }
     
 
@@ -65,12 +64,17 @@ public class SpotCounter implements Analyzer {
 
     @Override
     public void processImage(Object image, int image_width, int image_height, double pixel_size_um, long time_ms) {
-        
-        double fov_area = pixel_size_um*pixel_size_um*image_width*image_height;
+        double fov_area;
+        if (roi == null) {
+            fov_area = pixel_size_um*pixel_size_um*image_width*image_height;
+        } else {
+            fov_area = pixel_size_um*pixel_size_um*roi.getBounds().getWidth()*roi.getBounds().getHeight();
+        }
         ShortProcessor sp = new ShortProcessor(image_width, image_height);
         sp.setPixels(image);
+        
         HashMap<String,Double> results = core.analyze(sp.duplicate());
-        intermittent_output = results.get("spot-count")/ fov_area * 100;
+        intermittent_output = results.get("spot-count")/ fov_area * 10000;
         intermittent_outputs.add(intermittent_output);
     }
 
@@ -86,5 +90,11 @@ public class SpotCounter implements Analyzer {
         
         intermittent_outputs.clear();
         return mean_output;
+    }
+    
+    @Override
+    public void setROI(Roi roi) {
+        this.roi = roi;
+        core.setROI(roi);
     }
 }

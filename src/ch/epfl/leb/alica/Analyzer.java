@@ -19,6 +19,8 @@
  */
 package ch.epfl.leb.alica;
 
+import ij.gui.Roi;
+
 
 /**
  * An analyzer receives images from the WorkerThread, processes them, and
@@ -53,6 +55,8 @@ public interface Analyzer {
      * @return output value of the analyzer to be used by the controller
      */
     public double getBatchOutput();
+    
+    public void setROI(Roi roi);
     
     /**
      * 

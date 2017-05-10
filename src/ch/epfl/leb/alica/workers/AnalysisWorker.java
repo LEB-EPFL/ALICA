@@ -23,6 +23,7 @@ import ch.epfl.leb.alica.AlicaLogger;
 import ch.epfl.leb.alica.Analyzer;
 import ch.epfl.leb.alica.ImagingMode;
 import com.google.common.eventbus.Subscribe;
+import ij.gui.Roi;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.micromanager.Studio;
@@ -133,6 +134,12 @@ public class AnalysisWorker extends Thread {
             this.coordinator.requestStop();
         }
     }
+    
+    public void setROI(Roi roi) {
+        synchronized(analyzer) {
+            analyzer.setROI(roi);
+        }
+    }        
     
     
     
