@@ -152,7 +152,7 @@ public class MonitorGUI extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         e_new_setpoint = new javax.swing.JTextField();
         b_set_setpoint = new javax.swing.JButton();
-        jLabel6 = new javax.swing.JLabel();
+        l_roi_isset = new javax.swing.JLabel();
         b_set_ROI = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -169,7 +169,8 @@ public class MonitorGUI extends javax.swing.JFrame {
         jLabel12 = new javax.swing.JLabel();
         p_realtime_plot = new javax.swing.JPanel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle("ALICA Monitor");
         setResizable(false);
 
         pb_laser_power.setOrientation(1);
@@ -226,7 +227,7 @@ public class MonitorGUI extends javax.swing.JFrame {
             }
         });
 
-        jLabel6.setText("ROI: Not set");
+        l_roi_isset.setText("ROI: Not set");
 
         b_set_ROI.setText("Set ROI");
         b_set_ROI.addActionListener(new java.awt.event.ActionListener() {
@@ -254,7 +255,7 @@ public class MonitorGUI extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(b_set_setpoint))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel6)
+                        .addComponent(l_roi_isset)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(b_set_ROI)))
                 .addContainerGap())
@@ -275,7 +276,7 @@ public class MonitorGUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(b_set_ROI)
-                    .addComponent(jLabel6))
+                    .addComponent(l_roi_isset))
                 .addContainerGap(19, Short.MAX_VALUE))
         );
 
@@ -452,7 +453,11 @@ public class MonitorGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_b_set_setpointActionPerformed
 
     private void b_set_ROIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_set_ROIActionPerformed
-        coordinator.setCurrentROI();
+        boolean is_set = coordinator.setCurrentROI();
+        if (is_set)
+            l_roi_isset.setText("ROI: Set");
+        else
+            l_roi_isset.setText("ROI: Not set");
     }//GEN-LAST:event_b_set_ROIActionPerformed
 
 
@@ -466,7 +471,6 @@ public class MonitorGUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
@@ -480,6 +484,7 @@ public class MonitorGUI extends javax.swing.JFrame {
     private javax.swing.JLabel l_laser;
     public javax.swing.JLabel l_laser_power_max;
     public javax.swing.JLabel l_last_analysis_duration;
+    private javax.swing.JLabel l_roi_isset;
     private javax.swing.JLabel l_setpoint;
     public javax.swing.JPanel p_realtime_plot;
     public javax.swing.JProgressBar pb_laser_power;

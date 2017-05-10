@@ -26,6 +26,8 @@ import com.google.common.eventbus.Subscribe;
 import ij.gui.Roi;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import mmcorej.TaggedImage;
+import org.json.JSONException;
 import org.micromanager.Studio;
 import org.micromanager.data.Coords;
 import org.micromanager.data.Datastore;
@@ -119,6 +121,7 @@ public class AnalysisWorker extends Thread {
             this.image_counter = 0;
             AlicaLogger.getInstance().clear();
         }
+        AlicaLogger.getInstance().addToLog(image_counter, "Acquisition_in_progress", 1.0);
     }
     
     /**
@@ -133,6 +136,7 @@ public class AnalysisWorker extends Thread {
             this.new_image_watcher.setLatestDatastore(null);
             this.coordinator.requestStop();
         }
+        AlicaLogger.getInstance().addToLog(image_counter, "Acquisition_in_progress", 0.0);
     }
     
     public void setROI(Roi roi) {
@@ -211,10 +215,12 @@ public class AnalysisWorker extends Thread {
      */
     public void getNewImageFromCoreAndAnalyze() {
         long image_acquisition_time = coordinator.getTimeMillis();
+        TaggedImage new_tagged_image = null;
         Object new_image = null;
         // query core for new image, if failed, just log it and enter loop
         try {
-            new_image = studio.core().getLastImage();
+            new_tagged_image = studio.core().getLastTaggedImage();
+            new_image = new_tagged_image.pix;
         } catch (Exception ex) {
             studio.logs().logDebugMessage("Failure by AnalysisWorker to recieve image from MMCore.");
         }
@@ -228,7 +234,8 @@ public class AnalysisWorker extends Thread {
             try {
                 // also update acq time value
                 image_acquisition_time = coordinator.getTimeMillis();
-                new_image = studio.core().getLastImage();
+                new_tagged_image = studio.core().getLastTaggedImage();
+                new_image = new_tagged_image.pix;
             } catch (Exception ex) {
                 studio.logs().logDebugMessage("Failure by AnalysisWorker to recieve image from MMCore.");
             }
@@ -237,6 +244,11 @@ public class AnalysisWorker extends Thread {
         synchronized(analyzer) {
             analyzer.processImage(new_image, (int) studio.core().getImageWidth(), (int) studio.core().getImageHeight(), studio.core().getPixelSizeUm(), image_acquisition_time);
             this.last_core_image = new_image;
+            try {
+                AlicaLogger.getInstance().addToLog(image_counter+1, "tag_frame_index", new_tagged_image.tags.getInt("FrameIndex"));
+            } catch (JSONException ex) {
+                studio.logs().logError(ex, "Failed to extract tagged image data.");
+            }
         }
     }
     

@@ -24,6 +24,7 @@ import ch.epfl.leb.alica.Analyzer;
 import ch.epfl.leb.alica.Controller;
 import ch.epfl.leb.alica.ImagingMode;
 import ch.epfl.leb.alica.Laser;
+import ij.gui.Roi;
 import org.micromanager.Studio;
 
 /**
@@ -139,8 +140,14 @@ public class Coordinator {
         AlicaLogger.getInstance().addSetpoint(analysis_worker.getCurrentImageCount(), value);
     }
     
-    public void setCurrentROI() {
-        analysis_worker.setROI(studio.displays().getCurrentWindow().getImagePlus().getRoi());
+    public boolean setCurrentROI() {
+        Roi roi = studio.displays().getCurrentWindow().getImagePlus().getRoi();
+        analysis_worker.setROI(roi);
+        if (roi != null) {
+            return true;
+        } else {
+            return false;
+        }
         
         
     }

@@ -158,7 +158,13 @@ public class AlicaLogger {
             writer.print(','+s);
         }
         writer.print("\n");
-
+        
+        
+        LinkedHashMap<String,Object> value_cache = log_map.get(1);
+        if (value_cache == null) {
+            value_cache = new LinkedHashMap<String,Object>();
+        }
+        
         for (int i=1; i<=max_frame_no; i++) {
             writer.print(i);
             
@@ -169,7 +175,9 @@ public class AlicaLogger {
             for (String s: parameter_set) {
                 Object output = frame_map.get(s);
                 if (output==null) {
-                    output = Double.NaN;
+                    output = value_cache.get(s);
+                } else {
+                    value_cache.put(s, output);
                 }
                 writer.print(",");
                 writer.print(output.toString());

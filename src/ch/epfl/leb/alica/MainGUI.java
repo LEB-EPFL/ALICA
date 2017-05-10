@@ -176,6 +176,7 @@ public final class MainGUI extends JFrame {
         e_laser_deadzone_pct = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle("ALICA Setup");
         setResizable(false);
 
         l_title.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
