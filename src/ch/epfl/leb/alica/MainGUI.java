@@ -491,7 +491,10 @@ public final class MainGUI extends JFrame {
             if (dlg.cancelPressed()) {
                 return;
             } else if (dlg.yesPressed()) {
-                AlicaLogger.getInstance().saveLog();
+                if (!AlicaLogger.getInstance().saveLog())
+                    return;
+                else 
+                    this.log_is_saved = true;
             } else {
                 this.log_is_saved = true;
             }

@@ -116,10 +116,10 @@ public class AlicaLogger {
     /**
      * Saves the log into a csv file chosen by file selection dialog.
      */
-    public void saveLog() {
+    public boolean saveLog() {
         if (log_map.isEmpty()) {
             MMStudio.getInstance().logs().showError("Log is empty!");
-            return;
+            return true;
         }
         
         
@@ -141,7 +141,7 @@ public class AlicaLogger {
         fc.setFileFilter(new FileNameExtensionFilter("CSV file","csv"));
         returnVal = fc.showSaveDialog(null);
         if  (returnVal != JFileChooser.APPROVE_OPTION) {
-            return;
+            return false;
         }
         File csv_output = fc.getSelectedFile();
         
@@ -150,7 +150,7 @@ public class AlicaLogger {
             writer = new PrintWriter(csv_output.getAbsolutePath());
         } catch (FileNotFoundException ex) {
             MMStudio.getInstance().logs().showError(ex, "Can't find file to save.");
-            return;
+            return false;
         }
         
         writer.print("#frame_no");
@@ -186,5 +186,6 @@ public class AlicaLogger {
         }
         writer.close();
         this.clear();
+        return true;
     }
 }
