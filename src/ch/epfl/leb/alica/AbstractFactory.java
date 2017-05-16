@@ -19,7 +19,9 @@
  */
 package ch.epfl.leb.alica;
 
-import java.util.HashMap;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Set;
 
 /**
@@ -30,13 +32,13 @@ import java.util.Set;
  */
 public abstract class AbstractFactory<ProductSetupPanel> {
     String selected_name;
-    private final HashMap<String, ProductSetupPanel> setup_panels;
+    private final LinkedHashMap<String, ProductSetupPanel> setup_panels;
     
     /**
      * Initialize the map which stores different setup panels.
      */
     public AbstractFactory() {
-        setup_panels = new HashMap<String, ProductSetupPanel>();
+        setup_panels = new LinkedHashMap<String, ProductSetupPanel>();
     }
     
     /**
@@ -68,6 +70,10 @@ public abstract class AbstractFactory<ProductSetupPanel> {
      */
     public Set<String> getProductNameList() {
         return setup_panels.keySet();
+    }
+    
+    public Collection<ProductSetupPanel> getProductSetupPanelCollection() {
+        return setup_panels.values();
     }
     
     /**

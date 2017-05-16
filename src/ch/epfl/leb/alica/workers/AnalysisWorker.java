@@ -24,6 +24,7 @@ import ch.epfl.leb.alica.Analyzer;
 import ch.epfl.leb.alica.ImagingMode;
 import com.google.common.eventbus.Subscribe;
 import ij.gui.Roi;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import mmcorej.TaggedImage;
@@ -245,7 +246,13 @@ public class AnalysisWorker extends Thread {
             analyzer.processImage(new_image, (int) studio.core().getImageWidth(), (int) studio.core().getImageHeight(), studio.core().getPixelSizeUm(), image_acquisition_time);
             this.last_core_image = new_image;
             try {
-                AlicaLogger.getInstance().addToLog(image_counter+1, "tag_frame_index", new_tagged_image.tags.getInt("FrameIndex"));
+                /*String s = ""; Iterator<String> i = new_tagged_image.tags.keys();
+                while(i.hasNext()) {
+                    String k = i.next();
+                    s += "\n " + k + new_tagged_image.tags.get(k);
+                }
+                studio.logs().logDebugMessage("Keys in tag: " + s);*/
+                AlicaLogger.getInstance().addToLog(image_counter+1, "tag_frame_index", new_tagged_image.tags.getInt("ImageNumber"));
             } catch (JSONException ex) {
                 studio.logs().logError(ex, "Failed to extract tagged image data.");
             }

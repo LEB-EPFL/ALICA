@@ -164,6 +164,11 @@ public class AlicaLogger {
         if (value_cache == null) {
             value_cache = new LinkedHashMap<String,Object>();
         }
+        for (String s: parameter_set) {
+            if (value_cache.get(s) == null) {
+                value_cache.put(s, 0.0);
+            }
+        }
         
         for (int i=1; i<=max_frame_no; i++) {
             writer.print(i);
