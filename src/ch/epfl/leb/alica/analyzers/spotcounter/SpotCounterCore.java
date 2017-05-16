@@ -71,6 +71,12 @@ public class SpotCounterCore {
         }
     }
     
+    public void dispose() {
+        if (this.live_view != null) {
+            this.live_view.hide();
+        }
+    }
+    
     /**
      * Set new parameters for the analysis
      * @param noiseTolerance minimum peak value

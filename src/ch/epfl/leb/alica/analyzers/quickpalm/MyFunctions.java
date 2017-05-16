@@ -58,6 +58,12 @@ class MyFunctions {
         cal3d_wmh = caltable.getColumnAsDoubles(1);
         cal3d_center = (int) Math.round(cal3d_z.length / 2);
     }
+    
+    public void dispose() {
+        if (this.live_view!= null) {
+            this.live_view.hide();
+        }
+    }
 
     /**
      * Given a calculated width-minus-height (wmh) converts this value into the

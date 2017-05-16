@@ -97,4 +97,9 @@ public class SpotCounter implements Analyzer {
         this.roi = roi;
         core.setROI(roi);
     }
+    
+    @Override
+    public void dispose() {
+        core.dispose();
+    }
 }

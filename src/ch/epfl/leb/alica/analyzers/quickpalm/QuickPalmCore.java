@@ -58,6 +58,10 @@ public class QuickPalmCore {
         }
         return this.f.detectParticles(ip, this.dg, frame);
     }
+    
+    public void dispose() {
+        f.dispose();
+    }
         
 }
 

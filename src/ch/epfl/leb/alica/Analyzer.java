@@ -58,6 +58,8 @@ public interface Analyzer {
     
     public void setROI(Roi roi);
     
+    public void dispose();
+    
     /**
      * 
      * @return unique name of the analyzer.

@@ -91,4 +91,9 @@ public class QuickPalm implements Analyzer {
         return "QuickPALM";
     }
     
+    @Override
+    public void dispose() {
+        core.dispose();
+    }
+    
 }

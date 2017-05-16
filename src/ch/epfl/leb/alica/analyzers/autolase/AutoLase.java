@@ -77,6 +77,11 @@ public class AutoLase implements Analyzer {
     public void setROI(Roi roi) {
         autolase_core.setROI(roi);
     }
+    
+    @Override
+    public void dispose() {
+        
+    }
 
 }
 
