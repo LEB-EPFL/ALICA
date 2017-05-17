@@ -140,6 +140,10 @@ public class AnalysisWorker extends Thread {
         AlicaLogger.getInstance().addToLog(image_counter, "Acquisition_in_progress", 0.0);
     }
     
+    /**
+     * Set the ROI for Analyzer
+     * @param roi ROI to be set
+     */
     public void setROI(Roi roi) {
         synchronized(analyzer) {
             analyzer.setROI(roi);
@@ -332,6 +336,7 @@ public class AnalysisWorker extends Thread {
      */
     public void requestStop() {
         this.stop_flag = true;
+        this.analyzer.dispose();
     }
 }
 

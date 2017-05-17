@@ -66,12 +66,16 @@ public abstract class AbstractFactory<ProductSetupPanel> {
     
     /**
      *
-     * @return list of all possible products
+     * @return list of all possible product keys
      */
     public Set<String> getProductNameList() {
         return setup_panels.keySet();
     }
     
+    /**
+     *
+     * @return collection of all possible product setup panels
+     */
     public Collection<ProductSetupPanel> getProductSetupPanelCollection() {
         return setup_panels.values();
     }

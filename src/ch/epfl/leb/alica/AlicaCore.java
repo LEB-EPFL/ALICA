@@ -144,6 +144,7 @@ public final class AlicaCore {
      */
     public void setControlWorkerTickRate(int controller_tick_rate_ms) {
         this.controller_tick_rate_ms = controller_tick_rate_ms;
+        this.controller_factory.setControllerTickRateMs(controller_tick_rate_ms);
     }
     
     

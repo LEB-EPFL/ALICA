@@ -132,7 +132,7 @@ public class PIDSetupPanel extends ControllerSetupPanel {
     // End of variables declaration//GEN-END:variables
 
     @Override
-    public Controller initController(double max_controller_output) {
+    public Controller initController(double max_controller_output, double tick_rate_ms) {
         double P = Double.parseDouble(e_p.getText());
         double I = Double.parseDouble(e_i.getText());
         double D = Double.parseDouble(e_d.getText());

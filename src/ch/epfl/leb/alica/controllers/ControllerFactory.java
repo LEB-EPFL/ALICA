@@ -23,7 +23,9 @@ import ch.epfl.leb.alica.AbstractFactory;
 import ch.epfl.leb.alica.Controller;
 import ch.epfl.leb.alica.controllers.inverter.InverterSetupPanel;
 import ch.epfl.leb.alica.controllers.manual.ManualSetupPanel;
+import ch.epfl.leb.alica.controllers.pi.PI_SetupPanel;
 import ch.epfl.leb.alica.controllers.pid.PIDSetupPanel;
+import ch.epfl.leb.alica.controllers.selftuningpi.SelfTuningSetupPanel;
 
 /**
  * Controller Factory
@@ -31,7 +33,7 @@ import ch.epfl.leb.alica.controllers.pid.PIDSetupPanel;
  */
 public class ControllerFactory extends AbstractFactory<ControllerSetupPanel>{
     private double max_controller_output = 0.0;
-    
+    private double tick_rate_ms = 500;
     
     /**
      * Initialize the factory with known controllers
@@ -39,12 +41,14 @@ public class ControllerFactory extends AbstractFactory<ControllerSetupPanel>{
     public ControllerFactory() {
         super();
         // add known controllers
+        addSetupPanel("PI", new PI_SetupPanel());
         addSetupPanel("PID",new PIDSetupPanel());
         addSetupPanel("Manual", new ManualSetupPanel());
         addSetupPanel("Inverter", new InverterSetupPanel());
+        addSetupPanel("Self-tuning", new SelfTuningSetupPanel());
         
         // set up default choice
-        selectProduct("Manual");
+        selectProduct("PI");
     }
     
     /**
@@ -56,10 +60,18 @@ public class ControllerFactory extends AbstractFactory<ControllerSetupPanel>{
     }
     
     /**
+     * Set the tick rate at which the controller will operate.
+     * @param tick_rate_ms tick rate in milliseconds
+     */
+    public void setControllerTickRateMs(double tick_rate_ms) {
+        this.tick_rate_ms = tick_rate_ms;
+    }
+    
+    /**
      * Build the selected controller using current settings
      * @return initialized controller
      */
     public Controller build() {
-        return getSelectedSetupPanel().initController(max_controller_output);
+        return getSelectedSetupPanel().initController(max_controller_output, tick_rate_ms);
     }
 }

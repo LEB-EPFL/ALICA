@@ -131,6 +131,17 @@ public class Coordinator {
         
     }
     
+    /**
+     * True if still running, false if stopped
+     * @return boolean
+     */
+    public boolean isRunning() {
+        return !stop_flag;
+    }
+    
+    /**
+     * Clear windows opened by analyzers and controllers.
+     */
     public void dispose() {
         this.gui.dispose();
     }
@@ -144,6 +155,10 @@ public class Coordinator {
         AlicaLogger.getInstance().addSetpoint(analysis_worker.getCurrentImageCount(), value);
     }
     
+    /**
+     * Get the currently selected ROI in active MM display, and set it as analysis ROI.
+     * @return true if ROI has been set, false if no ROI is set
+     */
     public boolean setCurrentROI() {
         Roi roi = studio.displays().getCurrentWindow().getImagePlus().getRoi();
         analysis_worker.setROI(roi);

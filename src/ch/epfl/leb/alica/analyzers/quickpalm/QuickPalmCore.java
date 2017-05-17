@@ -35,6 +35,7 @@ public class QuickPalmCore {
     
     /**
      * Initializes the core and launches a dialog for parameter setup.
+     * @param live_view if true, live view of particle positions will be shown
      */
     public QuickPalmCore(boolean live_view) {
         dg = new MyDialogs();
@@ -59,6 +60,9 @@ public class QuickPalmCore {
         return this.f.detectParticles(ip, this.dg, frame);
     }
     
+    /**
+     * Close preview window if opened.
+     */
     public void dispose() {
         f.dispose();
     }

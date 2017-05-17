@@ -91,6 +91,7 @@ public class FindLocalMaxima {
     * 
     * 
     * @param iProc - ImageProcessor object in which to look for local maxima
+    * @param roi - region of interest to which the analysis is constrained
     * @param n - minimum distance to other local maximum
     * @param threshold - value below which a maximum will be rejected
     * @param filterType - Prefilter the image.  Either none or Gaussian1_5

@@ -42,6 +42,7 @@ public class SpotCounter implements Analyzer {
      * Initialize the analyzer
      * @param noise_tolerance required height of peak around surroundings
      * @param box_size size of the scanning box in pixels
+     * @param live_view if true, live preview is shown
      */
     public SpotCounter(int noise_tolerance, int box_size, boolean live_view) {
         intermittent_outputs = new ArrayList<Double>();

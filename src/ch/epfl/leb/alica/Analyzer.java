@@ -56,8 +56,16 @@ public interface Analyzer {
      */
     public double getBatchOutput();
     
+    /**
+     * Sets the region of interest in the image, so that only a section of the
+     * whole image is analyzed.
+     * @param roi ROI to constrain to
+     */
     public void setROI(Roi roi);
     
+    /**
+     * Close all windows that were opened and are owned by this analyzer.
+     */
     public void dispose();
     
     /**

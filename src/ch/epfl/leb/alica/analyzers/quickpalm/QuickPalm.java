@@ -27,8 +27,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- *
- * @author stefko
+ * Implementation of the QuickPALM algorithm as an analyzer, which produces
+ * particle count as output.
+ * @author Marcel Stefko
  */
 public class QuickPalm implements Analyzer {
     private final QuickPalmCore core;
@@ -38,6 +39,11 @@ public class QuickPalm implements Analyzer {
     private double intermittent_output = 0.0;
     private int counter = 0;
     
+    /**
+     * Implementation of the QuickPALM algorithm as an analyzer, which produces
+     * particle count as output.
+     * @param live_view if true, live view of particle positions is shown
+     */
     public QuickPalm(boolean live_view) {
         core = new QuickPalmCore(live_view);
         intermittent_outputs = new ArrayList<Double>();

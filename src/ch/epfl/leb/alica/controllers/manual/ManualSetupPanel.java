@@ -82,7 +82,7 @@ public class ManualSetupPanel extends ControllerSetupPanel {
 
 
     @Override
-    public Controller initController(double max_controller_output) {
+    public Controller initController(double max_controller_output, double tick_rate_ms) {
         double initial_output = Double.parseDouble(e_initial_output.getText());
         return new ManualController(max_controller_output, initial_output);
     }

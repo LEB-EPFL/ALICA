@@ -58,6 +58,7 @@ public class SpotCounterCore {
      *
      * @param noiseTolerance minimum peak value
      * @param boxSize size of scanning box
+     * @param live_view if true, live preview is shown
      */
     public SpotCounterCore(int noiseTolerance, int boxSize, boolean live_view) {
         boxSize_ = boxSize;
@@ -71,6 +72,9 @@ public class SpotCounterCore {
         }
     }
     
+    /**
+     * Hide live view window if it exists.
+     */
     public void dispose() {
         if (this.live_view != null) {
             this.live_view.hide();
@@ -178,6 +182,10 @@ public class SpotCounterCore {
         return ov;
     }
     
+    /**
+     * Constrain analysis to given ROI.
+     * @param roi ROI to constrain analysis to
+     */
     public void setROI(Roi roi) {
         this.roi = roi;
     }

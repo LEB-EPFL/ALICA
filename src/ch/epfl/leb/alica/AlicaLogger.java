@@ -50,6 +50,10 @@ public class AlicaLogger {
         parameter_set = new LinkedHashSet<String>();
     }
     
+    /**
+     *
+     * @return AlicaLogger singleton
+     */
     public static AlicaLogger getInstance() {
         if (instance == null) {
             instance = new AlicaLogger();
@@ -86,7 +90,7 @@ public class AlicaLogger {
     /**
      * Add setpoint of controller into log
      * @param frame_no
-     * @param value value of the output
+     * @param setpoint value of the output
      */
     public void addSetpoint(int frame_no, double setpoint) {
         addToLog(frame_no,"setpoint", setpoint);
@@ -106,6 +110,12 @@ public class AlicaLogger {
         log_map.get(frame_no).put(value_name, Double.valueOf(value));
     }
     
+    /**
+     * Add a parameter into log
+     * @param frame_no
+     * @param value_name name of parameter
+     * @param value value of parameter
+     */
     public void addToLog(int frame_no, String value_name, String value) {
         parameter_set.add(value_name);
         if (!log_map.containsKey(frame_no))
@@ -115,6 +125,7 @@ public class AlicaLogger {
     
     /**
      * Saves the log into a csv file chosen by file selection dialog.
+     * @return true if save was successful, false otherwise
      */
     public boolean saveLog() {
         if (log_map.isEmpty()) {

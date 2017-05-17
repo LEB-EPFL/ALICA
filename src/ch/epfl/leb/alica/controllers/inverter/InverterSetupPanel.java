@@ -82,7 +82,7 @@ public class InverterSetupPanel extends ControllerSetupPanel {
 
 
     @Override
-    public Controller initController(double max_controller_output) {
+    public Controller initController(double max_controller_output, double tick_rate_ms) {
         double input_at_1mw = Double.parseDouble(e_input_at_1mw.getText());
         return new InvertController(max_controller_output, input_at_1mw);
     }
