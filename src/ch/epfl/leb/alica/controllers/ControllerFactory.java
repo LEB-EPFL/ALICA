@@ -24,7 +24,6 @@ import ch.epfl.leb.alica.Controller;
 import ch.epfl.leb.alica.controllers.inverter.InverterSetupPanel;
 import ch.epfl.leb.alica.controllers.manual.ManualSetupPanel;
 import ch.epfl.leb.alica.controllers.pi.PI_SetupPanel;
-import ch.epfl.leb.alica.controllers.pid.PIDSetupPanel;
 import ch.epfl.leb.alica.controllers.selftuningpi.SelfTuningSetupPanel;
 
 /**
@@ -42,10 +41,9 @@ public class ControllerFactory extends AbstractFactory<ControllerSetupPanel>{
         super();
         // add known controllers
         addSetupPanel("PI", new PI_SetupPanel());
-        addSetupPanel("PID",new PIDSetupPanel());
         addSetupPanel("Manual", new ManualSetupPanel());
         addSetupPanel("Inverter", new InverterSetupPanel());
-        addSetupPanel("Self-tuning", new SelfTuningSetupPanel());
+        addSetupPanel("Self-tuning PI", new SelfTuningSetupPanel());
         
         // set up default choice
         selectProduct("PI");
