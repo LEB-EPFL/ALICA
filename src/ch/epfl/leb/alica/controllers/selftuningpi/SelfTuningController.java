@@ -104,36 +104,37 @@ public class SelfTuningController implements Controller {
             return current_output;
         } else {
             init_counter++;
-            if (init_counter == 0) {
+            MMStudio.getInstance().logs().logMessage("Counter: "+init_counter+"\nSignal value: "+value);
+            if (init_counter <= 0) {
                 current_output = 0.0;
                 
             } else if (init_counter == 1) {
                 //skip
-            } else if (init_counter < 3) {
+            } else if (init_counter < 10) {
                 zero_power_signal += value;
-            } else if (init_counter == 4) {
+            } else if (init_counter == 10) {
                 zero_power_signal += value;
-                zero_power_signal /= 3;
+                zero_power_signal /= 9;
                 MMStudio.getInstance().logs().logMessage(
                  String.format("Tuning: signal at zero power: %e", zero_power_signal));
                 current_output = step_height;
-            } else if (init_counter == 5) {
+            } else if (init_counter == 11) {
                 //skip
-            } else if (init_counter < 8) {
+            } else if (init_counter < 20) {
                 with_power_signal += value;
-            } else if (init_counter == 8) {
+            } else if (init_counter == 20) {
                 with_power_signal += value;
-                with_power_signal /= 3;
+                with_power_signal /= 9;
                 MMStudio.getInstance().logs().logMessage(
                  String.format("Tuning: signal at %5.2f power: %e", step_height, with_power_signal));
-                double error = with_power_signal - zero_power_signal;
+                double error =  with_power_signal - zero_power_signal;
                 P = step_height * p_factor / error;
                 I = P * sampling_period_s * i_factor;
                 if (P<0.0 || I<0.0) {
                     MMStudio.getInstance().logs().showError("Self-tuning failed! Components were calculated to be negative. Turning laser off.");
                     P = 0.0; I = 0.0;
                 } else {
-                    MMStudio.getInstance().logs().showMessage("Self-tuning successful!\n - P = " + P + "\n - I = " + I);
+                    MMStudio.getInstance().logs().logMessage("Self-tuning successful!\n - P = " + P + "\n - I = " + I);
                 }
                 MMStudio.getInstance().logs().logMessage(
                  "Controller calibrated:\n - P = " + P + "\n - I = " + I);
