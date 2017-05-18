@@ -27,13 +27,13 @@ import ch.epfl.leb.alica.Controller;
  * @author Marcel Stefko
  */
 public class PI_controller implements Controller {
-    private final double P;
-    private final double I;
+    protected double P;
+    protected double I;
     private final double max_output;
     private final double min_output;
     
     private double setpoint = 0.0;
-    private double current_output = 0.0;
+    protected double current_output = 0.0;
     
     private double integral = 0.0;
     
@@ -58,6 +58,9 @@ public class PI_controller implements Controller {
         if (new_setpoint < 0.0 || Double.isNaN(new_setpoint)) {
             throw new IllegalArgumentException("Setpoint can't be negative or NaN!");
         }
+        if (new_setpoint == 0.0 && integral > 0.0)
+            // of setpoint is set to 0, reset integral so it winds down immediately
+            this.integral = 0.0;
         this.setpoint = new_setpoint;
     }
 

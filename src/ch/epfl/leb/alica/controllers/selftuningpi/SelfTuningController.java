@@ -19,30 +19,22 @@
  */
 package ch.epfl.leb.alica.controllers.selftuningpi;
 
-import ch.epfl.leb.alica.Controller;
+import ch.epfl.leb.alica.controllers.pi.PI_controller;
 import org.micromanager.internal.MMStudio;
 
 /**
  * A self-tuning implementation of the PI controller. It waits for 10 cycles,
- * and over next 10 cycles generates a step pulse and measures response. From
+ * and over next 20 cycles generates a step pulse and measures response. From
  * this response it estimates the P and I components of the PID controller.
  * @author Marcel Stefko
  */
-public class SelfTuningController implements Controller {
-    private double P;
-    private double I;
-    private final double max_output;
-    private final double min_output;
+public class SelfTuningController extends PI_controller {
     private final double step_height;
     private final double sampling_period_s;
     private final double p_factor;
     private final double i_factor;
     
-    private double setpoint = 0.0;
-    private double current_output = 0.0;
-    
-    private double integral = 0.0;
-    
+    // each value of init_counter is associated with an action in the init sequence
     private int init_counter = -10;
     private boolean init_sequence = true;
     private double zero_power_signal = 0.0;
@@ -57,100 +49,78 @@ public class SelfTuningController implements Controller {
      * @param i_factor scaling factor for I in tuning
      */
     public SelfTuningController(double max_output, double sampling_period_s, double step_height, double p_factor, double i_factor) {
-        if (max_output < 0.0 || sampling_period_s < 0.0 || step_height < 0.0)
-            throw new IllegalArgumentException("Invalid PI controller parameter.");
-        this.max_output = max_output;
-        this.min_output = 0.0;
+        super(0.0,0.0, max_output, sampling_period_s);
+        if (step_height <= 0.0 || p_factor <= 0.0 || i_factor <= 0.0)
+            throw new IllegalArgumentException("Invalid self-tuning controller parameter!");
         this.step_height = step_height;
         this.sampling_period_s = sampling_period_s;
         this.p_factor = p_factor;
         this.i_factor = i_factor;
     }
     
-    @Override
-    public void setSetpoint(double new_setpoint) {
-        if (new_setpoint < 0.0 || Double.isNaN(new_setpoint)) {
-            throw new IllegalArgumentException("Setpoint can't be negative or NaN!");
-        }
-        this.setpoint = new_setpoint;
-    }
-
-    @Override
-    public double getSetpoint() {
-        return this.setpoint;
-    }
 
     @Override
     public double nextValue(double value) {
         if (Double.isNaN(value) || Double.isInfinite(value))
             return current_output;
         if (!init_sequence) {
-            final double error = setpoint - value;
-
-            final double P_output = P * error;
-
-            integral += I * error;
-            // back-calculate integral so we don't have windup
-            final double desiredMaxIoutput = max_output - P_output;
-            if (integral > desiredMaxIoutput)
-                integral = desiredMaxIoutput;
-            final double desiredMinIoutput = min_output - P_output;
-            if (integral < desiredMinIoutput)
-                integral = desiredMinIoutput;
-
-            final double I_output = integral;
-
-            current_output = P_output + I_output;
-            return current_output;
+            return super.nextValue(value);
         } else {
-            init_counter++;
-            MMStudio.getInstance().logs().logMessage("Counter: "+init_counter+"\nSignal value: "+value);
-            if (init_counter <= 0) {
-                current_output = 0.0;
-                
-            } else if (init_counter == 1) {
-                //skip
-            } else if (init_counter < 10) {
-                zero_power_signal += value;
-            } else if (init_counter == 10) {
-                zero_power_signal += value;
-                zero_power_signal /= 9;
-                MMStudio.getInstance().logs().logMessage(
-                 String.format("Tuning: signal at zero power: %e", zero_power_signal));
-                current_output = step_height;
-            } else if (init_counter == 11) {
-                //skip
-            } else if (init_counter < 20) {
-                with_power_signal += value;
-            } else if (init_counter == 20) {
-                with_power_signal += value;
-                with_power_signal /= 9;
-                MMStudio.getInstance().logs().logMessage(
-                 String.format("Tuning: signal at %5.2f power: %e", step_height, with_power_signal));
-                double error =  with_power_signal - zero_power_signal;
-                P = step_height * p_factor / error;
-                I = P * sampling_period_s * i_factor;
-                if (P<0.0 || I<0.0) {
-                    MMStudio.getInstance().logs().showError("Self-tuning failed! Components were calculated to be negative. Turning laser off.");
-                    P = 0.0; I = 0.0;
-                } else {
-                    MMStudio.getInstance().logs().logMessage("Self-tuning successful!\n - P = " + P + "\n - I = " + I);
-                }
-                MMStudio.getInstance().logs().logMessage(
-                 "Controller calibrated:\n - P = " + P + "\n - I = " + I);
-                
-                current_output = 0.0;
-                init_sequence = false;
-            } else {
-                //skip
-            }
-            return current_output;
+            return initSequence(value);
         }
     }
-
-    @Override
-    public double getCurrentOutput() {
-        return this.current_output;
+    
+    private double initSequence(double value) {
+        init_counter++;
+        MMStudio.getInstance().logs().logMessage("Counter: "+init_counter+"\nSignal value: "+value);
+        
+        if (init_counter <= 0) {
+            // just wait for sample stabilization
+            current_output = 0.0;
+        } else if (init_counter == 1) {
+            //skip
+        } else if (init_counter < 10) {
+            // 2-9: accumulate zero power signal 
+            zero_power_signal += value;
+        } else if (init_counter == 10) {
+            // 10: average out zero power signal
+            zero_power_signal += value;
+            zero_power_signal /= 9;
+            MMStudio.getInstance().logs().logMessage(
+             String.format("Tuning: signal at zero power: %e", zero_power_signal));
+            // increase output to step height
+            current_output = step_height;
+        } else if (init_counter == 11) {
+            //skip
+        } else if (init_counter < 20) {
+            // 12-19: accumulate signal with power
+            with_power_signal += value;
+        } else if (init_counter == 20) {
+            // 20: average out signal with power
+            with_power_signal += value;
+            with_power_signal /= 9;
+            MMStudio.getInstance().logs().logMessage(
+             String.format("Tuning: signal at %5.2f power: %e", step_height, with_power_signal));
+            // calculate difference of signals with and without power
+            double error =  with_power_signal - zero_power_signal;
+            // calculate P and I according to coefficients
+            P = step_height * p_factor / error;
+            I = P * sampling_period_s * i_factor;
+            if (P<0.0 || I<0.0) {
+                MMStudio.getInstance().logs().showError("Self-tuning failed! Components were calculated to be negative. Turning laser off.");
+                P = 0.0; I = 0.0;
+            } else {
+                MMStudio.getInstance().logs().logMessage("Self-tuning successful!\n - P = " + P + "\n - I = " + I);
+            }
+            MMStudio.getInstance().logs().logMessage(
+             "Controller calibrated:\n - P = " + P + "\n - I = " + I);
+            // set output to 0 and start normal operation
+            current_output = 0.0;
+            init_sequence = false;
+        } else {
+            //skip
+        }
+        return current_output;
     }
 
     @Override
