@@ -75,8 +75,10 @@ public class SpotCounter implements Analyzer {
         sp.setPixels(image);
         
         HashMap<String,Double> results = core.analyze(sp.duplicate());
-        intermittent_output = results.get("spot-count")/ fov_area * 10000;
-        intermittent_outputs.add(intermittent_output);
+        synchronized(this) {
+            intermittent_output = results.get("spot-count")/ fov_area * 10000;
+            intermittent_outputs.add(intermittent_output);
+        }
     }
 
     @Override

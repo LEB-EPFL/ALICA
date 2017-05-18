@@ -29,6 +29,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import mmcorej.TaggedImage;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.micromanager.Studio;
 import org.micromanager.data.Coords;
 import org.micromanager.data.Datastore;
@@ -60,7 +61,7 @@ public class AnalysisWorker extends Thread {
     private Coords last_live_image_coords = null;
     // for comparison with newly acquired images, to see if the image has
     // changed
-    private Object last_core_image = null;
+    private JSONObject last_core_image_tag = null;
     
     // for GUI output
     private long last_analysis_time_ms = 0;
@@ -200,18 +201,18 @@ public class AnalysisWorker extends Thread {
         long image_acquisition_time = coordinator.getTimeMillis();
         // draw the next image from the core or from the display
         // we don't want the last_live_image_coords to change during this operation
-        synchronized(analyzer) {
-            try {
-                Image img = this.new_image_watcher.getLatestDatastore().getImage(current_coords);
-                analyzer.processImage(img.getRawPixels(), img.getWidth(), img.getHeight(), studio.core().getPixelSizeUm(), image_acquisition_time);
-            } catch (Exception ex) {
-                studio.logs().logError(ex, "Error in image retrieval from datastore or processing by analyzer.");
-            }
-            // log coords of the image, offset by 1 because counter was not yet incremented
-            AlicaLogger.getInstance().addToLog(image_counter+1, "coords_time", Integer.toString(current_coords.getTime()));
-            // clear last image coords pointer
-            this.last_live_image_coords = null;
+        
+        try {
+            Image img = this.new_image_watcher.getLatestDatastore().getImage(current_coords);
+            analyzer.processImage(img.getRawPixels(), img.getWidth(), img.getHeight(), studio.core().getPixelSizeUm(), image_acquisition_time);
+        } catch (Exception ex) {
+            studio.logs().logError(ex, "Error in image retrieval from datastore or processing by analyzer.");
         }
+        // log coords of the image, offset by 1 because counter was not yet incremented
+        AlicaLogger.getInstance().addToLog(image_counter+1, "coords_time", Integer.toString(current_coords.getTime()));
+        // clear last image coords pointer
+        this.last_live_image_coords = null;
+
         last_analysis_time_ms = coordinator.getTimeMillis() - image_acquisition_time;
     }
     
@@ -230,7 +231,7 @@ public class AnalysisWorker extends Thread {
             studio.logs().logDebugMessage("Failure by AnalysisWorker to recieve image from MMCore.");
         }
         // if no image was detected, or is the same as last analyzed, wait 1ms and query again
-        while (new_image==null || areTwoImagesEqual((short[]) new_image, (short[]) this.last_core_image)) {
+        while (new_image==null || areTwoImagesEqual(new_tagged_image.tags, this.last_core_image_tag)) {
             try {
                 sleep(1);
             } catch (InterruptedException ex) {
@@ -246,40 +247,35 @@ public class AnalysisWorker extends Thread {
             }
         }
         // so we have a new image, now we process it and store for later comparison
-        synchronized(analyzer) {
-            analyzer.processImage(new_image, (int) studio.core().getImageWidth(), (int) studio.core().getImageHeight(), studio.core().getPixelSizeUm(), image_acquisition_time);
-            this.last_core_image = new_image;
-            try {
-                /*String s = ""; Iterator<String> i = new_tagged_image.tags.keys();
-                while(i.hasNext()) {
-                    String k = i.next();
-                    s += "\n " + k + new_tagged_image.tags.get(k);
-                }
-                studio.logs().logDebugMessage("Keys in tag: " + s);*/
-                AlicaLogger.getInstance().addToLog(image_counter+1, "tag_frame_index", new_tagged_image.tags.getInt("ImageNumber"));
-            } catch (JSONException ex) {
-                studio.logs().logError(ex, "Failed to extract tagged image data.");
+        analyzer.processImage(new_image, (int) studio.core().getImageWidth(), (int) studio.core().getImageHeight(), studio.core().getPixelSizeUm(), image_acquisition_time);
+        this.last_core_image_tag = new_tagged_image.tags;
+        try {
+            /*String s = ""; Iterator<String> i = new_tagged_image.tags.keys();
+            while(i.hasNext()) {
+                String k = i.next();
+                s += "\n " + k + new_tagged_image.tags.get(k);
             }
+            studio.logs().logDebugMessage("Keys in tag: " + s);*/
+            AlicaLogger.getInstance().addToLog(image_counter+1, "tag_frame_index", new_tagged_image.tags.getInt("ImageNumber"));
+        } catch (JSONException ex) {
+            studio.logs().logError(ex, "Failed to extract tagged image data.");
         }
     }
     
-    private boolean areTwoImagesEqual(short[] img1, short[] img2) {
+    private boolean areTwoImagesEqual(JSONObject tag1, JSONObject tag2) {
         // if any of these images is null, they are marked as not equal
-        if ((img1==null) || (img2==null)) {
+        if ((tag1==null) || (tag1==null)) {
             return false;
         }
-        for (int i=0; i<10; i++) {
-            try {
-                if (img1[i]!=img2[i]) {
-                    return false;
-                }
-            } catch (ArrayIndexOutOfBoundsException ex) {
-                // we reached the end of the array without finding a difference
-                studio.logs().logError(ex);
+        try {
+            if (tag1.getInt("ImageNumber") == tag2.getInt("ImageNumber"))
                 return true;
-            }
+            else
+                return false;
+        } catch (JSONException ex) {
+            studio.logs().logDebugMessage("Failed image from core comparison:\n"+ex.getMessage());
+            return false;
         }
-        return true;
     }
     
     /**

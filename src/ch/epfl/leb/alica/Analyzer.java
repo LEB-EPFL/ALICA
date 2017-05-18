@@ -31,7 +31,9 @@ import ij.gui.Roi;
 public interface Analyzer {
 
     /**
-     * Process the next image and adjust internal state.
+     * Process the next image and adjust internal state. You can use the
+     * synchronized(this) statement to ensure that no output readout happens
+     * during code execution.
      * @param image image to be processed
      * @param image_width width in pixels
      * @param image_height height in pixels
@@ -49,7 +51,10 @@ public interface Analyzer {
     public double getIntermittentOutput();
     
     /**
-     * Returns output of the analyzer to be used by a controller. This can also
+     * Returns output of the analyzer to be used by a controller. If no output
+     * can be provided (such as when there are no new analyzed images),
+     * Double.NaN should be returned. 
+     * This method can also
      * modify the internal state of the analyzer (such as flushing intermittent
      * value cache).
      * @return output value of the analyzer to be used by the controller

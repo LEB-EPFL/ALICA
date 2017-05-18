@@ -63,9 +63,10 @@ public class QuickPalm implements Analyzer {
             sp.setRoi(roi);
             sp = sp.crop();
         }
-        
-        intermittent_output = core.processImage(sp.duplicate(), counter++)/ fov_area * 10000;
-        intermittent_outputs.add(intermittent_output);        
+        synchronized(this) {
+            intermittent_output = core.processImage(sp.duplicate(), counter++)/ fov_area * 10000;
+            intermittent_outputs.add(intermittent_output);
+        }
     }
 
     @Override
