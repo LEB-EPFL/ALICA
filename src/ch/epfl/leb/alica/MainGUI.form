@@ -85,8 +85,8 @@
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="rb_source_live_pipeline" min="-2" max="-2" attributes="0"/>
-                                  <Component id="rb_source_mmcore" min="-2" max="-2" attributes="0"/>
                                   <Component id="rb_source_acquisition" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="rb_source_mmcore" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
@@ -99,11 +99,6 @@
                       <EmptySpace min="-2" pref="77" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
-                              <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="e_controller_tickrate" min="-2" pref="50" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" attributes="0">
                               <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="cb_controller_setup" min="-2" pref="80" max="-2" attributes="0"/>
@@ -111,6 +106,16 @@
                               <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="cb_laser_setup" min="-2" pref="90" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="e_controller_tickrate" min="-2" pref="50" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="l_roi_is_set" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="65" max="-2" attributes="0"/>
+                              <Component id="b_set_roi" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -131,7 +136,11 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="rb_source_mmcore" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="rb_source_live_pipeline" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="rb_source_live_pipeline" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="b_set_roi" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="l_roi_is_set" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="rb_source_acquisition" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -409,6 +418,19 @@
         <Property name="horizontalAlignment" type="int" value="11"/>
         <Property name="text" type="java.lang.String" value="10"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="l_roi_is_set">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="ROI: Not set"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="b_set_roi">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Set  ROI"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="b_set_roiActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

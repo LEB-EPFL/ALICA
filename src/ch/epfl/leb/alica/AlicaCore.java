@@ -24,6 +24,7 @@ import ch.epfl.leb.alica.workers.Coordinator;
 import ch.epfl.leb.alica.controllers.ControllerFactory;
 import ch.epfl.leb.alica.lasers.LaserFactory;
 import ij.IJ;
+import ij.gui.Roi;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import mmcorej.StrVector;
@@ -46,6 +47,7 @@ public final class AlicaCore {
     private final LaserFactory laser_factory;
     
     private int controller_tick_rate_ms = 500;
+    private Roi ROI;
     
 
     
@@ -147,6 +149,14 @@ public final class AlicaCore {
         this.controller_factory.setControllerTickRateMs(controller_tick_rate_ms);
     }
     
+    public boolean setCurrentROI() {
+        this.ROI = studio.displays().getCurrentWindow().getImagePlus().getRoi();
+        if (this.ROI == null)
+            return false;
+        else
+            return true;
+    }
+    
     
     
     /**
@@ -184,7 +194,7 @@ public final class AlicaCore {
         }
         coordinator = new Coordinator(studio, analyzer_factory.build(), 
                 controller_factory.build(), laser_factory.build(), imaging_mode,
-                controller_tick_rate_ms);
+                controller_tick_rate_ms, ROI);
     }
     
     /**

@@ -117,6 +117,13 @@ public class MonitorGUI extends javax.swing.JFrame {
         l_last_analysis_duration.setText(String.format("%d", duration_ms));
     }
     
+    public void setRoiStatus(boolean is_set) {
+        if (is_set)
+            l_roi_isset.setText("ROI: Set");
+        else
+            l_roi_isset.setText("ROI: Not set");
+    }
+    
     /**
      * Update the plow with new data
      * @param data data to be plotted
@@ -459,10 +466,7 @@ public class MonitorGUI extends javax.swing.JFrame {
 
     private void b_set_ROIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_set_ROIActionPerformed
         boolean is_set = coordinator.setCurrentROI();
-        if (is_set)
-            l_roi_isset.setText("ROI: Set");
-        else
-            l_roi_isset.setText("ROI: Not set");
+        setRoiStatus(is_set);
     }//GEN-LAST:event_b_set_ROIActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing

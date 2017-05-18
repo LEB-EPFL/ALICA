@@ -177,6 +177,8 @@ public final class MainGUI extends JFrame {
         b_save_last_run_log = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
         e_laser_deadzone_pct = new javax.swing.JTextField();
+        l_roi_is_set = new javax.swing.JLabel();
+        b_set_roi = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("ALICA Setup");
@@ -325,6 +327,15 @@ public final class MainGUI extends JFrame {
         e_laser_deadzone_pct.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
         e_laser_deadzone_pct.setText("10");
 
+        l_roi_is_set.setText("ROI: Not set");
+
+        b_set_roi.setText("Set  ROI");
+        b_set_roi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                b_set_roiActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -376,8 +387,8 @@ public final class MainGUI extends JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(rb_source_live_pipeline)
-                                    .addComponent(rb_source_mmcore)
-                                    .addComponent(rb_source_acquisition))
+                                    .addComponent(rb_source_acquisition)
+                                    .addComponent(rb_source_mmcore))
                                 .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel2)
@@ -386,17 +397,21 @@ public final class MainGUI extends JFrame {
                         .addGap(77, 77, 77)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel6)
-                                .addGap(18, 18, 18)
-                                .addComponent(e_controller_tickrate, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel3)
                                 .addGap(18, 18, 18)
                                 .addComponent(cb_controller_setup, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(80, 80, 80)
                                 .addComponent(jLabel4)
                                 .addGap(18, 18, 18)
-                                .addComponent(cb_laser_setup, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(cb_laser_setup, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel6)
+                                .addGap(18, 18, 18)
+                                .addComponent(e_controller_tickrate, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(l_roi_is_set)
+                                .addGap(65, 65, 65)
+                                .addComponent(b_set_roi)))))
                 .addContainerGap(13, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -411,7 +426,10 @@ public final class MainGUI extends JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(rb_source_mmcore)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(rb_source_live_pipeline)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(rb_source_live_pipeline)
+                    .addComponent(b_set_roi)
+                    .addComponent(l_roi_is_set))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(rb_source_acquisition)
@@ -585,12 +603,21 @@ public final class MainGUI extends JFrame {
         this.log_is_saved = true;
     }//GEN-LAST:event_b_save_last_run_logActionPerformed
 
+    private void b_set_roiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_set_roiActionPerformed
+        boolean is_set = alica_core.setCurrentROI();
+        if (is_set)
+            l_roi_is_set.setText("ROI: Set");
+        else
+            l_roi_is_set.setText("ROI: Not set");
+    }//GEN-LAST:event_b_set_roiActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel analyzer_panel;
     private javax.swing.JButton b_exit_plugin;
     private javax.swing.JButton b_print_loaded_devices;
     private javax.swing.JButton b_save_last_run_log;
+    private javax.swing.JButton b_set_roi;
     private javax.swing.JButton b_worker_start;
     private javax.swing.JButton b_worker_stop;
     private javax.swing.ButtonGroup buttonGroup_imaging_mode;
@@ -610,6 +637,7 @@ public final class MainGUI extends JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel l_roi_is_set;
     private javax.swing.JLabel l_title;
     private javax.swing.JLabel l_titletext;
     private javax.swing.JRadioButton rb_source_acquisition;

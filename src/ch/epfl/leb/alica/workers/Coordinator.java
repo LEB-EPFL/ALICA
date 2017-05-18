@@ -54,7 +54,8 @@ public class Coordinator {
      * @param controller_tick_rate_ms
      */
     public Coordinator(Studio studio, Analyzer analyzer, Controller controller, 
-            Laser laser, ImagingMode imaging_mode, int controller_tick_rate_ms) {
+            Laser laser, ImagingMode imaging_mode, int controller_tick_rate_ms,
+            final Roi ROI) {
         // log the start time
         this.thread_start_time_ms = System.currentTimeMillis();
         // sanitize input
@@ -73,6 +74,7 @@ public class Coordinator {
         // analysis worker is a thread which runs continuously
         this.analysis_worker = new AnalysisWorker(this, studio, analyzer, imaging_mode);
         studio.events().registerForEvents(this.analysis_worker);
+        this.analysis_worker.setROI(ROI);
         
         // this is a Timer which executes its internal task periodically
         this.control_worker = new ControlWorker(analysis_worker, controller, laser);
@@ -94,6 +96,9 @@ public class Coordinator {
         // display the GUI
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
+                if (ROI != null) {
+                    gui.setRoiStatus(true);
+                }
                 gui.setVisible(true);
             }
         });
@@ -167,8 +172,6 @@ public class Coordinator {
         } else {
             return false;
         }
-        
-        
     }
     
     /**
