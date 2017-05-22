@@ -161,10 +161,15 @@ public class AnalysisWorker extends Thread {
         // loop while asked to stop
         while (!this.stop_flag) {
             // either draw from core or live mode datastore
-            if (imaging_mode.equals(ImagingMode.GRAB_FROM_CORE))
-                getNewImageFromCoreAndAnalyze();
-            else
-                getNewImageFromWatcherAndAnalyze();
+            try {
+                if (imaging_mode.equals(ImagingMode.GRAB_FROM_CORE))
+                    getNewImageFromCoreAndAnalyze();
+                else
+                    getNewImageFromWatcherAndAnalyze();
+            } catch (InterruptedException ex) {
+                studio.logs().logMessage("Analysis Worker was interrupted.");
+                break;
+            }
             // increment fps counter after each image
             fps_count++;
             image_counter++;
@@ -178,23 +183,20 @@ public class AnalysisWorker extends Thread {
                 fps_time = coordinator.getTimeMillis();
             }
         }
+        // after finishing analysis, dispose of analyzer resources
+        analyzer.dispose();
     }
     
     /**
      * Grabs new images from the Datastore associated with the NewImageWatcher, analyzes
      * it.
      */
-    public void getNewImageFromWatcherAndAnalyze() {
+    public void getNewImageFromWatcherAndAnalyze() throws InterruptedException {
         Coords current_coords;
         // wait for image acquisition by NewImageWatcher
         synchronized(analyzer) {
             if (this.last_live_image_coords==null) {
-                try {
-                    analyzer.wait();
-                } catch (InterruptedException ex) {
-                    // if we get interrupted, exit disgracefully
-                    throw new RuntimeException("AnalysisWorker was interrupted!");
-                }
+                analyzer.wait();
             }
             current_coords = this.last_live_image_coords;
         }
@@ -219,7 +221,7 @@ public class AnalysisWorker extends Thread {
     /**
      * Acquire the new image directly from MMCore and send for analysis.
      */
-    public void getNewImageFromCoreAndAnalyze() {
+    public void getNewImageFromCoreAndAnalyze() throws InterruptedException {
         long image_acquisition_time = coordinator.getTimeMillis();
         TaggedImage new_tagged_image = null;
         Object new_image = null;
@@ -232,11 +234,7 @@ public class AnalysisWorker extends Thread {
         }
         // if no image was detected, or is the same as last analyzed, wait 1ms and query again
         while (new_image==null || areTwoImagesEqual(new_tagged_image.tags, this.last_core_image_tag)) {
-            try {
-                sleep(1);
-            } catch (InterruptedException ex) {
-                throw new RuntimeException("Analysis worker interrupted while waiting for new core image.");
-            }
+            sleep(2);
             try {
                 // also update acq time value
                 image_acquisition_time = coordinator.getTimeMillis();
@@ -264,7 +262,7 @@ public class AnalysisWorker extends Thread {
     
     private boolean areTwoImagesEqual(JSONObject tag1, JSONObject tag2) {
         // if any of these images is null, they are marked as not equal
-        if ((tag1==null) || (tag1==null)) {
+        if ((tag1==null) || (tag2==null)) {
             return false;
         }
         try {
@@ -332,7 +330,6 @@ public class AnalysisWorker extends Thread {
      */
     public void requestStop() {
         this.stop_flag = true;
-        this.analyzer.dispose();
     }
 }
 
