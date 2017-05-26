@@ -24,7 +24,6 @@ import ij.gui.YesNoCancelDialog;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
-import org.micromanager.internal.MMStudio;
 
 /**
  * Main controlling GUI for the ALICA plugin. This is a singleton which
@@ -130,7 +129,7 @@ public final class MainGUI extends JFrame {
                 cb_laser_properties.addItem(s);
             }
         } catch (Exception ex) {
-            MMStudio.getInstance().logs().logError(ex, "Error in getting selected device properties.");
+            AlicaLogger.getInstance().logError(ex, "Error in getting selected device properties.");
             return;
         }
         try {
@@ -522,11 +521,11 @@ public final class MainGUI extends JFrame {
         try {
             max_laser_power = Double.parseDouble(e_laser_max_power.getText());
         } catch (NumberFormatException ex) {
-            MMStudio.getInstance().logs().showError("Error in parsing max laser power value.");
+            AlicaLogger.getInstance().showMessage("Error in parsing max laser power value.");
             return;
         }
         if (max_laser_power<=0.0) {
-            MMStudio.getInstance().logs().showError("Max laser power must be positive.");
+            AlicaLogger.getInstance().showMessage("Max laser power must be positive.");
             return;
         }
         alica_core.setMaxLaserPower(max_laser_power);
@@ -536,12 +535,12 @@ public final class MainGUI extends JFrame {
         try {
             laser_power_deadzone_pct = Double.parseDouble(e_laser_deadzone_pct.getText());
         } catch (NumberFormatException ex) {
-            MMStudio.getInstance().logs().showError("Error in parsing laser power value.");
+            AlicaLogger.getInstance().showMessage("Error in parsing laser power value.");
             return;
         }
         // value sanity check
         if (laser_power_deadzone_pct>50 || laser_power_deadzone_pct<0) {
-            MMStudio.getInstance().logs().showError("Laser power deadzone must be between 0% and 50%.");
+            AlicaLogger.getInstance().showMessage("Laser power deadzone must be between 0% and 50%.");
             return;
         }
         // convert from percentage
@@ -564,11 +563,11 @@ public final class MainGUI extends JFrame {
         try {
             controller_tick_rate = Integer.parseInt(e_controller_tickrate.getText());
         } catch (NumberFormatException ex) {
-            MMStudio.getInstance().logs().showError("Error in parsing controller tick rate.");
+            AlicaLogger.getInstance().showMessage("Error in parsing controller tick rate.");
             return;
         }
         if (controller_tick_rate<50) {
-            MMStudio.getInstance().logs().showError("Controller tick rate must be at least 50ms.");
+            AlicaLogger.getInstance().showMessage("Controller tick rate must be at least 50ms.");
             return;
         }
         alica_core.setControlWorkerTickRate(controller_tick_rate);
@@ -579,7 +578,7 @@ public final class MainGUI extends JFrame {
         try {
             alica_core.startWorkers(imaging_mode);
         } catch (RuntimeException ex) {
-            MMStudio.getInstance().logs().showError(ex, "Error in worker initialization.");
+            AlicaLogger.getInstance().showError(ex, "Error in worker initialization.");
             return;
         }
         

@@ -366,7 +366,7 @@ class NewImageWatcher {
             try {
                 latest_datastore.unregisterForEvents(this);
             } catch (Exception ex) {
-                org.micromanager.internal.MMStudio.getInstance().logs().logError(ex, "Failure in unsubscribing NewImageWatcher from events.");
+                AlicaLogger.getInstance().logError(ex, "Failure in unsubscribing NewImageWatcher from events.");
             }
         }
         store.registerForEvents(this);

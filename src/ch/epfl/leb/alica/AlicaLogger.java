@@ -19,13 +19,18 @@
  */
 package ch.epfl.leb.alica;
 
+import ij.IJ;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import org.micromanager.LogManager;
+import org.micromanager.Studio;
 import org.micromanager.internal.MMStudio;
 
 /**
@@ -34,6 +39,7 @@ import org.micromanager.internal.MMStudio;
  */
 public class AlicaLogger {
     private static AlicaLogger instance = null;
+    private LogManager mm_logger = null;
     
     private LinkedHashMap<Integer, LinkedHashMap<String,Object>> log_map;
     private LinkedHashSet<String> parameter_set;
@@ -59,6 +65,52 @@ public class AlicaLogger {
             instance = new AlicaLogger();
         }
         return instance;
+    }
+    
+    public void setStudio(Studio studio) {
+        this.mm_logger = studio.getLogManager();
+    }
+    
+    public void logMessage(String message) {
+        try {
+            this.mm_logger.logMessage(message);
+        } catch (Throwable ex) {
+            Logger.getLogger(this.getClass().getName()).log(Level.INFO, message);
+        }
+    }
+    
+    
+    
+    public void logDebugMessage(String message) {
+        try {
+            this.mm_logger.logDebugMessage(message);
+        } catch (Throwable ex) {
+            Logger.getLogger(this.getClass().getName()).log(Level.FINER, message);
+        }
+    }
+    
+    public void showMessage(String message) {
+        try {
+            this.mm_logger.showMessage(message);
+        } catch (Throwable ex) {
+            IJ.showMessage(message);
+        }
+    }
+    
+    public void showError(Exception exc, String message) {
+        try {
+            this.mm_logger.showError(exc, message);
+        } catch (Throwable ex) {
+            IJ.showMessage(message);
+        }
+    }
+    
+    public void logError(Exception exc, String message) {
+        try {
+            this.mm_logger.logError(exc, message);
+        } catch (Throwable ex) {
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, message, exc);
+        }
     }
     
     /**
@@ -129,7 +181,7 @@ public class AlicaLogger {
      */
     public boolean saveLog() {
         if (log_map.isEmpty()) {
-            MMStudio.getInstance().logs().showError("Log is empty!");
+            this.showMessage("Log is empty!");
             return true;
         }
         
@@ -160,7 +212,7 @@ public class AlicaLogger {
         try {
             writer = new PrintWriter(csv_output.getAbsolutePath());
         } catch (FileNotFoundException ex) {
-            MMStudio.getInstance().logs().showError(ex, "Can't find file to save.");
+            this.showError(ex, "Can't find file to save.");
             return false;
         }
         

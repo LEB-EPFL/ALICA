@@ -19,8 +19,8 @@
  */
 package ch.epfl.leb.alica.controllers.selftuningpi;
 
+import ch.epfl.leb.alica.AlicaLogger;
 import ch.epfl.leb.alica.controllers.pi.PI_controller;
-import org.micromanager.internal.MMStudio;
 
 /**
  * A self-tuning implementation of the PI controller. It waits for 10 cycles,
@@ -72,7 +72,7 @@ public class SelfTuningController extends PI_controller {
     
     private double initSequence(double value) {
         init_counter++;
-        MMStudio.getInstance().logs().logMessage("Counter: "+init_counter+"\nSignal value: "+value);
+        AlicaLogger.getInstance().logDebugMessage("Counter: "+init_counter+"\nSignal value: "+value);
         
         if (init_counter <= 0) {
             // just wait for sample stabilization
@@ -86,7 +86,7 @@ public class SelfTuningController extends PI_controller {
             // 10: average out zero power signal
             zero_power_signal += value;
             zero_power_signal /= 9;
-            MMStudio.getInstance().logs().logMessage(
+            AlicaLogger.getInstance().logDebugMessage(
              String.format("Tuning: signal at zero power: %e", zero_power_signal));
             // increase output to step height
             current_output = step_height;
@@ -99,7 +99,7 @@ public class SelfTuningController extends PI_controller {
             // 20: average out signal with power
             with_power_signal += value;
             with_power_signal /= 9;
-            MMStudio.getInstance().logs().logMessage(
+            AlicaLogger.getInstance().logDebugMessage(
              String.format("Tuning: signal at %5.2f power: %e", step_height, with_power_signal));
             // calculate difference of signals with and without power
             double error =  with_power_signal - zero_power_signal;
@@ -107,12 +107,12 @@ public class SelfTuningController extends PI_controller {
             P = step_height * p_factor / error;
             I = P * sampling_period_s * i_factor;
             if (P<0.0 || I<0.0) {
-                MMStudio.getInstance().logs().showError("Self-tuning failed! Components were calculated to be negative. Turning laser off.");
+                AlicaLogger.getInstance().showMessage("Self-tuning failed! Components were calculated to be negative. Turning laser off.");
                 P = 0.0; I = 0.0;
             } else {
-                MMStudio.getInstance().logs().logMessage("Self-tuning successful!\n - P = " + P + "\n - I = " + I);
+                AlicaLogger.getInstance().logMessage("Self-tuning successful!\n - P = " + P + "\n - I = " + I);
             }
-            MMStudio.getInstance().logs().logMessage(
+            AlicaLogger.getInstance().logMessage(
              "Controller calibrated:\n - P = " + P + "\n - I = " + I);
             // set output to 0 and start normal operation
             current_output = 0.0;
