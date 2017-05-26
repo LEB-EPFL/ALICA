@@ -190,6 +190,7 @@ public class AnalysisWorker extends Thread {
     /**
      * Grabs new images from the Datastore associated with the NewImageWatcher, analyzes
      * it.
+     * @throws java.lang.InterruptedException
      */
     public void getNewImageFromWatcherAndAnalyze() throws InterruptedException {
         Coords current_coords;
@@ -201,9 +202,6 @@ public class AnalysisWorker extends Thread {
             current_coords = this.last_live_image_coords;
         }
         long image_acquisition_time = coordinator.getTimeMillis();
-        // draw the next image from the core or from the display
-        // we don't want the last_live_image_coords to change during this operation
-        
         try {
             Image img = this.new_image_watcher.getLatestDatastore().getImage(current_coords);
             analyzer.processImage(img.getRawPixels(), img.getWidth(), img.getHeight(), studio.core().getPixelSizeUm(), image_acquisition_time);
@@ -220,6 +218,7 @@ public class AnalysisWorker extends Thread {
     
     /**
      * Acquire the new image directly from MMCore and send for analysis.
+     * @throws java.lang.InterruptedException if waiting is interrupted
      */
     public void getNewImageFromCoreAndAnalyze() throws InterruptedException {
         long image_acquisition_time = coordinator.getTimeMillis();
@@ -232,9 +231,10 @@ public class AnalysisWorker extends Thread {
         } catch (Exception ex) {
             studio.logs().logDebugMessage("Failure by AnalysisWorker to recieve image from MMCore.");
         }
-        // if no image was detected, or is the same as last analyzed, wait 1ms and query again
+        // if no image was detected, or is the same as last analyzed, wait a given period and query again
         while (new_image==null || areTwoImagesEqual(new_tagged_image.tags, this.last_core_image_tag)) {
-            sleep(2);
+            sleep(2); // wait 2ms
+            // try to get new image again
             try {
                 // also update acq time value
                 image_acquisition_time = coordinator.getTimeMillis();
@@ -244,22 +244,23 @@ public class AnalysisWorker extends Thread {
                 studio.logs().logDebugMessage("Failure by AnalysisWorker to recieve image from MMCore.");
             }
         }
-        // so we have a new image, now we process it and store for later comparison
+        // so we have a new image, now we process it and store the tag for later comparison
         analyzer.processImage(new_image, (int) studio.core().getImageWidth(), (int) studio.core().getImageHeight(), studio.core().getPixelSizeUm(), image_acquisition_time);
         this.last_core_image_tag = new_tagged_image.tags;
         try {
-            /*String s = ""; Iterator<String> i = new_tagged_image.tags.keys();
-            while(i.hasNext()) {
-                String k = i.next();
-                s += "\n " + k + new_tagged_image.tags.get(k);
-            }
-            studio.logs().logDebugMessage("Keys in tag: " + s);*/
+            // log the image number
             AlicaLogger.getInstance().addToLog(image_counter+1, "tag_frame_index", new_tagged_image.tags.getInt("ImageNumber"));
         } catch (JSONException ex) {
             studio.logs().logError(ex, "Failed to extract tagged image data.");
         }
     }
     
+    /**
+     * Compare the ImageNumber parameter of the JSONObjects
+     * @param tag1 first image tag
+     * @param tag2 second image tag
+     * @return true of ImageNumber is identical, false if not or it does not exist
+     */
     private boolean areTwoImagesEqual(JSONObject tag1, JSONObject tag2) {
         // if any of these images is null, they are marked as not equal
         if ((tag1==null) || (tag2==null)) {

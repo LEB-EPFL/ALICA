@@ -52,6 +52,7 @@ public class Coordinator {
      * @param laser
      * @param imaging_mode
      * @param controller_tick_rate_ms
+     * @param ROI roi for analyzer
      */
     public Coordinator(Studio studio, Analyzer analyzer, Controller controller, 
             Laser laser, ImagingMode imaging_mode, int controller_tick_rate_ms,

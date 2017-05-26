@@ -117,6 +117,10 @@ public class MonitorGUI extends javax.swing.JFrame {
         l_last_analysis_duration.setText(String.format("%d", duration_ms));
     }
     
+    /**
+     * Update the GUI display of ROI status
+     * @param is_set true if ROI is set
+     */
     public void setRoiStatus(boolean is_set) {
         if (is_set)
             l_roi_isset.setText("ROI: Set");

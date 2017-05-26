@@ -67,6 +67,7 @@ public class AlicaPlugin implements MenuPlugin, SciJavaPlugin {
     public void setContext(Studio studio) {
         try {
             AlicaCore.initialize(studio);
+            AlicaLogger.getInstance().setStudio(studio);
         } catch (AlicaCore.AlreadyInitializedException ex) {
 
         }

@@ -67,10 +67,18 @@ public class AlicaLogger {
         return instance;
     }
     
+    /**
+     * Set studio to allow general logging
+     * @param studio MMStudio
+     */
     public void setStudio(Studio studio) {
         this.mm_logger = studio.getLogManager();
     }
     
+    /**
+     * Log message to MicroManager or to a general logger
+     * @param message message to be logged
+     */
     public void logMessage(String message) {
         try {
             this.mm_logger.logMessage(message);
@@ -80,7 +88,10 @@ public class AlicaLogger {
     }
     
     
-    
+    /**
+     * Log message to MicroManager or to a general logger
+     * @param message message to be logged
+     */
     public void logDebugMessage(String message) {
         try {
             this.mm_logger.logDebugMessage(message);
@@ -89,6 +100,10 @@ public class AlicaLogger {
         }
     }
     
+    /**
+     * Show message in MicroManager or in ImageJ
+     * @param message message to be logged
+     */
     public void showMessage(String message) {
         try {
             this.mm_logger.showMessage(message);
@@ -97,6 +112,11 @@ public class AlicaLogger {
         }
     }
     
+    /**
+     * Show exception in MicroManager or in ImageJ
+     * @param exc exception to be shown
+     * @param message message to be shown
+     */
     public void showError(Exception exc, String message) {
         try {
             this.mm_logger.showError(exc, message);
@@ -105,6 +125,11 @@ public class AlicaLogger {
         }
     }
     
+    /**
+     * Log exception in MicroManager or in general logger
+     * @param exc exception to be logged
+     * @param message message to be logged
+     */
     public void logError(Exception exc, String message) {
         try {
             this.mm_logger.logError(exc, message);

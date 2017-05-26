@@ -32,9 +32,11 @@ public interface Analyzer {
 
     /**
      * Process the next image and adjust internal state. You can use the
-     * synchronized(this) statement to ensure that no output readout happens
-     * during code execution.
-     * @param image image to be processed
+     * synchronized(this) statement in the Analyzerto ensure that no output 
+     * readout happens during code execution.
+     * @param image image to be processed, you can either set it to an IJ.ImageProcessor
+     *  using ImageProcessor.setPixels(image), or turn into 1D short array using
+     *  (short[]) image
      * @param image_width width in pixels
      * @param image_height height in pixels
      * @param pixel_size_um length of one pixel side in micrometers
@@ -44,7 +46,8 @@ public interface Analyzer {
     
     /**
      * Return intermittent output of the analyzer based on current internal state.
-     * Internal state of the controller should stay the same. Use
+     * This is just for informational purposes. Internal state of the controller 
+     * should stay the same. Use
      *  getBatchOutput() for values to be passed to the controller.
      * @return output value of the analyzer to be plotted by the GUI.
      */

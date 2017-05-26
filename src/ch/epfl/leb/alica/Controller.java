@@ -39,10 +39,10 @@ public interface Controller {
     public double getSetpoint();
     
     /**
-     * Receives next input from the WorkerThread (this is the batched output of the
-     * analyzer)
+     * Receives next input from the WorkerThread (this usually the batched output of the
+     * analyzer).
      * @param value input to be processed
-     * @return output of the controller as a response to the input
+     * @return same as getCurrentOutput()
      */
     public double nextValue(double value);
     

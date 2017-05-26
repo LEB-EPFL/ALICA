@@ -27,12 +27,24 @@ import ch.epfl.leb.alica.Controller;
  * @author Marcel Stefko
  */
 public class PI_controller implements Controller {
+    /**
+     * Proportional component
+     */
     protected double P;
+    
+    /**
+     * Integral component
+     */
     protected double I;
+    
     private final double max_output;
     private final double min_output;
     
     private double setpoint = 0.0;
+    
+    /**
+     * Last calculated output of the controller
+     */
     protected double current_output = 0.0;
     
     private double integral = 0.0;

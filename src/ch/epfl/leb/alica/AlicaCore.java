@@ -149,12 +149,13 @@ public final class AlicaCore {
         this.controller_factory.setControllerTickRateMs(controller_tick_rate_ms);
     }
     
+    /**
+     * Sets currently selected ROI to the analyzer when it is initialized
+     * @return true if ROI is set, false if no ROI is set
+     */
     public boolean setCurrentROI() {
         this.ROI = studio.displays().getCurrentWindow().getImagePlus().getRoi();
-        if (this.ROI == null)
-            return false;
-        else
-            return true;
+        return (this.ROI != null);
     }
     
     
