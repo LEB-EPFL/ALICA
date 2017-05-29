@@ -39,7 +39,7 @@ public class AlicaPlugin implements MenuPlugin, SciJavaPlugin {
      */
     @Override
     public String getSubMenu() {
-        return "";
+        return "Device Control";
     }
 
     /**
@@ -106,7 +106,7 @@ public class AlicaPlugin implements MenuPlugin, SciJavaPlugin {
      */
     @Override
     public String getCopyright() {
-        return "GPLv3";
+        return "GNU GENERAL PUBLIC LICENSE, Version 3, 29 June 2007";
     }
     
 }
