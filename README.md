@@ -46,6 +46,17 @@ Whichever `Analyzer` is selected, it waits for new image acquisition, and analyz
 ### Controlling the laser
 Periodically, the `Analyzer` is queried by the `Controller` to produce a `double` value which is a measure of the controlled property of the sample (e.g. fluorophore density). For example, SpotCounter outputs the average density of spots per frame since last query by `Controller`. The `Controller` then processes this value, and adjusts the `Laser`'s output, to achieve a desired value of `Analyzer`'s output. The `Laser` can be any Device Property from MicroManager's core (e.g. the device is a 405nm Laser, and property is Power Setpoint).
 
+## Developing custom functionality
+### Custom `Analyzer`
+You need to create two classes:
+ 1. The actual analyzer, which implements the `ch.epfl.leb.alica.Analyzer` interface. This is the actual object which will recieve images.
+ 2. A setup panel, which is used to initialize this custom Analyzer. It should extend the `ch.epfl.leb.alica.analyzers.AnalyzerSetupPanel` abstract class, which itself extends `javax.swing.JPanel`. The panel should have dimensions 200x150px, and will be automatically placed in the ALICA frame. In this panel, you should place all entry fields, checkboxes, etc. which are used to modify the settings of your `Analyzer`. Upon `Start`, ALICA will call the  `initAnalyzer()` method, and use the returned `Analyzer`. (Think of this as a Factory design attern).
+ 
+After creating these two classes, modify the `AnalyzerFactory` constructor to instantiate your `AnalyzerSetupPanel` as well. ALICA will automatically place it in the selection box.
+
+### Custom `Controller`
+Same as with `Analyzer`, except `initController` has two parameters which are passed from the GUI upon initalization.
+
 ## Acknowledgements
 ALICA uses adapted code and algorithms under GPL from following projects:
  - [AutoLase](https://micro-manager.org/wiki/AutoLase) by Thomas Pengo and Seamus Holden
