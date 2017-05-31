@@ -14,7 +14,7 @@ All notable changes to this project will be documented in this file.
 ### Removed
 - miniPID controller
 
-## v0.0.1
+## [v0.0.1]
 ### Added
 - CHANGELOG.md was created for tracking changes to the project.
 
