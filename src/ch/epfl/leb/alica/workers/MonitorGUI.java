@@ -19,6 +19,8 @@
  */
 package ch.epfl.leb.alica.workers;
 
+import ch.epfl.leb.alica.analyzers.AnalyzerStatusPanel;
+import ch.epfl.leb.alica.controllers.ControllerStatusPanel;
 import ij.IJ;
 import org.micromanager.internal.graph.GraphData;
 import org.micromanager.internal.graph.GraphPanel;
@@ -35,6 +37,8 @@ public class MonitorGUI extends javax.swing.JFrame {
     private double plot_max = 0.0;
     private final Coordinator coordinator;
     private final GraphPanel realtime_graph;
+    private final AnalyzerStatusPanel analyzer_status;
+    private final ControllerStatusPanel controller_status;
     
     /**
      * Creates new form MonitorGUI
@@ -62,15 +66,33 @@ public class MonitorGUI extends javax.swing.JFrame {
         
         // initialize the GraphPanel
         realtime_graph = new GraphPanel();
-        realtime_graph.setBounds(5,5,370,170);
+        realtime_graph.setBounds(5,5,415,170);
         realtime_graph.revalidate();
         
         // place the GraphPanel into its container
         p_realtime_plot.add(realtime_graph);
         
+        // place analyzer and controller status panels
+        analyzer_status = coordinator.getAnalyzerStatusPanel();
+        if (analyzer_status != null) {
+            analyzer_status.setBounds(5,5,200,150);
+            analyzer_status.revalidate();
+            p_analyzer_status.add(analyzer_status);
+        }
+        controller_status = coordinator.getControllerStatusPanel();
+        if (controller_status != null) {
+            controller_status.setBounds(5,5,200,150);
+            controller_status.revalidate();
+            p_controller_status.add(controller_status);
+        }
+        
+        
+
         // set the setpoint display
         l_setpoint.setText(String.format("%5.2f", start_setpoint));
         e_new_setpoint.setText(l_setpoint.getText());
+        
+        
     }
     
     /**
@@ -179,6 +201,9 @@ public class MonitorGUI extends javax.swing.JFrame {
         l_last_analysis_duration = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         p_realtime_plot = new javax.swing.JPanel();
+        jPanel5 = new javax.swing.JPanel();
+        p_analyzer_status = new javax.swing.JPanel();
+        p_controller_status = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("ALICA Monitor");
@@ -293,7 +318,7 @@ public class MonitorGUI extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(b_set_ROI)
                     .addComponent(l_roi_isset))
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addContainerGap(26, Short.MAX_VALUE))
         );
 
         jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -405,11 +430,59 @@ public class MonitorGUI extends javax.swing.JFrame {
         p_realtime_plot.setLayout(p_realtime_plotLayout);
         p_realtime_plotLayout.setHorizontalGroup(
             p_realtime_plotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 380, Short.MAX_VALUE)
+            .addGap(0, 420, Short.MAX_VALUE)
         );
         p_realtime_plotLayout.setVerticalGroup(
             p_realtime_plotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 182, Short.MAX_VALUE)
+        );
+
+        p_analyzer_status.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        p_analyzer_status.setPreferredSize(new java.awt.Dimension(210, 160));
+
+        javax.swing.GroupLayout p_analyzer_statusLayout = new javax.swing.GroupLayout(p_analyzer_status);
+        p_analyzer_status.setLayout(p_analyzer_statusLayout);
+        p_analyzer_statusLayout.setHorizontalGroup(
+            p_analyzer_statusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 206, Short.MAX_VALUE)
+        );
+        p_analyzer_statusLayout.setVerticalGroup(
+            p_analyzer_statusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
+        p_controller_status.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        p_controller_status.setPreferredSize(new java.awt.Dimension(200, 150));
+
+        javax.swing.GroupLayout p_controller_statusLayout = new javax.swing.GroupLayout(p_controller_status);
+        p_controller_status.setLayout(p_controller_statusLayout);
+        p_controller_statusLayout.setHorizontalGroup(
+            p_controller_statusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 204, Short.MAX_VALUE)
+        );
+        p_controller_statusLayout.setVerticalGroup(
+            p_controller_statusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 156, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addComponent(p_analyzer_status, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(p_controller_status, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0))
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(p_analyzer_status, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(p_controller_status, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -423,8 +496,10 @@ public class MonitorGUI extends javax.swing.JFrame {
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(p_realtime_plot, javax.swing.GroupLayout.PREFERRED_SIZE, 384, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(p_realtime_plot, javax.swing.GroupLayout.PREFERRED_SIZE, 424, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -435,14 +510,15 @@ public class MonitorGUI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(p_realtime_plot, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(p_realtime_plot, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -498,6 +574,7 @@ public class MonitorGUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JLabel l_analyzer;
     private javax.swing.JLabel l_controller;
     public javax.swing.JLabel l_fps;
@@ -506,6 +583,8 @@ public class MonitorGUI extends javax.swing.JFrame {
     public javax.swing.JLabel l_last_analysis_duration;
     private javax.swing.JLabel l_roi_isset;
     private javax.swing.JLabel l_setpoint;
+    private javax.swing.JPanel p_analyzer_status;
+    private javax.swing.JPanel p_controller_status;
     public javax.swing.JPanel p_realtime_plot;
     public javax.swing.JProgressBar pb_laser_power;
     // End of variables declaration//GEN-END:variables

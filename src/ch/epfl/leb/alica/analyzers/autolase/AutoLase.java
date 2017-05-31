@@ -21,6 +21,7 @@ package ch.epfl.leb.alica.analyzers.autolase;
 
 
 import ch.epfl.leb.alica.Analyzer;
+import ch.epfl.leb.alica.analyzers.AnalyzerStatusPanel;
 import ij.gui.Roi;
 import ij.process.ShortProcessor;
 import static java.lang.Math.sqrt;
@@ -81,6 +82,11 @@ public class AutoLase implements Analyzer {
     @Override
     public void dispose() {
         
+    }
+
+    @Override
+    public AnalyzerStatusPanel getStatusPanel() {
+        return null;
     }
 
 }

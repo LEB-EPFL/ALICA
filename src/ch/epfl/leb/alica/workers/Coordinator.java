@@ -24,6 +24,8 @@ import ch.epfl.leb.alica.Analyzer;
 import ch.epfl.leb.alica.Controller;
 import ch.epfl.leb.alica.ImagingMode;
 import ch.epfl.leb.alica.Laser;
+import ch.epfl.leb.alica.analyzers.AnalyzerStatusPanel;
+import ch.epfl.leb.alica.controllers.ControllerStatusPanel;
 import ij.gui.Roi;
 import org.micromanager.Studio;
 
@@ -37,6 +39,7 @@ public class Coordinator {
     
     private final Studio studio;
     private final Controller controller;
+    private final Analyzer analyzer;
     
     private final AnalysisWorker analysis_worker;
     private final ControlWorker control_worker;
@@ -70,6 +73,7 @@ public class Coordinator {
             throw new NullPointerException("You need to set a laser!");
         this.studio = studio;
         this.controller = controller;
+        this.analyzer = analyzer;
         
         studio.logs().logDebugMessage("Alica Coordinator started with imaging mode " + imaging_mode.toString());
         // analysis worker is a thread which runs continuously
@@ -150,6 +154,22 @@ public class Coordinator {
      */
     public void dispose() {
         this.gui.dispose();
+    }
+    
+    /**
+     *
+     * @return status panel of associated analyzer
+     */
+    public AnalyzerStatusPanel getAnalyzerStatusPanel() {
+        return this.analyzer.getStatusPanel();
+    }
+    
+    /**
+     *
+     * @return status panel of associated controller
+     */
+    public ControllerStatusPanel getControllerStatusPanel() {
+        return this.controller.getStatusPanel();
     }
     
     /**

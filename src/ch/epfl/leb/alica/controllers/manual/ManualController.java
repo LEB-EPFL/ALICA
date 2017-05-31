@@ -20,6 +20,7 @@
 package ch.epfl.leb.alica.controllers.manual;
 
 import ch.epfl.leb.alica.Controller;
+import ch.epfl.leb.alica.controllers.ControllerStatusPanel;
 
 /**
  * Manual controller. Output is equal to setpoint value, any input is ignored.
@@ -80,6 +81,11 @@ public class ManualController implements Controller {
     @Override
     public double getSetpoint() {
         return setpoint;
+    }
+
+    @Override
+    public ControllerStatusPanel getStatusPanel() {
+        return null;
     }
 
     

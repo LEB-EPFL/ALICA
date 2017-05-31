@@ -19,6 +19,8 @@
  */
 package ch.epfl.leb.alica;
 
+import ch.epfl.leb.alica.controllers.ControllerStatusPanel;
+
 
 /**
  * A Controller receives the output of the Analyzer as input, and then
@@ -59,4 +61,9 @@ public interface Controller {
      */
     public String getName();
     
+    /**
+     *
+     * @return status panel to be placed into the MonitorGUI, or null
+     */
+    public ControllerStatusPanel getStatusPanel();
 }

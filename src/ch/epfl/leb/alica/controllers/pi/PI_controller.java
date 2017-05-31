@@ -20,6 +20,7 @@
 package ch.epfl.leb.alica.controllers.pi;
 
 import ch.epfl.leb.alica.Controller;
+import ch.epfl.leb.alica.controllers.ControllerStatusPanel;
 
 /**
  * Simple implementation of PI controller with output constraining and windup
@@ -112,6 +113,11 @@ public class PI_controller implements Controller {
     @Override
     public String getName() {
         return "PI controller";
+    }
+
+    @Override
+    public ControllerStatusPanel getStatusPanel() {
+        return null;
     }
     
 }

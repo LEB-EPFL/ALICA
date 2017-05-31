@@ -20,6 +20,7 @@
 package ch.epfl.leb.alica.analyzers.quickpalm;
 
 import ch.epfl.leb.alica.Analyzer;
+import ch.epfl.leb.alica.analyzers.AnalyzerStatusPanel;
 import ij.gui.Roi;
 import ij.process.ImageProcessor;
 import ij.process.ShortProcessor;
@@ -101,6 +102,11 @@ public class QuickPalm implements Analyzer {
     @Override
     public void dispose() {
         core.dispose();
+    }
+
+    @Override
+    public AnalyzerStatusPanel getStatusPanel() {
+        return null;
     }
     
 }

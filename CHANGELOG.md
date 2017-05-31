@@ -1,12 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [v0.1.0]
 ### Added
+- Optional Analyzer and Controller StatusPanels
 
-### Removed
-
-## [0.0.2]
+## [v0.0.2]
 ### Added
 - Added self-tuning PI controller
 - Resolved compatibility issues which prevented adaptation to STEADIER-SAILOR
@@ -15,6 +14,9 @@ All notable changes to this project will be documented in this file.
 ### Removed
 - miniPID controller
 
-## [0.0.1]
+## v0.0.1
 ### Added
 - CHANGELOG.md was created for tracking changes to the project.
+
+[v0.0.2]: https://github.com/MStefko/ALICA/releases/tag/v0.0.2
+[v0.1.0]: https://github.com/MStefko/ALICA/releases/tag/v0.1.0

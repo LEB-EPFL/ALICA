@@ -20,6 +20,7 @@
 package ch.epfl.leb.alica.controllers.inverter;
 
 import ch.epfl.leb.alica.Controller;
+import ch.epfl.leb.alica.controllers.ControllerStatusPanel;
 import ij.IJ;
 
 /**
@@ -94,5 +95,10 @@ public class InvertController implements Controller {
     public double nextValue(double value) {
         last_input = value;
         return getCurrentOutput();
+    }
+
+    @Override
+    public ControllerStatusPanel getStatusPanel() {
+        return null;
     }
 }

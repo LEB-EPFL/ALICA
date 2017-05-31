@@ -19,6 +19,7 @@
  */
 package ch.epfl.leb.alica;
 
+import ch.epfl.leb.alica.analyzers.AnalyzerStatusPanel;
 import ij.gui.Roi;
 
 
@@ -81,4 +82,10 @@ public interface Analyzer {
      * @return unique name of the analyzer.
      */
     public String getName();
+    
+    /**
+     *
+     * @return status panel of this Analyzer to be placed into MonitorGUI, or null
+     */
+    public AnalyzerStatusPanel getStatusPanel();
 }

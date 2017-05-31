@@ -20,6 +20,7 @@
 package ch.epfl.leb.alica.analyzers.spotcounter;
 
 import ch.epfl.leb.alica.Analyzer;
+import ch.epfl.leb.alica.analyzers.AnalyzerStatusPanel;
 import ij.ImagePlus;
 import ij.gui.Roi;
 import ij.process.ShortProcessor;
@@ -32,6 +33,7 @@ import java.util.HashMap;
  */
 public class SpotCounter implements Analyzer {
     private final SpotCounterCore core;
+    private final SpotCounterStatusPanel status_panel;
     
     private final ArrayList<Double> intermittent_outputs;
     
@@ -46,9 +48,8 @@ public class SpotCounter implements Analyzer {
      */
     public SpotCounter(int noise_tolerance, int box_size, boolean live_view) {
         intermittent_outputs = new ArrayList<Double>();
-        
-
         this.core = new SpotCounterCore(noise_tolerance, box_size, live_view);
+        this.status_panel = new SpotCounterStatusPanel(core);
     }
     
 
@@ -104,5 +105,10 @@ public class SpotCounter implements Analyzer {
     @Override
     public void dispose() {
         core.dispose();
+    }
+
+    @Override
+    public AnalyzerStatusPanel getStatusPanel() {
+        return status_panel;
     }
 }
