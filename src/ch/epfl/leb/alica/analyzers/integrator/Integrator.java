@@ -33,6 +33,8 @@ import java.util.ArrayList;
 public class Integrator implements Analyzer {
     // array for storing outputs since last batchedoutput query
     private final ArrayList<Double> intermittent_outputs = new ArrayList<Double>();
+    private int min;
+    private boolean start = true;
     
     // region of interest to confine analysis to
     private Roi roi;
@@ -41,6 +43,7 @@ public class Integrator implements Analyzer {
     private double intermittent_output = 0.0;
     
     public Integrator() {
+        this.min = Short.MAX_VALUE;
     }
     
     @Override
@@ -69,8 +72,19 @@ public class Integrator implements Analyzer {
             }
         }
         
+        if (start) {
+            for (int x=x_min; x<x_max; x++) {
+                for (int y=y_min; y<y_max; y++) {
+                    if (sp.getPixel(x, y)<min) {
+                        min = sp.getPixel(x,y);
+                    }
+                }
+            }
+            start = false;
+        }
+        
         // divide by area and store
-        intermittent_output = ((double)sum)/((x_max-x_min)*(y_max-y_min));
+        intermittent_output = ((double)sum)/((x_max-x_min)*(y_max-y_min)) - min;
         intermittent_outputs.add(intermittent_output);
     }
 
