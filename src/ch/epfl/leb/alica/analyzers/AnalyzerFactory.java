@@ -22,6 +22,7 @@ package ch.epfl.leb.alica.analyzers;
 import ch.epfl.leb.alica.AbstractFactory;
 import ch.epfl.leb.alica.Analyzer;
 import ch.epfl.leb.alica.analyzers.autolase.AutoLaseSetupPanel;
+import ch.epfl.leb.alica.analyzers.integrator.IntegratorSetupPanel;
 import ch.epfl.leb.alica.analyzers.quickpalm.QuickPalmSetupPanel;
 import ch.epfl.leb.alica.analyzers.spotcounter.SpotCounterSetupPanel;
 
@@ -39,6 +40,7 @@ public class AnalyzerFactory extends AbstractFactory<AnalyzerSetupPanel>{
         addSetupPanel("SpotCounter", new SpotCounterSetupPanel());
         addSetupPanel("AutoLase", new AutoLaseSetupPanel());
         addSetupPanel("QuickPalm", new QuickPalmSetupPanel());
+        addSetupPanel("Integrator", new IntegratorSetupPanel());
         selectProduct("SpotCounter");
     }
     
