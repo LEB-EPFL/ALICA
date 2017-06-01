@@ -72,6 +72,7 @@ public class Integrator implements Analyzer {
             }
         }
         
+        // estimate background from first frame
         if (start) {
             for (int x=x_min; x<x_max; x++) {
                 for (int y=y_min; y<y_max; y++) {
@@ -83,7 +84,7 @@ public class Integrator implements Analyzer {
             start = false;
         }
         
-        // divide by area and store
+        // divide by area, subtract background and store
         intermittent_output = ((double)sum)/((x_max-x_min)*(y_max-y_min)) - min;
         intermittent_outputs.add(intermittent_output);
     }
