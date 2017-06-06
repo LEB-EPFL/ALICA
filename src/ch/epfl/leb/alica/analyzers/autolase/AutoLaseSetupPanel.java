@@ -39,8 +39,7 @@ public class AutoLaseSetupPanel extends AnalyzerSetupPanel {
     @Override
     public Analyzer initAnalyzer() {
         int threshold = Integer.parseInt(e_threshold.getText());
-        int averaging = Integer.parseInt(e_averaging.getText());
-        return new AutoLase(threshold, averaging);
+        return new AutoLase(threshold);
     }
     
     @Override
@@ -59,8 +58,6 @@ public class AutoLaseSetupPanel extends AnalyzerSetupPanel {
 
         jLabel1 = new javax.swing.JLabel();
         e_threshold = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        e_averaging = new javax.swing.JTextField();
 
         setPreferredSize(new java.awt.Dimension(150, 150));
 
@@ -69,27 +66,16 @@ public class AutoLaseSetupPanel extends AnalyzerSetupPanel {
         e_threshold.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
         e_threshold.setText("80");
 
-        jLabel2.setText("Averaging:");
-
-        e_averaging.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
-        e_averaging.setText("5");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(18, 18, 18)
-                        .addComponent(e_averaging, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(e_threshold, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(83, Short.MAX_VALUE))
+                .addComponent(jLabel1)
+                .addGap(42, 42, 42)
+                .addComponent(e_threshold, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(11, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -98,20 +84,14 @@ public class AutoLaseSetupPanel extends AnalyzerSetupPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(e_threshold, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(e_averaging, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(88, Short.MAX_VALUE))
+                .addContainerGap(119, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField e_averaging;
     private javax.swing.JTextField e_threshold;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     // End of variables declaration//GEN-END:variables
 
 

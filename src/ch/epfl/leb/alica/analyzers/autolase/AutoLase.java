@@ -37,19 +37,16 @@ public class AutoLase implements Analyzer {
     private ArrayList<Double> raw_value_history;
     
 
-    private final int threshold;
-    private final int averaging;
+    private int threshold;
     
     /**
      * Initializes AutoLase with default threshold (120) and averaging (30) 
      * values.
      * @param threshold
-     * @param averaging
      */
-    public AutoLase(int threshold, int averaging) {
+    public AutoLase(int threshold) {
         this.threshold = threshold;
-        this.averaging = averaging;
-        autolase_core = new AutoLaseAnalyzer(threshold, averaging);
+        autolase_core = new AutoLaseAnalyzer(threshold);
     }
 
     @Override
@@ -103,9 +100,9 @@ public class AutoLase implements Analyzer {
  * @author Thomas Pengo
  */
 class AutoLaseAnalyzer {
-    public final int threshold;
+    private int threshold;
     private final int sqrt_threshold;
-    public final int averaging;
+    private int averaging;
     
     private Roi roi;
     
@@ -114,16 +111,10 @@ class AutoLaseAnalyzer {
     
     double currentDensity = 0;
     private int[][] accumulator = null;
-    private boolean[][] is_always_on = null; 
-    long lastTime;
-
-    ArrayDeque<Double> density_fifo;
     
-    public AutoLaseAnalyzer(int threshold, int averaging ) {
-        this.density_fifo = new ArrayDeque<Double>(averaging);
+    public AutoLaseAnalyzer(int threshold) {
         this.threshold = threshold;
         this.averaging = averaging;
-        lastTime = System.currentTimeMillis();
         sqrt_threshold = (int) sqrt(threshold);
     }
     
@@ -132,13 +123,21 @@ class AutoLaseAnalyzer {
         this.accumulator = null;
     }
     
+    public void setParameters(int threshold) {
+        if (threshold<1 ) {
+            throw new IllegalArgumentException("Wrong parameters for AutoLase!");
+        }
+        this.threshold = threshold;
+        this.accumulator = null;
+    }
+    
     /**
      * Analyzes next image and adjusts internal state.
      * @param image image to be analyzed
      */
     public void nextImage(ShortProcessor sp) {
-        int width, height;
-        int x_start, y_start;
+        final int width, height;
+        final int x_start, y_start;
         if (roi == null) {
             width = sp.getWidth();
             height = sp.getHeight();
@@ -154,12 +153,6 @@ class AutoLaseAnalyzer {
         // in case of reset, initialize arrays
         if (accumulator == null) {
             accumulator = new int[width][height];
-            is_always_on = new boolean[width][height];
-            for (int i=0; i<width; i++) {
-                for (int j=0; j<height; j++) {
-                    is_always_on[i][j] = true;
-                }
-            }
         }
 
         // scan over whole image
@@ -172,10 +165,6 @@ class AutoLaseAnalyzer {
                 } else {
                     accumulator[i][j] = 0;
                 }
-                // if pixel is marked as always on, check if it didnt dip below the threshold
-                if ((is_always_on[i][j]) && sp.getPixel(i+x_start,j+y_start)<(threshold - 3*sqrt_threshold)) {
-                    is_always_on[i][j] = false;
-                }
             }
         }
 
@@ -184,22 +173,11 @@ class AutoLaseAnalyzer {
         for (int i=0; i<width; i++) {
             for (int j=0; j<height; j++) {
                 // only take into account pixels that are not always on
-                if (!is_always_on[i][j] && accumulator[i][j]>curd)
+                if (accumulator[i][j]>curd)
                     curd = accumulator[i][j];
             }
         }
-
-        // Moving average estimate
-        if (density_fifo.size() == averaging)
-            density_fifo.remove();
-        density_fifo.offer(curd);
-
-        double mean_density = 0;
-        for (Double d : density_fifo)
-            mean_density+=d;
-        mean_density /= density_fifo.size();
-
-        currentDensity = mean_density;  
+        currentDensity = curd;  
     }
     
     /**
@@ -215,6 +193,6 @@ class AutoLaseAnalyzer {
      * @return estimated max emitter density for most recent frame
      */
     public double getRawCurrentValue() {
-        return density_fifo.getLast();
+        return currentDensity;
     }
 }
