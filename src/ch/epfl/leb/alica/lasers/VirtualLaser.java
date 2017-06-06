@@ -97,7 +97,7 @@ public class VirtualLaser implements Laser {
 
     @Override
     public String getDeviceName() {
-        return "V:"+device_name;
+        return "VIRTUAL";
     }
 
     @Override

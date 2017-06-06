@@ -24,6 +24,7 @@ import ch.epfl.leb.alica.Analyzer;
 import ch.epfl.leb.alica.Controller;
 import ch.epfl.leb.alica.ImagingMode;
 import ch.epfl.leb.alica.Laser;
+import ch.epfl.leb.alica.MainGUI;
 import ch.epfl.leb.alica.analyzers.AnalyzerStatusPanel;
 import ch.epfl.leb.alica.controllers.ControllerStatusPanel;
 import ij.gui.Roi;
@@ -81,10 +82,6 @@ public class Coordinator {
         studio.events().registerForEvents(this.analysis_worker);
         this.analysis_worker.setROI(ROI);
         
-        // this is a Timer which executes its internal task periodically
-        this.control_worker = new ControlWorker(analysis_worker, controller, laser);
-        this.control_worker.scheduleExecution(1000, controller_tick_rate_ms);
-        
         // initialize the GUI
         gui = new MonitorGUI(this, 
                 analyzer.getName(), 
@@ -92,6 +89,12 @@ public class Coordinator {
                 laser.getDeviceName()+"-"+laser.getPropertyName(),
                 controller.getSetpoint());
         gui.setLaserPowerDisplayMax(laser.getMaxPower());
+        
+        // this is a Timer which executes its internal task periodically
+        this.control_worker = new ControlWorker(analysis_worker, controller, laser);
+        this.control_worker.scheduleExecution(1000, controller_tick_rate_ms);
+        
+
         
         // this updates the GUI with info from the workers
         this.monitor_worker = new MonitorWorker(gui, analysis_worker, control_worker);
@@ -104,7 +107,10 @@ public class Coordinator {
                 if (ROI != null) {
                     gui.setRoiStatus(true);
                 }
+                gui.setLocation(MainGUI.getInstance().getLocationOnScreen());
+                MainGUI.getInstance().setVisible(false);
                 gui.setVisible(true);
+
             }
         });
     }
@@ -138,6 +144,16 @@ public class Coordinator {
                 studio.logs().logError(ex);
             }
         }
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                MainGUI.getInstance().setLocation(gui.getLocationOnScreen());
+                gui.dispose();
+                MainGUI.getInstance().setVisible(true);
+
+            }
+        });
+        
+        
         
     }
     

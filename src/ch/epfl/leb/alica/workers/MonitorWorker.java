@@ -29,6 +29,7 @@ import org.micromanager.internal.graph.GraphData;
  */
 public class MonitorWorker extends Timer {
     private final MonitorTask monitor_task;
+    private final MonitorGUI gui;
     
     /**
      * Initialize new worker for monitoring
@@ -39,6 +40,7 @@ public class MonitorWorker extends Timer {
     public MonitorWorker(MonitorGUI gui, AnalysisWorker analysis_worker, ControlWorker control_worker) {
         super();
         monitor_task = new MonitorTask(gui, analysis_worker, control_worker);
+        this.gui = gui;
     }
     
     /**
@@ -48,6 +50,16 @@ public class MonitorWorker extends Timer {
      */
     public void scheduleExecution(long delay_ms, long period_ms) {
         this.scheduleAtFixedRate(monitor_task, delay_ms, period_ms);
+    }
+    
+    @Override
+    public void cancel() {
+        super.cancel();
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                gui.setStopped();
+            }
+        });
     }
 }
 

@@ -42,6 +42,7 @@ public final class MainGUI extends JFrame {
      * Creates new form MainGUI, private to prevent outside instantiation
      */
     private MainGUI(AlicaCore core) {
+        super();
         if (core == null) {
             throw new NullPointerException("ALICA core must be initialized before instantiating the GUI!");
         } else {
@@ -154,7 +155,6 @@ public final class MainGUI extends JFrame {
         l_titletext = new javax.swing.JLabel();
         b_print_loaded_devices = new javax.swing.JButton();
         b_worker_start = new javax.swing.JButton();
-        b_worker_stop = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         rb_source_mmcore = new javax.swing.JRadioButton();
         rb_source_live_pipeline = new javax.swing.JRadioButton();
@@ -182,6 +182,11 @@ public final class MainGUI extends JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("ALICA Setup");
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         l_title.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
         l_title.setText("ALICA");
@@ -206,14 +211,6 @@ public final class MainGUI extends JFrame {
         b_worker_start.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 b_worker_startActionPerformed(evt);
-            }
-        });
-
-        b_worker_stop.setText("Stop");
-        b_worker_stop.setEnabled(false);
-        b_worker_stop.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                b_worker_stopActionPerformed(evt);
             }
         });
 
@@ -344,9 +341,7 @@ public final class MainGUI extends JFrame {
                 .addComponent(b_save_last_run_log)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(b_worker_start)
-                .addGap(31, 31, 31)
-                .addComponent(b_worker_stop)
-                .addGap(62, 62, 62)
+                .addGap(93, 93, 93)
                 .addComponent(b_print_loaded_devices)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(b_exit_plugin)
@@ -453,7 +448,6 @@ public final class MainGUI extends JFrame {
                             .addComponent(b_exit_plugin)
                             .addComponent(b_print_loaded_devices)
                             .addComponent(b_worker_start)
-                            .addComponent(b_worker_stop)
                             .addComponent(b_save_last_run_log))
                         .addGap(11, 11, 11))
                     .addGroup(layout.createSequentialGroup()
@@ -581,21 +575,8 @@ public final class MainGUI extends JFrame {
             AlicaLogger.getInstance().showError(ex, "Error in worker initialization.");
             return;
         }
-        
-        // change button state
-        b_worker_start.setEnabled(false);
-        b_worker_stop.setEnabled(true);
         this.log_is_saved = false;
     }//GEN-LAST:event_b_worker_startActionPerformed
-
-    private void b_worker_stopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_worker_stopActionPerformed
-        // request the worker to stop
-        alica_core.stopWorkers();
-
-        // change button states back to original
-        b_worker_start.setEnabled(true);
-        b_worker_stop.setEnabled(false);
-    }//GEN-LAST:event_b_worker_stopActionPerformed
 
     private void b_save_last_run_logActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_save_last_run_logActionPerformed
         AlicaLogger.getInstance().saveLog();
@@ -610,6 +591,10 @@ public final class MainGUI extends JFrame {
             l_roi_is_set.setText("ROI: Not set");
     }//GEN-LAST:event_b_set_roiActionPerformed
 
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        this.setVisible(false);
+    }//GEN-LAST:event_formWindowClosing
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel analyzer_panel;
@@ -618,7 +603,6 @@ public final class MainGUI extends JFrame {
     private javax.swing.JButton b_save_last_run_log;
     private javax.swing.JButton b_set_roi;
     private javax.swing.JButton b_worker_start;
-    private javax.swing.JButton b_worker_stop;
     private javax.swing.ButtonGroup buttonGroup_imaging_mode;
     private javax.swing.JComboBox cb_analyzer_setup;
     private javax.swing.JComboBox cb_controller_setup;
