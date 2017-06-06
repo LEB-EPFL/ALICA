@@ -11,7 +11,7 @@
     <description>Builds, tests, and runs the project ALICA.</description>
     <import file="nbproject/build-impl.xml"/>
     <property name="pluginsDir"  location="C:\Program Files\Micro-Manager-2.0beta\mmplugins" />
-    <property name="store.jar.name" value="ALICA_v0.1.0.jar"/>
+    <property name="store.jar.name" value="ALICA.jar"/>
     <property name="store.dir" value="store"/>
     <property name="store.jar" value="${store.dir}/${store.jar.name}"/>
     <target name="-post-jar">
