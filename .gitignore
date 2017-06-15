@@ -2,3 +2,9 @@
 /build/
 /store/
 /nbproject/private/
+
+# emacs
+*~
+
+# sphinx
+/docs/build/
