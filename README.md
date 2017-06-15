@@ -4,7 +4,7 @@ Automated Laser Illumination Control Algorithm
 MicroManager2.0 plugin for real-time image analysis and automated laser illumination control.
 
 ## Installation
-Copy `ALICA.jar` into the `Micro-Manager2.0/mmplugins` folder.
+Copy `ALICA.jar` from one of the [releases](https://github.com/MStefko/ALICA/releases) into the `Micro-Manager2.0/mmplugins` folder.
 
 ## Usage
  1. Select appropriate `Analyzer`, `Controller` and `Laser`, and adjust parameters.
