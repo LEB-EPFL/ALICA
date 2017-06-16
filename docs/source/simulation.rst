@@ -96,8 +96,8 @@ steps in this section.
    should appear. Select your parameters for the simulation. A full
    description of the simulation parameters is outside the scope of
    this documentation. However, you will want to set the Controller
-   setting to **Manual** since we will eventually test ALICA's
-   controllers, not SASS's.
+   setting to **Manual** since we want only a simple simulation where
+   we manually select the laser power.
 
 .. image:: _images/sass_options_controller_manual.png
    :alt: Set the Controller option to Manual and remember the value
@@ -190,9 +190,17 @@ virtual mode.
    density estimates and the laser power.
 4. Click the *Live* button in the main Micro-Manager GUI window. You
    should see the reports in ALICA's Monitor window respond to changes
-   in the images streaming through the Snap/Live View window.
-5. When you want to close the Monitor window, first click *Stop* in
-   the ALICA Setup window.
+   in the images streaming through the Snap/Live View window. If you
+   don't immediately see any change in the monitors, try stopping and
+   starting Live mode again in the Snap/Live View window.
+
+.. image:: _images/alica_monitor_window.png
+   :alt: The ALICA monitor window provides real-time feedback on the
+         estimated density of fluorophores.
+   :align: center
+
+5. When you want to close the Monitor window, click *Stop* in the
+   Monitor window.
 
 What's Next?
 ++++++++++++
