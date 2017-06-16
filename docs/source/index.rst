@@ -42,18 +42,10 @@ hardware. As a `Micro-Manager`_ plugin, ALICA easily integrates with
 many types of cameras and illumination sources.
 
 ALICA was designed and written by Marcel Stefko and Kyle M. Douglass
-in the `Laboratory of Experimental Biophysics`_ at the EPFL to reduce
-the amount of time and effort required by microscopists to produce
-high-quality STORM and PALM images.
+in the `Laboratory of Experimental Biophysics`_ at the EPFL to
+automate the lab's STORM and PALM microscopes.
 
 For more information, please see the FAQ.
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
 
 .. _Micro-Manager: https://www.micro-manager.org/
 .. _Laboratory of Experimental Biophysics: https://leb.epfl.ch
