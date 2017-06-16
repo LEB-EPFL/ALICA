@@ -20,6 +20,7 @@
 package ch.epfl.leb.alica.controllers.selftuningpi;
 
 import ch.epfl.leb.alica.AlicaLogger;
+import ch.epfl.leb.alica.controllers.ControllerStatusPanel;
 import ch.epfl.leb.alica.controllers.pi.PI_controller;
 
 /**
@@ -29,16 +30,16 @@ import ch.epfl.leb.alica.controllers.pi.PI_controller;
  * @author Marcel Stefko
  */
 public class SelfTuningController extends PI_controller {
-    private final double step_height;
-    private final double sampling_period_s;
-    private final double p_factor;
-    private final double i_factor;
+    private final SelfTuningStatusPanel status_panel;
     
-    // each value of init_counter is associated with an action in the init sequence
-    private int init_counter = -10;
-    private boolean init_sequence = true;
-    private double zero_power_signal = 0.0;
-    private double with_power_signal = 0.0;
+    private double step_height;
+    private final double sampling_period_s;
+    private double p_factor;
+    private double i_factor;
+    private int init_counter;
+    private boolean init_sequence;
+    private double zero_power_signal;
+    private double with_power_signal;
     
     /**
      * Initialize a new SelfTuningController
@@ -50,12 +51,22 @@ public class SelfTuningController extends PI_controller {
      */
     public SelfTuningController(double max_output, double sampling_period_s, double step_height, double p_factor, double i_factor) {
         super(0.0,0.0, max_output, sampling_period_s);
+
+        this.sampling_period_s = sampling_period_s;
+        this.status_panel = new SelfTuningStatusPanel(this);
+        this.recalibrate(step_height, p_factor, i_factor);
+    }
+    
+    public final void recalibrate(double step_height, double p_factor, double i_factor) {
         if (step_height <= 0.0 || p_factor <= 0.0 || i_factor <= 0.0)
             throw new IllegalArgumentException("Invalid self-tuning controller parameter!");
+        this.with_power_signal = 0.0;
+        this.zero_power_signal = 0.0;
+        this.init_sequence = true;
+        this.init_counter = -10;
         this.step_height = step_height;
-        this.sampling_period_s = sampling_period_s;
         this.p_factor = p_factor;
-        this.i_factor = i_factor;
+        this.i_factor = i_factor;       
     }
     
 
@@ -73,6 +84,13 @@ public class SelfTuningController extends PI_controller {
     private double initSequence(double value) {
         init_counter++;
         AlicaLogger.getInstance().logDebugMessage("Counter: "+init_counter+"\nSignal value: "+value);
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                status_panel.setCalibrationStatusDisplay(
+                   String.format("Calibrating... %d%%",100*(20 - init_counter)/30));
+            }
+        });
+        
         
         if (init_counter <= 0) {
             // just wait for sample stabilization
@@ -117,6 +135,13 @@ public class SelfTuningController extends PI_controller {
             // set output to 0 and start normal operation
             current_output = 0.0;
             init_sequence = false;
+            javax.swing.SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    status_panel.setCalibrationStatusDisplay("Calibrated.");
+                    status_panel.setValuesDisplay(P, I);
+                }
+            });
+
         } else {
             //skip
         }
@@ -126,6 +151,11 @@ public class SelfTuningController extends PI_controller {
     @Override
     public String getName() {
         return "Self-Tuning PI";
+    }
+    
+    @Override
+    public ControllerStatusPanel getStatusPanel() {
+        return status_panel;
     }
     
 }
