@@ -1,14 +1,37 @@
 Frequently Asked Questions
 ==========================
 
+General
++++++++
+
+Doesn't AutoLase already do autonomous illumination control for STORM/PALM?
+---------------------------------------------------------------------------
+
+`AutoLase`_ was developed for one particular use-case: automated PALM
+imaging of relatively sparse bacteria populations on microscopes with
+small fields of view. In more general conditions, AutoLase can
+completely fail to maintain an optimum illumination for STORM/PALM
+imaging because it cannot easily distinguish between true fluorescence
+signals and those from other sources such as fiducial markers, dust,
+or sample autofluorescence. Recent advances that extend PALM/STORM to
+large fields of view [#f1]_ further compound these problems because
+the chances of capturing a signal from a foreign source are greatly
+increased. Simply put, AutoLase cannot adequately account for sample
+heterogeneity.
+
+Recognizing that every sample has different illumination requirements
+and varying degrees of noise, we developed ALICA as an extensible,
+robust, and general-purpose tool for autonomous illumination control
+in PALM/STORM experiments.
+
+Software-specific
++++++++++++++++++
+
 What version of Micro-Manager should I use?
 -------------------------------------------
 
 ALICA was designed to work with Micro-Manager 2.0 or greater. See the
 `Micro-Manager 2.0`_ website for more information.
-
-.. _`Micro-Manager 2.0`:
-   https://www.micro-manager.org/wiki/Version_2.0
 
 Why doesn't ALICA work properly when SASS is installed?
 -------------------------------------------------------
@@ -21,4 +44,22 @@ Micro-Manager's copy, producing unexpected behavior.
 For this reason, we highly recommend installing SASS with an
 installation of Fiji that is independent of the copy of ImageJ used by
 Micro-Manager and ALICA.
+
+.. _`Micro-Manager 2.0`:
+   https://www.micro-manager.org/wiki/Version_2.0
+.. _`AutoLase`: https://micro-manager.org/wiki/AutoLase
+
+.. rubric:: Footnotes
+
+.. [#f1] K. M. Douglass et al., "Super-resolution imaging of multiple
+         cells by optimized flat-field epi-illumination," Nature
+         Photonics 10, 705-708
+         (2016). http://www.nature.com/nphoton/journal/v10/n11/full/nphoton.2016.200.html
+         ; Z. Zhao et al., "High-power homogeneous illumination for
+         super-resolution localization microscopy with large
+         field-of-view," Optics Express 25, 13382-13395
+         (2017). https://www.osapublishing.org/oe/abstract.cfm?uri=oe-25-12-13382
+         ; R. Diekmann, et al., "Chip-based wide field-of-view
+         nanoscopy," Nature Photonics 11, 322-328
+         (2017). https://www.nature.com/nphoton/journal/v11/n5/abs/nphoton.2017.55.html
 
