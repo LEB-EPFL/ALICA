@@ -167,6 +167,82 @@ hardware control.
 Step 5: Start the monitor
 -------------------------
 
-**TODO** Describe the ALICA monitor window
+When ready, click *Start* in the ALICA Setup window. This will open
+the ALICA monitor window, which will look similar to the image below.
+
+.. image:: _images/alica_monitor_window.png
+   :alt: The ALICA Monitor window
+   :align: center
+   :scale: 80%
+
+In the upper left, you can find a readout on the currently selected
+analyzer, controller, and laser. In this example image, the analyzer
+is the SpotCounter, controller is a PI controller, and the device is
+actually not set, i.e. the *Virtual* checkbox was checked in the ALICA
+Setup window.
+
+Below this box you can set the desired density of fluorophores in the
+*New setpoint:* text box. After typing in a new value, click *Set* to
+activate the change. If you draw a region of interest (ROI) in the
+Snap/Live View window, you can set ALICA to only analyze this region
+by clicking the *Set ROI* button. You can also drag this ROI around
+the the Snap/Live View window in real-time and ALICA will respond in
+real-time.
+
+Moving further down the left-hand side of the ALICA Monitor window,
+you will find information on the number of frames processed by the
+analyzer per second and the time taken to analyze the last frame. You
+may also close the ALICA Monitor window in this section by clicking
+the *Stop* button.
+
+In the middle of the ALICA Monitor window on the top is a real-time
+plot of the output of the analyzer as a function of time. The units on
+the y-axis of this plot will depend on the output of the analyzer. For
+example, the SpotCounter outputs a number of spots, but AutoLase will
+output the longest "On" pixel in units of time.
+
+Below this plot you may update the analyzer settings.
+
+Finally, on the far right of the ALICA Monitor window is a status bar
+that reflects the current output of the laser. The maximum value of
+the status bar is the maximum value set in the ALICA Setup window.
+
+Step 6: Start taking images
+---------------------------
+
+When you are ready, start taking images using the source of images
+that you set in the ALICA Setup window. For example, if you selected
+*Live mode*, then all you need to do is start a Live stream in
+Micro-Manager. The different parts of the ALICA Monitor window will
+begin to reflect the output of the analyzer and controller once images
+begin arriving in this stream.
+
+If the controller was set to Manual, try adjusting the ultraviolet
+laser power and watching how the output of the analyzer changes in
+response. If you are using a PI controller, you may notice a slight
+oscillation in the readout of the analyzer. This is caused by the
+particular values you have set for P and I.
+
+If you selected a self-tuning PI controller, Micro-Manager will pulse
+the laser a short time after the acquisition has started and observe
+how the density of fluorophores changes in response to the pulse. It
+will then determine the optimum values for P and I. You may set the
+set point after the controller has tuned itself.
+
+.. image:: _images/alica_desktop_example.png
+   :alt: Example of ALICA running during an image acquisition.
+   :align: center
+
+What's next?
+++++++++++++
+
+Tuning the parameters in ALICA may take some time and experimentation,
+even with the self-tuning controller. Tuning may not be easy to do on
+real samples due to time constraints and costly sample
+preparations. To ease this process, we created a simulation
+environment to help you learn how ALICA works.
+
+You may read about how to setup this environment on the `simulation
+<simulation.html>`_ page.
 
 .. _QuickPALM: http://imagej.net/QuickPALM

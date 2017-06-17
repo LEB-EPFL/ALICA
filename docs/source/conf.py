@@ -49,7 +49,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'ALICA'
-copyright = '2017, Marcel Stefko, Kyle M. Douglass'
+copyright = '2017, The Laboratory of Experimental Biophysics, EPFL, Lausanne, Switzerland'
 author = 'Marcel Stefko, Kyle M. Douglass'
 
 # The version info for the project you're documenting, acts as replacement for
