@@ -65,4 +65,8 @@ ALICA uses adapted code and algorithms under GPL from following projects:
  - [QuickPalm](http://imagej.net/QuickPALM) by Ricardo Henriques
  - [SpotCounter](http://imagej.net/SpotCounter) by Nico Stuurman
  
- Many thanks to Dr. Kyle M. Douglass for guidance during this project.
+ Contributors:
+  - [Marcel Stefko](https://github.com/MStefko): ALICA framework and GUI, and adaptation of algorithms into Analyzers and Controllers
+  - [Kyle M. Douglass](https://github.com/kmdouglass): Documentation and beta-testing
+ 
+ Many thanks to [Dr. Kyle M. Douglass](https://github.com/kmdouglass) for guidance during this project.
