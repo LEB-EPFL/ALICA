@@ -17,6 +17,7 @@ Table of Contents
    quickstart
    simulation
    faq
+   _javasphinx/packages
 
 
 About
