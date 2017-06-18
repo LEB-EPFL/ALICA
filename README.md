@@ -3,7 +3,7 @@ Automated Laser Illumination Control Algorithm
 
 MicroManager2.0 plugin for real-time image analysis and automated laser illumination control.
 
-Besides this short introduction, more extensive documentation can be found at (alica.readthedocs.io)[http://alica.readthedocs.io].
+Besides this short introduction, more extensive documentation can be found at [alica.readthedocs.io](http://alica.readthedocs.io).
 
 ## Installation
 Copy `ALICA.jar` from one of the [releases](https://github.com/MStefko/ALICA/releases) into the `Micro-Manager2.0/mmplugins` folder.
