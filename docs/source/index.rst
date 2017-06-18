@@ -65,7 +65,8 @@ ALICA was designed and written by Marcel Stefko and Kyle M. Douglass
 in the `Laboratory of Experimental Biophysics`_ at the EPFL to
 automate the lab's STORM and PALM microscopes.
 
-For more information, please see the `FAQ <faq.html>`_.
+For more information, please see the `FAQ <faq.html>`_ or 
+`Javadoc <_javasphinx/packages.html>`_
 
 Acknowledgments
 ===============
