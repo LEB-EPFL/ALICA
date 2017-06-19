@@ -41,9 +41,10 @@ public interface Controller {
     public double getSetpoint();
     
     /**
-     * Receives next input from the WorkerThread (this usually the batched output of the
+     * Receives next input from the WorkerThread (this the batched output of the
      * analyzer).
-     * @param value input to be processed
+     * @param value input to be processed. This input can be Double.NaN, if 
+     * the Analyzer can not produce an output for some reason.
      * @return same as getCurrentOutput()
      */
     public double nextValue(double value);

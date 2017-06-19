@@ -24,17 +24,21 @@ import ij.gui.Roi;
 
 
 /**
- * An analyzer receives images from the WorkerThread, processes them, and
- * adjusts its internal state (and output) accordingly. The WorkerThread 
- * can request the output at any time. 
+ * An analyzer receives images from the MicroManager, processes them, and
+ * adjusts its internal state (and output) accordingly. ALICA 
+ * can request the output at any time.
+ * 
  * @author Marcel Stefko
  */
 public interface Analyzer {
 
     /**
-     * Process the next image and adjust internal state. You can use the
-     * synchronized(this) statement in the Analyzerto ensure that no output 
-     * readout happens during code execution.
+     * Process the next image and adjust internal state. This method is 
+     * called after each new image acquisition by the AnalysisWorker.
+     * You can use the
+     * synchronized(this) statement in the Analyzer to ensure that no output 
+     * readout happens during code execution. Try to keep analysis time as
+     * short as possible.
      * @param image image to be processed, you can either set it to an IJ.ImageProcessor
      *  using ImageProcessor.setPixels(image), or turn into 1D short array using
      *  (short[]) image
@@ -48,8 +52,8 @@ public interface Analyzer {
     /**
      * Return intermittent output of the analyzer based on current internal state.
      * This is just for informational purposes. Internal state of the controller 
-     * should stay the same. Use
-     *  getBatchOutput() for values to be passed to the controller.
+     * should stay the same.
+     *  getBatchOutput() is used for values to be passed to the controller.
      * @return output value of the analyzer to be plotted by the GUI.
      */
     public double getIntermittentOutput();
@@ -85,7 +89,9 @@ public interface Analyzer {
     
     /**
      *
-     * @return status panel of this Analyzer to be placed into MonitorGUI, or null
+     * @return status panel of this Analyzer to be placed into MonitorGUI, or 
+     * null if no such panel is implemented (space in MonitorGUI will remain
+     * blank).
      */
     public AnalyzerStatusPanel getStatusPanel();
 }
