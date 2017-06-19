@@ -8,8 +8,16 @@ All notable changes to this project will be documented in this file.
     - The jar file has to be placed in `mmplugins/` folder, and begin with 
 `ALICA_`.
     - Example valid filename: `ALICA_MyOwnAnalyzer.jar`
+
+
+### Modified
  - Self-tuning PI controller's calibration is now triggered manually after 
 starting ALICA. 
+ - The build process now compiles a "lightweight" jar file for use with
+MicroManager, and also a "standalone" jar for inclusion into SASS.
+
+### TODO
+ - Make dynamic loading compatible with SASS.
 
 ## [v0.1.2]
 ### Added
