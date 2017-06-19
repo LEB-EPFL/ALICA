@@ -32,4 +32,7 @@ public abstract class AnalyzerSetupPanel extends javax.swing.JPanel {
      * @return initialized analyzer
      */
     public abstract Analyzer initAnalyzer();   
+    
+    @Override
+    public abstract String getName();
 }

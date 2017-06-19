@@ -1,6 +1,16 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [v0.2.0]
+### Added
+ - Extensibility support:
+    - Analyzers and Controllers can now be loaded from external jar files.
+    - The jar file has to be placed in `mmplugins/` folder, and begin with 
+`ALICA_`.
+    - Example valid filename: `ALICA_MyOwnAnalyzer.jar`
+ - Self-tuning PI controller's calibration is now triggered manually after 
+starting ALICA. 
+
 ## [v0.1.2]
 ### Added
 - Colorized warning labels
@@ -31,3 +41,4 @@ All notable changes to this project will be documented in this file.
 [v0.1.0]: https://github.com/MStefko/ALICA/releases/tag/v0.1.0
 [v0.1.1]: https://github.com/MStefko/ALICA/releases/tag/v0.1.1
 [v0.1.2]: https://github.com/MStefko/ALICA/releases/tag/v0.1.2
+[v0.2.0]: https://github.com/MStefko/ALICA/releases/tag/v0.2.0

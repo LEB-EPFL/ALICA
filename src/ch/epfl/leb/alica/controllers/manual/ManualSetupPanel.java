@@ -86,4 +86,9 @@ public class ManualSetupPanel extends ControllerSetupPanel {
         double initial_output = Double.parseDouble(e_initial_output.getText());
         return new ManualController(max_controller_output, initial_output);
     }
+
+    @Override
+    public String getName() {
+        return "Manual";
+    }
 }

@@ -75,4 +75,9 @@ public class SelfTuningSetupPanel extends ControllerSetupPanel {
     public Controller initController(double max_controller_output, double tick_rate_ms) {
         return new SelfTuningController(max_controller_output, tick_rate_ms/1000.0);
     }
+
+    @Override
+    public String getName() {
+        return "Self-tuning PI";
+    }
 }

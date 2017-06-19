@@ -64,4 +64,9 @@ public class IntegratorSetupPanel extends AnalyzerSetupPanel {
     public Analyzer initAnalyzer() {
         return new Integrator();
     }
+
+    @Override
+    public String getName() {
+        return "Integrator";
+    }
 }

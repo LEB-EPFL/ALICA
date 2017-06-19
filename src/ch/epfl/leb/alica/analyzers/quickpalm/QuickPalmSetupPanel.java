@@ -74,4 +74,9 @@ public class QuickPalmSetupPanel extends AnalyzerSetupPanel {
     public Analyzer initAnalyzer() {
         return new QuickPalm(cb_live_view.isSelected());
     }
+
+    @Override
+    public String getName() {
+        return "QuickPALM";
+    }
 }

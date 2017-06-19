@@ -90,6 +90,14 @@ public class SpotCounterCore {
         boxSize_ = boxSize;
         noiseTolerance_ = noiseTolerance;
     }
+    
+    public int getNoiseTolerance() {
+        return noiseTolerance_;
+    }
+    
+    public int getBoxSize() {
+        return boxSize_;
+    }
 
     /**
      * Analyzes the image and returns information about current state.

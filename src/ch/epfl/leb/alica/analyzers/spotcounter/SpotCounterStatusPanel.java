@@ -36,6 +36,8 @@ public class SpotCounterStatusPanel extends AnalyzerStatusPanel {
     public SpotCounterStatusPanel(SpotCounterCore core) {
         initComponents();
         this.core = core;
+        this.e_box_size.setText(Integer.toString(core.getBoxSize()));
+        this.e_noise_tolerance.setText(Integer.toString(core.getNoiseTolerance()));
     }
 
     /**

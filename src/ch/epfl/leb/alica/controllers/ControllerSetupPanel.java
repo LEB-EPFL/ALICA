@@ -37,5 +37,6 @@ public abstract class ControllerSetupPanel extends javax.swing.JPanel{
      */
     public abstract Controller initController(double max_controller_output, double tick_rate_ms);
    
-    
+    @Override
+    public abstract String getName();
 }

@@ -86,4 +86,9 @@ public class InverterSetupPanel extends ControllerSetupPanel {
         double input_at_1mw = Double.parseDouble(e_input_at_1mw.getText());
         return new InvertController(max_controller_output, input_at_1mw);
     }
+
+    @Override
+    public String getName() {
+        return "Inverter";
+    }
 }

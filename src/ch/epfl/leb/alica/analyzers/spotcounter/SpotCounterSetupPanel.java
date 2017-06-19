@@ -118,5 +118,10 @@ public class SpotCounterSetupPanel extends AnalyzerSetupPanel {
     private javax.swing.JLabel jLabel2;
     // End of variables declaration//GEN-END:variables
 
+    @Override
+    public String getName() {
+        return "QuickPALM";
+    }
+
 
 }

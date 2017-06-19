@@ -94,5 +94,10 @@ public class AutoLaseSetupPanel extends AnalyzerSetupPanel {
     private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 
+    @Override
+    public String getName() {
+        return "AutoLase";
+    }
+
 
 }

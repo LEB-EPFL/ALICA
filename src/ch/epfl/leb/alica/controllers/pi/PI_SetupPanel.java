@@ -123,4 +123,9 @@ public class PI_SetupPanel extends ControllerSetupPanel {
         }
         return new PI_controller(P, I_per_s, max_controller_output, tick_rate_ms/1000.0);
     }
+
+    @Override
+    public String getName() {
+        return "PI controller";
+    }
 }
