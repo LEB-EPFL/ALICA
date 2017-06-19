@@ -55,7 +55,8 @@ application. Example applications include
 - *in vitro* single molecule assays
 - single particle tracking
 
-A primary design goal of ALICA is **extensibility.** A minimal
+A primary design goal of ALICA is **`extensibility <extensibility.html>`_**. 
+A minimal
 knowledge of the Java programming language will allow you to write
 your own analyzers for deriving quantitative information from an image
 stream and controllers for implementing closed-loop feedback for your

@@ -37,7 +37,9 @@ Step 2: Implementing the Analyzer and its Setup/Status panels
 Implement the `Analyzer` interface from package `ch.epfl.leb.alica`, and 
 extend the `AnalyzerSetupPanel` and (optionally) `AnalyzerStatusPanel`
 abstract classes from package `ch.epfl.leb.alica.analyzers`. Check the 
-`API documentation <_javasphinx/packages.html>`_ for details.
+`API documentation <_javasphinx/packages.html>`_ for details. You can
+also consult the source code for already implemented Analyzers 
+on `GitHub <https://github.com/MStefko/ALICA/tree/master/src/ch/epfl/leb/alica/analyzers>`_.
 
 To give a little bit of intuition, the `AnalyzerSetupPanel` 
 serves as a Builder for Analyzers. In the Panel, the user can modify 
