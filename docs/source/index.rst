@@ -16,6 +16,7 @@ Table of Contents
    
    quickstart
    simulation
+   extending
    faq
    _javasphinx/packages
 
