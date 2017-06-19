@@ -72,6 +72,10 @@ analyzer. Your options include
 
 We suggest choosing the **Live mode** option when you are just
 starting to use ALICA because it is the most interactive option.
+During actual acquisitions, **MM Core** is recommended due 
+to its superior performance, unless you need
+to perform some image preprocessing using the MicroManager
+processing pipeline before feeding the images to ALICA.
 
 .. image:: _images/alica_setup_imagesource.png
    :alt: Select the source of the image stream.
