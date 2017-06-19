@@ -167,7 +167,7 @@
         <Component class="javax.swing.JTextField" name="e_i_factor">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="11"/>
-            <Property name="text" type="java.lang.String" value="1.0"/>
+            <Property name="text" type="java.lang.String" value="0.3"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel3">
@@ -178,12 +178,12 @@
         <Component class="javax.swing.JTextField" name="e_p_factor">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="11"/>
-            <Property name="text" type="java.lang.String" value="0.5"/>
+            <Property name="text" type="java.lang.String" value="0.1"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="b_recalibrate">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Recalibrate"/>
+            <Property name="text" type="java.lang.String" value="Calibrate"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="b_recalibrateActionPerformed"/>
@@ -198,7 +198,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="l_status">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Initialized"/>
+        <Property name="text" type="java.lang.String" value="Requires calibration..."/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel8">

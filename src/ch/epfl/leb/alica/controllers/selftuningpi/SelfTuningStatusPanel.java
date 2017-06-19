@@ -75,14 +75,14 @@ public class SelfTuningStatusPanel extends ControllerStatusPanel {
         jLabel4.setText("I factor:");
 
         e_i_factor.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
-        e_i_factor.setText("1.0");
+        e_i_factor.setText("0.3");
 
         jLabel3.setText("P factor:");
 
         e_p_factor.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
-        e_p_factor.setText("0.5");
+        e_p_factor.setText("0.1");
 
-        b_recalibrate.setText("Recalibrate");
+        b_recalibrate.setText("Calibrate");
         b_recalibrate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 b_recalibrateActionPerformed(evt);
@@ -134,7 +134,7 @@ public class SelfTuningStatusPanel extends ControllerStatusPanel {
 
         jLabel5.setText("Status:");
 
-        l_status.setText("Initialized");
+        l_status.setText("Requires calibration...");
 
         jLabel8.setText("P:");
 
@@ -204,6 +204,7 @@ public class SelfTuningStatusPanel extends ControllerStatusPanel {
         }
         try {
             this.controller.recalibrate(init_step_size, p_factor, i_factor);
+            this.setValuesDisplay(Double.NaN, Double.NaN);
         } catch (IllegalArgumentException ex) {
             AlicaLogger.getInstance().showError(ex, "Wrong number value!");
             return;

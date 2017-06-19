@@ -49,12 +49,15 @@ public class SelfTuningController extends PI_controller {
      * @param p_factor scaling factor for P in tuning
      * @param i_factor scaling factor for I in tuning
      */
-    public SelfTuningController(double max_output, double sampling_period_s, double step_height, double p_factor, double i_factor) {
+    public SelfTuningController(double max_output, double sampling_period_s) {
         super(0.0,0.0, max_output, sampling_period_s);
 
         this.sampling_period_s = sampling_period_s;
         this.status_panel = new SelfTuningStatusPanel(this);
-        this.recalibrate(step_height, p_factor, i_factor);
+        // initial values
+        this.P = 0.0;
+        this.I = 0.0;
+        this.init_sequence = false;
     }
     
     public final void recalibrate(double step_height, double p_factor, double i_factor) {
@@ -63,7 +66,7 @@ public class SelfTuningController extends PI_controller {
         this.with_power_signal = 0.0;
         this.zero_power_signal = 0.0;
         this.init_sequence = true;
-        this.init_counter = -10;
+        this.init_counter = -5;
         this.step_height = step_height;
         this.p_factor = p_factor;
         this.i_factor = i_factor;       
@@ -87,7 +90,7 @@ public class SelfTuningController extends PI_controller {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 status_panel.setCalibrationStatusDisplay(
-                   String.format("Calibrating... %d%%",100*(20 - init_counter)/30));
+                   String.format("Calibrating... %d%%",100*(5 + init_counter)/21));
             }
         });
         
@@ -97,33 +100,33 @@ public class SelfTuningController extends PI_controller {
             current_output = 0.0;
         } else if (init_counter == 1) {
             //skip
-        } else if (init_counter < 10) {
+        } else if (init_counter < 8) {
             // 2-9: accumulate zero power signal 
             zero_power_signal += value;
-        } else if (init_counter == 10) {
+        } else if (init_counter == 8) {
             // 10: average out zero power signal
             zero_power_signal += value;
-            zero_power_signal /= 9;
+            zero_power_signal /= 7;
             AlicaLogger.getInstance().logDebugMessage(
              String.format("Tuning: signal at zero power: %e", zero_power_signal));
             // increase output to step height
             current_output = step_height;
-        } else if (init_counter == 11) {
+        } else if (init_counter == 9) {
             //skip
-        } else if (init_counter < 20) {
+        } else if (init_counter < 16) {
             // 12-19: accumulate signal with power
             with_power_signal += value;
-        } else if (init_counter == 20) {
+        } else if (init_counter == 16) {
             // 20: average out signal with power
             with_power_signal += value;
-            with_power_signal /= 9;
+            with_power_signal /= 7;
             AlicaLogger.getInstance().logDebugMessage(
              String.format("Tuning: signal at %5.2f power: %e", step_height, with_power_signal));
             // calculate difference of signals with and without power
             double error =  with_power_signal - zero_power_signal;
             // calculate P and I according to coefficients
             P = step_height * p_factor / error;
-            I = P * sampling_period_s * i_factor;
+            I = step_height * sampling_period_s * i_factor / error;
             if (P<0.0 || I<0.0) {
                 AlicaLogger.getInstance().showMessage("Self-tuning failed! Components were calculated to be negative. Turning laser off.");
                 P = 0.0; I = 0.0;
