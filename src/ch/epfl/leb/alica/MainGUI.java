@@ -24,6 +24,7 @@ import ij.gui.YesNoCancelDialog;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
+import org.micromanager.internal.MMStudio;
 
 /**
  * Main controlling GUI for the ALICA plugin. This is a singleton which
@@ -44,6 +45,8 @@ public final class MainGUI extends JFrame {
     private MainGUI(AlicaCore core) {
         super();
         if (core == null) {
+            // force initialization by using internal method
+            this.alica_core = AlicaCore.initialize(MMStudio.getInstance());
             throw new NullPointerException("ALICA core must be initialized before instantiating the GUI!");
         } else {
             this.alica_core = core;
@@ -95,7 +98,7 @@ public final class MainGUI extends JFrame {
      */
     public static MainGUI getInstance() {
         if (instance == null) {
-            throw new NullPointerException("Main ALICA GUI was not yet initialized.");
+            instance = initialize(AlicaCore.getInstance());
         }
         return instance;
     }

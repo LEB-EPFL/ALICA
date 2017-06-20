@@ -52,7 +52,12 @@ public class MonitorGUI extends javax.swing.JFrame {
      */
     public MonitorGUI(Coordinator coordinator, String analyzer_name, String controller_name, String laser_name, double start_setpoint) {
         super();
-        this.setLocation(MainGUI.getInstance().getLocationOnScreen());
+        try {
+            this.setLocation(MainGUI.getInstance().getLocationOnScreen());
+        } catch (RuntimeException ex) {
+            // center of screen fallback
+            this.setLocationRelativeTo(null);
+        }
         // check if coordinator is alive
         if (coordinator == null) {
             throw new NullPointerException();

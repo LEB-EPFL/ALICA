@@ -111,7 +111,11 @@ public class Coordinator {
                     if (ROI != null) {
                         gui.setRoiStatus(true);
                     }
-                    gui.setLocation(MainGUI.getInstance().getLocationOnScreen());
+                    try {
+                        gui.setLocation(MainGUI.getInstance().getLocationOnScreen());
+                    } catch (RuntimeException ex) {
+                        gui.setLocationRelativeTo(null);
+                    }
                     MainGUI.getInstance().setVisible(false);
                     gui.setVisible(true);
 
