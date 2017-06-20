@@ -91,12 +91,12 @@ public class ControllerFactory extends AbstractFactory<ControllerSetupPanel>{
 
 
 class ControllerSetupPanelLoader {
-    // I use this just to print jars in mmplugins dir, whatever
+    // I use this just to print jars in the working dir, whatever
     private static PluginClassLoader class_loader = new PluginClassLoader("./");
     
     /**
-     * Dynamically loads ControllerSetupPanels from mmplugins. The jar filename MUST
-     * begin with "ALICA_" for the jar to be recognized.
+     * Dynamically loads ControllerSetupPanels from available jar files. 
+     * The jar filename MUST begin with "ALICA_" for the jar to be recognized.
      * @return list of loaded setup panels
      */
     public static ArrayList<ControllerSetupPanel> getControllerSetupPanels() {

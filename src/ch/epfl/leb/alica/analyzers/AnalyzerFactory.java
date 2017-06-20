@@ -75,12 +75,12 @@ public class AnalyzerFactory extends AbstractFactory<AnalyzerSetupPanel>{
 }
 
 class AnalyzerSetupPanelLoader {
-    // I use this just to print jars in mmplugins dir, whatever
+    // I use this just to print jars in the working dir, whatever
     private static PluginClassLoader class_loader = new PluginClassLoader("./");
     
     /**
-     * Dynamically loads AnalyzerSetupPanels from mmplugins. The jar filename MUST
-     * begin with "ALICA_" for the jar to be recognized.
+     * Dynamically loads AnalyzerSetupPanels from available jar files. 
+     * The jar filename MUST begin with "ALICA_" for the jar to be recognized.
      * @return list of loaded setup panels
      */
     public static ArrayList<AnalyzerSetupPanel> getAnalyzerSetupPanels() {
@@ -89,7 +89,6 @@ class AnalyzerSetupPanelLoader {
         
         // print urls of files in mmplugins folder
         for (URL u: class_loader.getURLs()) {
-            System.out.println(u.toString());
             // if it doesnt match desired filename, skip it
             if (!u.toString().toUpperCase().contains("ALICA_")) {
                 continue;
