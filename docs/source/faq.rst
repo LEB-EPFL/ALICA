@@ -24,6 +24,28 @@ and varying degrees of noise, we developed ALICA as an extensible,
 robust, and general-purpose tool for autonomous illumination control
 in PALM/STORM experiments.
 
+How do I do determine the value for the set point?
+--------------------------------------------------
+
+The set point is the value from the analyzer that the controller tries
+to maintain. Because of this, the meaning of the set point will vary
+depending on the analyzer you choose. For example, the set point for
+the spot counter is in units of number of spots per :math:`100 \, \mu
+m \times 100 \, \mu m`.
+
+A pretty good way to empirically find the set point for any analyzer
+is to perform a STORM or PALM experiment and manually adjust the laser
+powers until your sample is blinking optimally. Then, use the
+real-time plot in the upper right of the ALICA Monitor window and take
+the y-value of the curve as the approximate value for the set
+point. This value is highlighted in the figure below:
+
+.. image:: _images/alica_monitor_setpoint.png
+   :alt: You can use the real-time graph in the ALICA monitor window
+         to help determine the optimum set point.
+   :align: center
+   :scale: 25%
+
 Software-specific
 +++++++++++++++++
 
