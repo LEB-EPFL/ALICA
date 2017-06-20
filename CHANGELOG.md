@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
      classes for extending ALICA and inclusion into SASS. 
    - This replaces the `ALICA_SASS.jar` release.
  - Dynamic class loading now supported in SASS.
+ - [LEB](http://leb.epfl.ch/) logo
 
 ### Modified
  - Dynamic loaders of Analyzers and Controllers now scan the 
