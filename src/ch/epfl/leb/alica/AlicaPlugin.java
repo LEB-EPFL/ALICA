@@ -53,7 +53,11 @@ public class AlicaPlugin implements MenuPlugin, SciJavaPlugin {
                 try {
                     MainGUI.initialize(AlicaCore.getInstance()).setVisible(true);
                 } catch (MainGUI.AlreadyInitializedException ex) {
+                    if (AlicaCore.getInstance().isCoordinatorRunning()) {
+                        AlicaLogger.getInstance().showMessage("ALICA already running!");
+                    } else {
                     MainGUI.getInstance().setVisible(true);
+                    }
                 }
             }
         });
@@ -107,6 +111,14 @@ public class AlicaPlugin implements MenuPlugin, SciJavaPlugin {
     @Override
     public String getCopyright() {
         return "GNU GENERAL PUBLIC LICENSE, Version 3, 29 June 2007";
+    }
+    
+    /**
+     *
+     * @return singleton core of ALICA plugin
+     */
+    public AlicaCore getCore() {
+        return AlicaCore.getInstance();
     }
     
 }

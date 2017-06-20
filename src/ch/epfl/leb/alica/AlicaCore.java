@@ -193,9 +193,10 @@ public final class AlicaCore {
         if (coordinator != null) {
             coordinator.dispose();
         }
+        // run without headless mode
         coordinator = new Coordinator(studio, analyzer_factory.build(), 
                 controller_factory.build(), laser_factory.build(), imaging_mode,
-                controller_tick_rate_ms, ROI);
+                controller_tick_rate_ms, ROI, false);
     }
     
     /**
@@ -203,6 +204,19 @@ public final class AlicaCore {
      */
     public void stopWorkers() {
         coordinator.requestStop();
+    }
+    
+    /**
+     * Checks if the stop flag of the coordinator was set.
+     * @return true if coordinator's stop flag was set, or if coordinator
+     * is null
+     */
+    public boolean isCoordinatorRunning() {
+        try {
+            return coordinator.isRunning();
+        } catch (NullPointerException ex) {
+            return false;
+        }
     }
     
     /**

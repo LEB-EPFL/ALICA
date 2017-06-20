@@ -28,6 +28,8 @@ import ch.epfl.leb.alica.MainGUI;
 import ch.epfl.leb.alica.analyzers.AnalyzerStatusPanel;
 import ch.epfl.leb.alica.controllers.ControllerStatusPanel;
 import ij.gui.Roi;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.micromanager.Studio;
 
 /**
@@ -41,6 +43,7 @@ public class Coordinator {
     private final Studio studio;
     private final Controller controller;
     private final Analyzer analyzer;
+    private final Laser laser;
     
     private final AnalysisWorker analysis_worker;
     private final ControlWorker control_worker;
@@ -60,7 +63,7 @@ public class Coordinator {
      */
     public Coordinator(Studio studio, Analyzer analyzer, Controller controller, 
             Laser laser, ImagingMode imaging_mode, int controller_tick_rate_ms,
-            final Roi ROI) {
+            final Roi ROI, boolean headless) {
         // log the start time
         this.thread_start_time_ms = System.currentTimeMillis();
         // sanitize input
@@ -75,6 +78,7 @@ public class Coordinator {
         this.studio = studio;
         this.controller = controller;
         this.analyzer = analyzer;
+        this.laser = laser;
         
         studio.logs().logDebugMessage("Alica Coordinator started with imaging mode " + imaging_mode.toString());
         // analysis worker is a thread which runs continuously
@@ -82,37 +86,42 @@ public class Coordinator {
         studio.events().registerForEvents(this.analysis_worker);
         this.analysis_worker.setROI(ROI);
         
-        // initialize the GUI
-        gui = new MonitorGUI(this, 
-                analyzer.getName(), 
-                controller.getName(), 
-                laser.getDeviceName()+"-"+laser.getPropertyName(),
-                controller.getSetpoint());
-        gui.setLaserPowerDisplayMax(laser.getMaxPower());
+
         
         // this is a Timer which executes its internal task periodically
         this.control_worker = new ControlWorker(analysis_worker, controller, laser);
         this.control_worker.scheduleExecution(1000, controller_tick_rate_ms);
         
+        if (!headless) {
+            // initialize the GUI
+            gui = new MonitorGUI(this, 
+                    analyzer.getName(), 
+                    controller.getName(), 
+                    laser.getDeviceName()+"-"+laser.getPropertyName(),
+                    controller.getSetpoint());
+            gui.setLaserPowerDisplayMax(laser.getMaxPower());
 
-        
-        // this updates the GUI with info from the workers
-        this.monitor_worker = new MonitorWorker(gui, analysis_worker, control_worker);
-        this.monitor_worker.scheduleExecution(500, 100);
-        this.analysis_worker.start();
-        
-        // display the GUI
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                if (ROI != null) {
-                    gui.setRoiStatus(true);
+            // this updates the GUI with info from the workers
+            this.monitor_worker = new MonitorWorker(gui, analysis_worker, control_worker);
+            this.monitor_worker.scheduleExecution(500, 100);
+
+            // display the GUI
+            javax.swing.SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    if (ROI != null) {
+                        gui.setRoiStatus(true);
+                    }
+                    gui.setLocation(MainGUI.getInstance().getLocationOnScreen());
+                    MainGUI.getInstance().setVisible(false);
+                    gui.setVisible(true);
+
                 }
-                gui.setLocation(MainGUI.getInstance().getLocationOnScreen());
-                MainGUI.getInstance().setVisible(false);
-                gui.setVisible(true);
-
-            }
-        });
+            });
+        } else {
+            gui = null;
+            this.monitor_worker = null;
+        }
+        this.analysis_worker.start();
     }
     
     /**
@@ -125,7 +134,9 @@ public class Coordinator {
         }
         stop_flag = true;
         analysis_worker.requestStop();
-        monitor_worker.cancel();
+        if (monitor_worker != null) {
+            monitor_worker.cancel();
+        }
         control_worker.cancel();
        
         try {
@@ -144,14 +155,24 @@ public class Coordinator {
                 studio.logs().logError(ex);
             }
         }
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                MainGUI.getInstance().setLocation(gui.getLocationOnScreen());
-                gui.dispose();
-                MainGUI.getInstance().setVisible(true);
+        
+        // turn off laser when we are turning off ALICA
+        try {
+            laser.setLaserPower(0.0);
+        } catch (Exception ex) {
+            Logger.getLogger(Coordinator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        if (gui!=null) {
+            javax.swing.SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    MainGUI.getInstance().setLocation(gui.getLocationOnScreen());
+                    gui.dispose();
+                    MainGUI.getInstance().setVisible(true);
 
-            }
-        });
+                }
+            });
+        }
         
         
         
@@ -169,7 +190,9 @@ public class Coordinator {
      * Clear windows opened by analyzers and controllers.
      */
     public void dispose() {
-        this.gui.dispose();
+        if (gui!=null) {
+            this.gui.dispose();
+        }
     }
     
     /**

@@ -60,6 +60,7 @@ public class SelfTuningStatusPanel extends ControllerStatusPanel {
         jLabel9 = new javax.swing.JLabel();
         l_p_value = new javax.swing.JLabel();
         l_i_value = new javax.swing.JLabel();
+        cb_block = new javax.swing.JCheckBox();
 
         setPreferredSize(new java.awt.Dimension(200, 154));
 
@@ -144,6 +145,13 @@ public class SelfTuningStatusPanel extends ControllerStatusPanel {
 
         l_i_value.setText("<none>");
 
+        cb_block.setText("Block");
+        cb_block.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cb_blockActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -153,7 +161,7 @@ public class SelfTuningStatusPanel extends ControllerStatusPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addGap(0, 4, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -166,10 +174,12 @@ public class SelfTuningStatusPanel extends ControllerStatusPanel {
                                     .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(l_p_value)
-                                    .addComponent(l_i_value))))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(l_p_value, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
+                                    .addComponent(l_i_value, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(2, 2, 2)
+                                .addComponent(cb_block)))
+                        .addContainerGap(16, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -179,16 +189,21 @@ public class SelfTuningStatusPanel extends ControllerStatusPanel {
                     .addComponent(jLabel5)
                     .addComponent(l_status))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8)
-                    .addComponent(l_p_value))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
-                    .addComponent(l_i_value))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel8)
+                            .addComponent(l_p_value))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel9)
+                            .addComponent(l_i_value)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(cb_block)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addContainerGap(28, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -211,10 +226,18 @@ public class SelfTuningStatusPanel extends ControllerStatusPanel {
         }
     }//GEN-LAST:event_b_recalibrateActionPerformed
 
+    private void cb_blockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cb_blockActionPerformed
+        if (cb_block.isSelected()) {
+            controller.block();
+        } else {
+            controller.unblock();
+        }
+    }//GEN-LAST:event_cb_blockActionPerformed
+
 
     public void setValuesDisplay(double P, double I){
-        l_p_value.setText(String.format("%6.4f",P));
-        l_i_value.setText(String.format("%6.4f",P));
+        l_p_value.setText(String.format("%6.4e",P));
+        l_i_value.setText(String.format("%6.4e",I));
     }
     
     public void setCalibrationStatusDisplay(String text) {
@@ -223,6 +246,7 @@ public class SelfTuningStatusPanel extends ControllerStatusPanel {
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton b_recalibrate;
+    private javax.swing.JCheckBox cb_block;
     private javax.swing.JTextField e_i_factor;
     private javax.swing.JTextField e_init_step_size;
     private javax.swing.JTextField e_p_factor;
