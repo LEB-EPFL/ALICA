@@ -51,6 +51,7 @@ Periodically, the `Analyzer` is queried by the `Controller` to produce a `double
 ## Developing custom functionality
 It is possible to implement your own `Analyzer` or `Controller`. 
 More info can be found in the [documentation](http://alica.readthedocs.io).
+
 ## Acknowledgements
 ALICA uses adapted code and algorithms under GPL from following projects:
  - [AutoLase](https://micro-manager.org/wiki/AutoLase) by Thomas Pengo and Seamus Holden

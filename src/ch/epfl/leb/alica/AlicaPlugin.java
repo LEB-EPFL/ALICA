@@ -97,7 +97,7 @@ public class AlicaPlugin implements MenuPlugin, SciJavaPlugin {
      */
     @Override
     public String getVersion() {
-        return "0.2.0";
+        return "0.2.1";
     }
 
     /**

@@ -3,13 +3,15 @@ All notable changes to this project will be documented in this file.
 
 ## [v0.2.1]
 ### Added
- - `ALICA_dev.jar` release, which contains necessary MicroManager and ImageJ
-   classes for extending ALICA and inclusion into SASS. 
-   This replaces the `ALICA_SASS.jar` release.
+ - `ALICA_dev.jar` release
+   - This release contains necessary MicroManager and ImageJ
+     classes for extending ALICA and inclusion into SASS. 
+   - This replaces the `ALICA_SASS.jar` release.
+ - Dynamic class loading now supported in SASS.
 
 ### Modified
  - Dynamic loaders of Analyzers and Controllers now scan the 
-   root directory and one level of subdirectories. This should improve 
+   root directory and one level of subdirectories. This allows 
    compatibility with SASS. 
 
 
