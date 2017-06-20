@@ -76,7 +76,7 @@ public class AnalyzerFactory extends AbstractFactory<AnalyzerSetupPanel>{
 
 class AnalyzerSetupPanelLoader {
     // I use this just to print jars in mmplugins dir, whatever
-    private static PluginClassLoader class_loader = new PluginClassLoader("mmplugins/");
+    private static PluginClassLoader class_loader = new PluginClassLoader("./");
     
     /**
      * Dynamically loads AnalyzerSetupPanels from mmplugins. The jar filename MUST
@@ -89,6 +89,7 @@ class AnalyzerSetupPanelLoader {
         
         // print urls of files in mmplugins folder
         for (URL u: class_loader.getURLs()) {
+            System.out.println(u.toString());
             // if it doesnt match desired filename, skip it
             if (!u.toString().toUpperCase().contains("ALICA_")) {
                 continue;

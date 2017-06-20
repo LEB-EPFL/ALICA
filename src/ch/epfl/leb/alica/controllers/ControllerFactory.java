@@ -92,7 +92,7 @@ public class ControllerFactory extends AbstractFactory<ControllerSetupPanel>{
 
 class ControllerSetupPanelLoader {
     // I use this just to print jars in mmplugins dir, whatever
-    private static PluginClassLoader class_loader = new PluginClassLoader("mmplugins/");
+    private static PluginClassLoader class_loader = new PluginClassLoader("./");
     
     /**
      * Dynamically loads ControllerSetupPanels from mmplugins. The jar filename MUST
