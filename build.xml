@@ -16,7 +16,7 @@
     <property name="store.jar" value="${store.dir}/${store.jar.name}"/>
     <target name="-post-jar">
         <copy file="${basedir}/${dist.jar}" toDir="${pluginsDir}" />
-        <echo message="--Copied MM plugin JAR to basedir: ${basedir}" />
+        <echo message="--Copied MM plugin JAR to MM plugins dir: ${pluginsDir}" />
         <echo message="Packaging ${application.title} into a single JAR at ${store.jar}"/>
         <delete dir="${store.dir}"/>
         <mkdir dir="${store.dir}"/>
@@ -32,6 +32,8 @@
             excludes="META-INF/*.SF, META-INF/*.DSA, META-INF/*.RSA"/>
         </zip>
         <delete file="${store.dir}/temp_final.jar"/>
+        <copy file="${store.jar}" toDir="${basedir}/dist/" />
+        <delete dir="${store.dir}"/>
         <echo message="Finished" />
     </target>
 </project>
