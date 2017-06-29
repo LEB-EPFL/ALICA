@@ -173,10 +173,11 @@ public class SelfTuningController extends PI_controller {
     }
     
     /**
-     * 
+     * Resets integral before unblocking the output
      */
     public void unblock() {
         is_blocked = false;
+        integral = 0.0;
     }
     
 }
