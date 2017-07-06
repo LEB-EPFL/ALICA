@@ -123,7 +123,9 @@ controllers includes
    error signal;
 2. a manual controller, which gives control over the laser to the
    microscopist;
-3. an inverter **TODO: BRIEF EXPLANATION OF THE INVERTER**;
+3. an inverter, which adjusts the laser by a factor that is
+   proportional to the inverse of the error signal (e.g. high error
+   signal > low laser power and vice versa);
 4. a self-tuning (PI) controller, which uses a pulse of laser light to
    estimate the optimum values for the P and I parameters.
 

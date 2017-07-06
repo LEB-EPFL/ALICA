@@ -15,6 +15,7 @@ Table of Contents
    :maxdepth: 1
    
    quickstart
+   parameters
    simulation
    extending
    faq
