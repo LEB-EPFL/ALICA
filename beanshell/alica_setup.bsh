@@ -1,0 +1,79 @@
+/**
+ * Make sure to open camera view beforehand.
+ */
+
+boolean LASER_VIRTUAL = true; // testing on virtual laser
+boolean HEADLESS_MODE = false; // show gui
+
+double LASER_MIN_OUTPUT = 0.0;
+double LASER_MAX_OUTPUT = 50.0;
+double LASER_DEADZONE = 0.05;
+double CONTROLLER_SAMPLING_PERIOD_S = 0.3;
+int SPOTCOUNTER_NOISE_TOLERANCE = 70;
+int SPOTCOUNTER_BOX_SIZE = 3;
+boolean SPOTCOUNTER_LIVE_VIEW = true;
+
+String DEVICE_NAME = "Laser 405nm";
+String DEVICE_PROPERTY = "PowerSetpoint";
+
+// self-tuning pulse parameters
+double CONTROLLER_I_FACTOR = 0.5;
+double CONTROLLER_P_FACTOR = 0.1;
+double CONTROLLER_STEP_SIZE = 2.0; //mW
+
+import ch.epfl.leb.alica.ImagingMode;
+//ImagingMode MODE = ImagingMode.GRAB_FROM_CORE;
+ImagingMode MODE = ImagingMode.LIVE; // live mode source
+
+
+// set up analyzer
+import ch.epfl.leb.alica.analyzers.spotcounter.SpotCounter;
+SpotCounter analyzer = new SpotCounter(SPOTCOUNTER_NOISE_TOLERANCE, 
+	SPOTCOUNTER_BOX_SIZE,SPOTCOUNTER_LIVE_VIEW);
+
+// set up controller
+import ch.epfl.leb.alica.controllers.selftuningpi.SelfTuningController;
+SelfTuningController controller = new SelfTuningController(LASER_MAX_OUTPUT,
+	CONTROLLER_SAMPLING_PERIOD_S);
+
+// set up laser
+import ch.epfl.leb.alica.Laser;
+import ch.epfl.leb.alica.lasers.MMLaser;
+import ch.epfl.leb.alica.lasers.VirtualLaser;
+Laser laser;
+if (LASER_VIRTUAL) {
+	laser = new VirtualLaser(mm, DEVICE_NAME, DEVICE_PROPERTY,
+		LASER_MIN_OUTPUT, LASER_MAX_OUTPUT); 
+} else {
+ 	laser = new MMLaser(mm, DEVICE_NAME, DEVICE_PROPERTY,
+		LASER_MIN_OUTPUT, LASER_MAX_OUTPUT, LASER_DEADZONE);
+}
+
+// assemble the coordinator
+import ch.epfl.leb.alica.workers.Coordinator;
+Coordinator coordinator = new Coordinator(mm, analyzer, controller,
+	laser, MODE, (int) (CONTROLLER_SAMPLING_PERIOD_S*1000), null, HEADLESS_MODE);
+
+
+// launch live mode
+mm.live().setLiveMode(true);	
+mmc.sleep(1000);
+
+// send calibration signal to self-tuning controller
+controller.recalibrate(CONTROLLER_STEP_SIZE, CONTROLLER_P_FACTOR,
+	CONTROLLER_I_FACTOR);
+
+// set setpoint to 1500 (which should be a good value)
+// this will not be updated in GUI because we are bypassing the MonitorGUI handles
+controller.setSetpoint(1500);
+
+
+// here you would start the acquisition and whatever
+mmc.sleep(20000);
+// after acquisition end
+
+coordinator.requestStop();
+
+
+
+	

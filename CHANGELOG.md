@@ -1,6 +1,17 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [v0.2.2]
+### Added
+ - Function handles for use via BeanShell scripts
+
+### Modified
+ - SpotCounter live view is now toggled during ALICA run
+ - SelfTuningPI's output can be suppressed temporarily
+
+### Fixed
+ - SelfTuningPI's reported P and I values in GUI
+
 ## [v0.2.1]
 ### Added
  - `ALICA_dev.jar` release
@@ -14,7 +25,6 @@ All notable changes to this project will be documented in this file.
  - Dynamic loaders of Analyzers and Controllers now scan the 
    root directory and one level of subdirectories. This allows 
    compatibility with SASS. 
- - SpotCounter live view is now toggled during ALICA run
 
 
 ## [v0.2.0]
