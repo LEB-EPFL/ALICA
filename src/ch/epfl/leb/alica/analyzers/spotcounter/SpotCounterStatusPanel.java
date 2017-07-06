@@ -38,6 +38,10 @@ public class SpotCounterStatusPanel extends AnalyzerStatusPanel {
         this.core = core;
         this.e_box_size.setText(Integer.toString(core.getBoxSize()));
         this.e_noise_tolerance.setText(Integer.toString(core.getNoiseTolerance()));
+        
+        if (this.core.isLiveModeOn()) {
+            this.cb_live_view.setSelected(true);
+        }
     }
 
     /**
@@ -55,6 +59,7 @@ public class SpotCounterStatusPanel extends AnalyzerStatusPanel {
         e_box_size = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         b_set = new javax.swing.JButton();
+        cb_live_view = new javax.swing.JCheckBox();
 
         jLabel1.setText("SpotCounter");
 
@@ -75,15 +80,29 @@ public class SpotCounterStatusPanel extends AnalyzerStatusPanel {
             }
         });
 
+        cb_live_view.setText("Live view");
+        cb_live_view.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cb_live_viewActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(55, 55, 55)
+                .addComponent(b_set)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(cb_live_view))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2)
                             .addComponent(jLabel3))
@@ -92,25 +111,23 @@ public class SpotCounterStatusPanel extends AnalyzerStatusPanel {
                             .addComponent(e_box_size, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(e_noise_tolerance, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE))))
                 .addGap(45, 45, 45))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(55, 55, 55)
-                .addComponent(b_set)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(e_noise_tolerance, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(e_box_size, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(cb_live_view)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 4, Short.MAX_VALUE)
                 .addComponent(b_set)
                 .addContainerGap())
         );
@@ -128,9 +145,18 @@ public class SpotCounterStatusPanel extends AnalyzerStatusPanel {
         core.setParams(noise_tolerance, box_size);
     }//GEN-LAST:event_b_setActionPerformed
 
+    private void cb_live_viewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cb_live_viewActionPerformed
+        if (cb_live_view.isSelected()) {
+            core.liveModeOn();
+        } else {
+            core.liveModeOff();
+        }
+    }//GEN-LAST:event_cb_live_viewActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton b_set;
+    private javax.swing.JCheckBox cb_live_view;
     private javax.swing.JTextField e_box_size;
     private javax.swing.JTextField e_noise_tolerance;
     private javax.swing.JLabel jLabel1;

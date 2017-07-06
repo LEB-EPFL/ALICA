@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
  - Dynamic loaders of Analyzers and Controllers now scan the 
    root directory and one level of subdirectories. This allows 
    compatibility with SASS. 
+ - SpotCounter live view is now toggled during ALICA run
 
 
 ## [v0.2.0]

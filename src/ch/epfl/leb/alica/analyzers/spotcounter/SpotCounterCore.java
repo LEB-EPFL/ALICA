@@ -40,6 +40,7 @@ import java.util.LinkedHashMap;
  * @author Nico Stuurman
  */
 public class SpotCounterCore {
+    private boolean live_mode;
     private final ImagePlus live_view;
     private final int nPasses_ = 1;
     private int pasN_ = 0;
@@ -58,17 +59,16 @@ public class SpotCounterCore {
      *
      * @param noiseTolerance minimum peak value
      * @param boxSize size of scanning box
-     * @param live_view if true, live preview is shown
+     * @param live_mode if true, live preview is shown
      */
-    public SpotCounterCore(int noiseTolerance, int boxSize, boolean live_view) {
+    public SpotCounterCore(int noiseTolerance, int boxSize, boolean live_mode) {
         boxSize_ = boxSize;
         noiseTolerance_ = noiseTolerance;
+        this.live_mode = live_mode;
         
-        if (live_view) {
-            this.live_view = new ImagePlus("SpotCounter live view");
+        this.live_view = new ImagePlus("SpotCounter live view");
+        if (live_mode) {
             this.live_view.show();
-        } else {
-            this.live_view = null;
         }
     }
     
@@ -107,11 +107,15 @@ public class SpotCounterCore {
      */
     public HashMap<String,Double> analyze(ImageProcessor ip) {
         Overlay ov = getSpotOverlay(ip);
-        if (live_view != null) {
-            live_view.setProcessor(ip);
-            live_view.setOverlay(ov);
-            live_view.updateAndDraw();
-            live_view.show();
+        synchronized(live_view) {
+            if (live_mode) {
+                live_view.setProcessor(ip);
+                live_view.setOverlay(ov);
+                live_view.updateAndDraw();
+                if (!live_view.isVisible()) {
+                    live_view.show();
+                }
+            }
         }
         return getFrameStats(ov);
 
@@ -196,5 +200,32 @@ public class SpotCounterCore {
      */
     public void setROI(Roi roi) {
         this.roi = roi;
+    }
+    
+    /**
+     * Turns on live viewing of SpotCounter analysis.
+     */
+    public void liveModeOn() {
+        synchronized(live_view) {
+            live_mode = true;
+        }
+    }
+    
+    /**
+     * Turns off live viewing of SpotCounter analysis.
+     */
+    public void liveModeOff() {
+        synchronized(live_view) {
+            live_mode = false;
+            live_view.hide();
+        }
+    }
+    
+    /**
+     * 
+     * @return true if live mode is on, false otherwise
+     */
+    public boolean isLiveModeOn() {
+        return live_mode;
     }
 }
