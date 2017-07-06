@@ -48,7 +48,7 @@ public class PI_controller implements Controller {
      */
     protected double current_output = 0.0;
     
-    private double integral = 0.0;
+    protected double integral = 0.0;
     
     /**
      * Initialize the PI controller.
