@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [v0.2.3]
+### Fixed
+ - Last analysis time reporting now works for MM Core mode.
+
 ## [v0.2.2]
 ### Added
  - Function handles for use via BeanShell scripts
@@ -76,4 +80,6 @@ MicroManager, and also a "standalone" jar for inclusion into SASS.
 [v0.1.1]: https://github.com/MStefko/ALICA/releases/tag/v0.1.1
 [v0.1.2]: https://github.com/MStefko/ALICA/releases/tag/v0.1.2
 [v0.2.0]: https://github.com/MStefko/ALICA/releases/tag/v0.2.0
-[v0.2.0]: https://github.com/MStefko/ALICA/releases/tag/v0.2.1
+[v0.2.1]: https://github.com/MStefko/ALICA/releases/tag/v0.2.1
+[v0.2.2]: https://github.com/MStefko/ALICA/releases/tag/v0.2.2
+[v0.2.3]: https://github.com/MStefko/ALICA/releases/tag/v0.2.3

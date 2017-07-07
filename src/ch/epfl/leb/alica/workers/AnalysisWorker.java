@@ -247,6 +247,7 @@ public class AnalysisWorker extends Thread {
         // so we have a new image, now we process it and store the tag for later comparison
         analyzer.processImage(new_image, (int) studio.core().getImageWidth(), (int) studio.core().getImageHeight(), studio.core().getPixelSizeUm(), image_acquisition_time);
         this.last_core_image_tag = new_tagged_image.tags;
+        this.last_analysis_time_ms = coordinator.getTimeMillis() - image_acquisition_time;
         try {
             // log the image number
             AlicaLogger.getInstance().addToLog(image_counter+1, "tag_frame_index", new_tagged_image.tags.getInt("ImageNumber"));
