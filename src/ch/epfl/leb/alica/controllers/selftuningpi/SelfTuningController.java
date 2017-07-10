@@ -31,7 +31,7 @@ import ch.epfl.leb.alica.controllers.pi.PI_controller;
  */
 public class SelfTuningController extends PI_controller {
     private final SelfTuningStatusPanel status_panel;
-    private boolean is_blocked = false;
+    
     private double step_height;
     private final double sampling_period_s;
     private double p_factor;
@@ -164,20 +164,5 @@ public class SelfTuningController extends PI_controller {
         return status_panel;
     }
     
-    /**
-     * Temporarily stops the controller from taking in input, and forces
-     * output to be 0.
-     */
-    public void block() {
-        is_blocked = true;
-    }
-    
-    /**
-     * Resets integral before unblocking the output
-     */
-    public void unblock() {
-        is_blocked = false;
-        integral = 0.0;
-    }
-    
+
 }

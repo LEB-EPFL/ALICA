@@ -38,6 +38,8 @@ public class PI_controller implements Controller {
      */
     protected double I;
     
+    protected boolean is_blocked = false;
+    
     private final double max_output;
     private final double min_output;
     
@@ -48,7 +50,9 @@ public class PI_controller implements Controller {
      */
     protected double current_output = 0.0;
     
-    protected double integral = 0.0;
+    private double integral = 0.0;
+    
+    private final PI_StatusPanel status_panel;
     
     /**
      * Initialize the PI controller.
@@ -64,6 +68,8 @@ public class PI_controller implements Controller {
         this.I = I_per_second * sampling_period_s;
         this.max_output = max_output;
         this.min_output = 0.0;
+        this.status_panel = new PI_StatusPanel(this);
+        this.status_panel.setValuesDisplay(P, I_per_second);
     }
     
     @Override
@@ -84,6 +90,9 @@ public class PI_controller implements Controller {
 
     @Override
     public double nextValue(double value) {
+        if (is_blocked) {
+            return 0.0;
+        }
         if (Double.isNaN(value) || Double.isInfinite(value))
             return current_output;
         final double error = setpoint - value;
@@ -117,7 +126,24 @@ public class PI_controller implements Controller {
 
     @Override
     public ControllerStatusPanel getStatusPanel() {
-        return null;
+        return this.status_panel;
     }
+    
+    /**
+     * Temporarily stops the controller from taking in input, and forces
+     * output to be 0.
+     */
+    public void block() {
+        is_blocked = true;
+    }
+    
+    /**
+     * Resets integral before unblocking the output
+     */
+    public void unblock() {
+        is_blocked = false;
+        integral = 0.0;
+    }
+    
     
 }

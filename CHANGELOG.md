@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [v0.2.4]
+### Modified
+ - Added StatusPanel and blocking capabilities to the PI controller.
+
 ## [v0.2.3]
 ### Fixed
  - Last analysis time reporting now works for MM Core mode.
