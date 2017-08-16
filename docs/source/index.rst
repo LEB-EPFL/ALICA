@@ -8,9 +8,6 @@ ALICA
 
 Automated Laser Illumination Control Algorithm
 
-Table of Contents
-=================
-
 .. toctree::
    :maxdepth: 1
    
@@ -92,6 +89,12 @@ Authors
 
 - `Marcel Stefko <https://github.com/MStefko>`_
 - `Kyle M. Douglass <https://github.com/kmdouglass>`_
+
+See Also
+========
+
+- `SASS <http://sass.readthedocs.io/en/latest/>`_ - STORM Acquisition
+  Simulation Software
 
 .. _Micro-Manager: https://www.micro-manager.org/
 .. _Laboratory of Experimental Biophysics: https://leb.epfl.ch
