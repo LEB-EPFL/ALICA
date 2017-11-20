@@ -54,7 +54,7 @@ public class IntegratorSetupPanel extends AnalyzerSetupPanel {
         jTextArea1.setColumns(20);
         jTextArea1.setLineWrap(true);
         jTextArea1.setRows(5);
-        jTextArea1.setText("Computes the average value of all pixels.");
+        jTextArea1.setText("Computes the average pixel value across an image.");
         jTextArea1.setWrapStyleWord(true);
         jScrollPane1.setViewportView(jTextArea1);
 
