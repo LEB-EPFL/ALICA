@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [v0.2.5]
+### Modified
+- The Integrator no longer implicitly performs a background
+  subtraction. This means that its outputs now match the result of
+  running the **Measure** command on an image in ImageJ.
+
 ## [v0.2.4]
 ### Modified
  - Added StatusPanel and blocking capabilities to the PI controller.

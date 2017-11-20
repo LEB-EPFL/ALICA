@@ -26,14 +26,14 @@ import ij.process.ShortProcessor;
 import java.util.ArrayList;
 
 /**
- * Analyzer which just outputs average pixel value per frame. Not really useless,
- * but good as an example.
+ * Analyzer which outputs the average pixel value per frame.
+ * 
  * @author Marcel Stefko
  */
 public class Integrator implements Analyzer {
     // array for storing outputs since last batchedoutput query
-    private final ArrayList<Double> intermittent_outputs = new ArrayList<Double>();
-    private int min;
+    private final ArrayList<Double> intermittentOutputs = 
+            new ArrayList<Double>();
     private boolean start = true;
     
     // region of interest to confine analysis to
@@ -43,11 +43,25 @@ public class Integrator implements Analyzer {
     private double intermittent_output = 0.0;
     
     public Integrator() {
-        this.min = Short.MAX_VALUE;
     }
     
+    /**
+     * Computes the average of the pixel values taken over the image (or ROI).
+     * 
+     * @param image
+     * @param image_width
+     * @param image_height
+     * @param pixel_size_um
+     * @param time_ms 
+     */
     @Override
-    public void processImage(Object image, int image_width, int image_height, double pixel_size_um, long time_ms) {
+    public void processImage(
+            Object image,
+            int image_width,
+            int image_height,
+            double pixel_size_um,
+            long time_ms
+    ) {
         // set boundaries from roi or image edges
         int x_min, x_max, y_min, y_max;
         if (roi == null) {
@@ -70,23 +84,11 @@ public class Integrator implements Analyzer {
             for (int y=y_min; y<y_max; y++) {
                 sum += sp.getPixel(x, y);
             }
-        }
-        
-        // estimate background from first frame
-        if (start) {
-            for (int x=x_min; x<x_max; x++) {
-                for (int y=y_min; y<y_max; y++) {
-                    if (sp.getPixel(x, y)<min) {
-                        min = sp.getPixel(x,y);
-                    }
-                }
-            }
-            start = false;
-        }
+        }      
         
         // divide by area, subtract background and store
-        intermittent_output = ((double)sum)/((x_max-x_min)*(y_max-y_min)) - min;
-        intermittent_outputs.add(intermittent_output);
+        intermittent_output = ((double)sum)/((x_max-x_min)*(y_max-y_min));
+        intermittentOutputs.add(intermittent_output);
     }
 
     @Override
@@ -97,15 +99,15 @@ public class Integrator implements Analyzer {
     @Override
     public double getBatchOutput() {
         // return arithmetic average of stored values and flush array
-        if (intermittent_outputs.size() == 0)
+        if (intermittentOutputs.size() == 0)
             return Double.NaN;
         double mean_output = 0.0;
-        for (double d: intermittent_outputs) {
+        for (double d: intermittentOutputs) {
             mean_output += d;
         }
-        mean_output /= intermittent_outputs.size();
+        mean_output /= intermittentOutputs.size();
         
-        intermittent_outputs.clear();
+        intermittentOutputs.clear();
         return mean_output;
     }
 
@@ -122,7 +124,7 @@ public class Integrator implements Analyzer {
 
     @Override
     public String getName() {
-        return "Brightness integrator";
+        return "Integrator";
     }
 
     @Override
