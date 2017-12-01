@@ -7,6 +7,11 @@ All notable changes to this project will be documented in this file.
   subtraction. This means that its outputs now match the result of
   running the **Measure** command on an image in ImageJ.
 
+### Fixed
+- A bug in the spot counter has been fixed that resulted missed spots
+  in a narrow band of pixels on the right and bottom edges of an
+  image.
+
 ## [v0.2.4]
 ### Modified
  - Added StatusPanel and blocking capabilities to the PI controller.
