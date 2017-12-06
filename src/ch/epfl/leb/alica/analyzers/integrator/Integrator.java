@@ -28,6 +28,9 @@ import java.util.ArrayList;
 /**
  * Analyzer which outputs the average pixel value per frame.
  * 
+ * The average is taken over the area of the image (or ROI) in units of squared
+ * pixels.
+ * 
  * @author Marcel Stefko
  */
 public class Integrator implements Analyzer {
@@ -86,7 +89,7 @@ public class Integrator implements Analyzer {
             }
         }      
         
-        // divide by area, subtract background and store
+        // divide by area in px^2, subtract background and store
         intermittent_output = ((double)sum)/((x_max-x_min)*(y_max-y_min));
         intermittentOutputs.add(intermittent_output);
     }
@@ -131,6 +134,12 @@ public class Integrator implements Analyzer {
     public AnalyzerStatusPanel getStatusPanel() {
         // no status panel
         return null;
+    }
+    
+    @Override
+    public String getShortReturnDescription() {
+        String descr = "avg. pixel value";
+        return descr;
     }
     
 }

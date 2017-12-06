@@ -28,11 +28,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Implementation of the QuickPALM algorithm as an analyzer, which produces
- * particle count as output.
+ * Produces a localization count per area using QuickPALM.
  * @author Marcel Stefko
  */
 public class QuickPalm implements Analyzer {
+    /**
+     * Scaling factor for the density.
+     * 
+     * Multiplying the estimated density by a factor of 100 means that the
+     * output returns localizations per 10 um x 10 um = 100 um^2 area.
+     */
+    private final double SCALEFACTOR = 100;
+    
     private final QuickPalmCore core;
     private final ArrayList<Double> intermittent_outputs;
     
@@ -51,21 +58,29 @@ public class QuickPalm implements Analyzer {
     }
     
     @Override
-    public void processImage(Object image, int image_width, int image_height, double pixel_size_um, long time_ms) {
+    public void processImage(
+            Object image,
+            int image_width,
+            int image_height,
+            double pixel_size_um,
+            long time_ms) {
         ImageProcessor sp = new ShortProcessor(image_width, image_height);
         sp.setPixels(image);
         
         double fov_area;
         if (roi == null) {
-            fov_area = pixel_size_um*pixel_size_um*image_width*image_height;
+            fov_area = pixel_size_um * pixel_size_um *
+                       image_width * image_height;
             
         } else {
-            fov_area = pixel_size_um*pixel_size_um*roi.getBounds().getWidth()*roi.getBounds().getHeight();
+            fov_area = pixel_size_um * pixel_size_um * 
+                       roi.getBounds().getWidth() * roi.getBounds().getHeight();
             sp.setRoi(roi);
             sp = sp.crop();
         }
         synchronized(this) {
-            intermittent_output = core.processImage(sp.duplicate(), counter++)/ fov_area * 10000;
+            intermittent_output = core.processImage(sp.duplicate(), counter++) /
+                                  fov_area * SCALEFACTOR;
             intermittent_outputs.add(intermittent_output);
         }
     }
@@ -107,6 +122,12 @@ public class QuickPalm implements Analyzer {
     @Override
     public AnalyzerStatusPanel getStatusPanel() {
         return null;
+    }
+    
+    @Override
+    public String getShortReturnDescription() {
+        String descr = "locs per " + String.valueOf(SCALEFACTOR) + "um^2";
+        return descr;
     }
     
 }
