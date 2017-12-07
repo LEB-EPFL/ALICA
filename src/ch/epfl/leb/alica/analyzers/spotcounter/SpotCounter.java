@@ -132,7 +132,7 @@ public class SpotCounter implements Analyzer {
     
     @Override
     public String getShortReturnDescription() {
-        String descr = "spots per " + String.valueOf(SCALEFACTOR) + " um^2";
+        String descr = "spots/" + String.valueOf((int) SCALEFACTOR) + " um^2";
         return descr;
     }
 }
