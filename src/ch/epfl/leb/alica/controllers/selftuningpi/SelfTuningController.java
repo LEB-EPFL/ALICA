@@ -104,10 +104,10 @@ public class SelfTuningController extends PI_controller {
         } else if (init_counter == 1) {
             //skip
         } else if (init_counter < 8) {
-            // 2-9: accumulate zero power signal 
+            // accumulate zero power signal 
             zero_power_signal += value;
         } else if (init_counter == 8) {
-            // 10: average out zero power signal
+            // average out zero power signal
             zero_power_signal += value;
             zero_power_signal /= 7;
             AlicaLogger.getInstance().logDebugMessage(
@@ -117,10 +117,10 @@ public class SelfTuningController extends PI_controller {
         } else if (init_counter == 9) {
             //skip
         } else if (init_counter < 16) {
-            // 12-19: accumulate signal with power
+            // accumulate signal with power
             with_power_signal += value;
         } else if (init_counter == 16) {
-            // 20: average out signal with power
+            // average out signal with power
             with_power_signal += value;
             with_power_signal /= 7;
             AlicaLogger.getInstance().logDebugMessage(

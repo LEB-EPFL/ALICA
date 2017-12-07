@@ -35,8 +35,6 @@ import java.util.ArrayList;
 public class AutoLase implements Analyzer {
     private final AutoLaseAnalyzer autolase_core;
     private ArrayList<Double> raw_value_history;
-    
-
     private int threshold;
     
     /**
@@ -50,7 +48,12 @@ public class AutoLase implements Analyzer {
     }
 
     @Override
-    public void processImage(Object image, int image_width, int image_height, double pixel_size_um, long time_ms) {
+    public void processImage(
+            Object image,
+            int image_width,
+            int image_height,
+            double pixel_size_um,
+            long time_ms) {
         ShortProcessor sp = new ShortProcessor(image_width, image_height, true);
         sp.setPixels(image);
         autolase_core.nextImage(sp);
@@ -85,15 +88,22 @@ public class AutoLase implements Analyzer {
     public AnalyzerStatusPanel getStatusPanel() {
         return null;
     }
+    
+    @Override
+    public String getShortReturnDescription() {
+        String descr = "max. on time";
+        return descr;
+    }
 
 }
 
 
 /**
- * This class estimates the density of activations. The density at a particular 
- * point relates 
- * to the maximum time a certain pixel is "on", or above a certain threshold. 
- * The density is calculated as a moving average 30 frames.
+ * This class estimates the density of activations.
+ * 
+ * The density at a particular point relates to the maximum time a certain pixel
+ * is "on", or above a certain threshold. The density is calculated as a moving
+ * average 30 frames.
  * 
  * The code only works for 2 bytes per pixel cameras for now. 
  * 

@@ -47,7 +47,13 @@ public interface Analyzer {
      * @param pixel_size_um length of one pixel side in micrometers
      * @param time_ms time of image acquisition in milliseconds
      */
-    public void processImage(Object image, int image_width, int image_height, double pixel_size_um, long time_ms);
+    public void processImage(
+            Object image,
+            int image_width,
+            int image_height,
+            double pixel_size_um,
+            long time_ms
+    );
     
     /**
      * Return intermittent output of the analyzer based on current internal state.
@@ -59,12 +65,12 @@ public interface Analyzer {
     public double getIntermittentOutput();
     
     /**
-     * Returns output of the analyzer to be used by a controller. If no output
-     * can be provided (such as when there are no new analyzed images),
-     * Double.NaN should be returned. 
-     * This method can also
-     * modify the internal state of the analyzer (such as flushing intermittent
-     * value cache).
+     * Returns output of the analyzer to be used by a controller.
+     * 
+     * If no output can be provided (such as when there are no new analyzed
+     * images), Double.NaN should be returned. This method can also modify the
+     * internal state of the analyzer (such as flushing intermittent value
+     * cache).
      * @return output value of the analyzer to be used by the controller
      */
     public double getBatchOutput();
@@ -94,4 +100,11 @@ public interface Analyzer {
      * blank).
      */
     public AnalyzerStatusPanel getStatusPanel();
+    
+    /**
+     * 
+     * @return A short string describing the return values of the analyzer.
+     */
+    public String getShortReturnDescription();
+    
 }

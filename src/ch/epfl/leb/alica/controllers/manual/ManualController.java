@@ -61,7 +61,7 @@ public class ManualController implements Controller {
     
     @Override
     public String getName() {
-        return "Manuals";
+        return "Manual";
     }
 
     @Override

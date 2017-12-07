@@ -1,6 +1,27 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [v0.2.5]
+
+### Added
+- Analyzers now return a short description of their return values for
+  y-axis labels in plots.
+
+### Modified
+- The Integrator no longer implicitly performs a background
+  subtraction. This means that its outputs now match the result of
+  running the **Measure** command on an image in ImageJ.
+- All analyzers that return densities (SpotCounter, QuickPALM, and the
+  Integrator) return events per 100 µm^2. Previously this was per
+  10000 µm^2.
+
+### Fixed
+- A bug in the spot counter has been fixed that resulted missed spots
+  in a narrow band of pixels on the right and bottom edges of an
+  image.
+- Fixed a typo in the `getName()` method for the `ManualController`.
+  The method now returns `"Manual"` instead of `"Manuals"`.
+
 ## [v0.2.4]
 ### Modified
  - Added StatusPanel and blocking capabilities to the PI controller.

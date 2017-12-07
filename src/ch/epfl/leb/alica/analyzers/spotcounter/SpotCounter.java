@@ -32,6 +32,14 @@ import java.util.HashMap;
  * @author stefko
  */
 public class SpotCounter implements Analyzer {
+    /**
+     * Scaling factor for the density.
+     * 
+     * Multiplying the estimated density by a factor of 100 means that the
+     * output returns spots per 10 um x 10 um = 100 um^2 area.
+     */
+    private final double SCALEFACTOR = 100;
+    
     private final SpotCounterCore core;
     private final SpotCounterStatusPanel status_panel;
     
@@ -65,19 +73,29 @@ public class SpotCounter implements Analyzer {
     }
 
     @Override
-    public void processImage(Object image, int image_width, int image_height, double pixel_size_um, long time_ms) {
+    public void processImage(
+            Object image,
+            int image_width,
+            int image_height,
+            double pixel_size_um,
+            long time_ms) {
         double fov_area;
+        
         if (roi == null) {
-            fov_area = pixel_size_um*pixel_size_um*image_width*image_height;
+            fov_area = pixel_size_um * pixel_size_um *
+                       image_width * image_height;
         } else {
-            fov_area = pixel_size_um*pixel_size_um*roi.getBounds().getWidth()*roi.getBounds().getHeight();
+            fov_area = pixel_size_um * pixel_size_um *
+                       roi.getBounds().getWidth() * roi.getBounds().getHeight();
         }
+        
         ShortProcessor sp = new ShortProcessor(image_width, image_height);
         sp.setPixels(image);
         
         HashMap<String,Double> results = core.analyze(sp.duplicate());
         synchronized(this) {
-            intermittent_output = results.get("spot-count")/ fov_area * 10000;
+            intermittent_output = results.get("spot-count") /
+                                  fov_area * SCALEFACTOR;
             intermittent_outputs.add(intermittent_output);
         }
     }
@@ -110,5 +128,11 @@ public class SpotCounter implements Analyzer {
     @Override
     public AnalyzerStatusPanel getStatusPanel() {
         return status_panel;
+    }
+    
+    @Override
+    public String getShortReturnDescription() {
+        String descr = "counts/" + String.valueOf((int) SCALEFACTOR) + " um^2";
+        return descr;
     }
 }
