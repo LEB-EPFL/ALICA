@@ -126,7 +126,7 @@ public class QuickPalm implements Analyzer {
     
     @Override
     public String getShortReturnDescription() {
-        String descr = "locs per " + String.valueOf(SCALEFACTOR) + "um^2";
+        String descr = "counts/" + String.valueOf((int) SCALEFACTOR) + "um^2";
         return descr;
     }
     

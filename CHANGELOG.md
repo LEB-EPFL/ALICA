@@ -19,6 +19,8 @@ All notable changes to this project will be documented in this file.
 - A bug in the spot counter has been fixed that resulted missed spots
   in a narrow band of pixels on the right and bottom edges of an
   image.
+- Fixed a typo in the `getName()` method for the `ManualController`.
+  The method now returns `"Manual"` instead of `"Manuals"`.
 
 ## [v0.2.4]
 ### Modified
