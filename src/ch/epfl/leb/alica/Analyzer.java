@@ -24,24 +24,27 @@ import ij.gui.Roi;
 
 
 /**
- * An analyzer receives images from the MicroManager, processes them, and
- * adjusts its internal state (and output) accordingly. ALICA 
- * can request the output at any time.
+ * Performs a fluorophore density estimate on an input image.
+ * 
+ * An analyzer receives images, processes them, and adjusts its internal state
+ * (and output) accordingly. ALICA can request the output at any time.
  * 
  * @author Marcel Stefko
  */
 public interface Analyzer {
 
     /**
-     * Process the next image and adjust internal state. This method is 
-     * called after each new image acquisition by the AnalysisWorker.
-     * You can use the
-     * synchronized(this) statement in the Analyzer to ensure that no output 
-     * readout happens during code execution. Try to keep analysis time as
-     * short as possible.
-     * @param image image to be processed, you can either set it to an IJ.ImageProcessor
-     *  using ImageProcessor.setPixels(image), or turn into 1D short array using
-     *  (short[]) image
+     * Process the next image and adjust the analyzer's internal state.
+     * 
+     * This method is called after each new image acquisition by the
+     * AnalysisWorker. You can use the synchronized(this) statement in the
+     * Analyzer to ensure that no output readout happens during code execution.
+     * Try to keep analysis time as short as possible.
+     * 
+     * @param image image to be processed as 1D raw pixel data. Inside this
+     * method, you can then set it to an IJ.ImageProcessor using
+     * ImageProcessor.setPixels(image) or turn into 1D short array using 
+     * (short[]) image.
      * @param image_width width in pixels
      * @param image_height height in pixels
      * @param pixel_size_um length of one pixel side in micrometers
