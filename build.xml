@@ -14,6 +14,10 @@
     <property name="store.jar.name" value="ALICA_dev.jar"/>
     <property name="store.dir" value="store"/>
     <property name="store.jar" value="${store.dir}/${store.jar.name}"/>
+    <target name="-pre-jar">
+        <!-- Single file -->
+        <copy file="src/resources/leb_logo_small.png" todir="${build.dir}/classes/resources" />
+    </target>
     <target name="-post-jar">
         <copy file="${basedir}/${dist.jar}" toDir="${pluginsDir}" />
         <echo message="--Copied MM plugin JAR to MM plugins dir: ${pluginsDir}" />

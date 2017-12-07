@@ -100,11 +100,13 @@ MicroManager, and also a "standalone" jar for inclusion into SASS.
 ### Added
 - CHANGELOG.md was created for tracking changes to the project.
 
-[v0.0.2]: https://github.com/MStefko/ALICA/releases/tag/v0.0.2
-[v0.1.0]: https://github.com/MStefko/ALICA/releases/tag/v0.1.0
-[v0.1.1]: https://github.com/MStefko/ALICA/releases/tag/v0.1.1
-[v0.1.2]: https://github.com/MStefko/ALICA/releases/tag/v0.1.2
-[v0.2.0]: https://github.com/MStefko/ALICA/releases/tag/v0.2.0
-[v0.2.1]: https://github.com/MStefko/ALICA/releases/tag/v0.2.1
-[v0.2.2]: https://github.com/MStefko/ALICA/releases/tag/v0.2.2
-[v0.2.3]: https://github.com/MStefko/ALICA/releases/tag/v0.2.3
+[v0.0.2]: https://github.com/LEB-EPFL/ALICA/releases/tag/v0.0.2
+[v0.1.0]: https://github.com/LEB-EPFL/ALICA/releases/tag/v0.1.0
+[v0.1.1]: https://github.com/LEB-EPFL/ALICA/releases/tag/v0.1.1
+[v0.1.2]: https://github.com/LEB-EPFL/ALICA/releases/tag/v0.1.2
+[v0.2.0]: https://github.com/LEB-EPFL/ALICA/releases/tag/v0.2.0
+[v0.2.1]: https://github.com/LEB-EPFL/ALICA/releases/tag/v0.2.1
+[v0.2.2]: https://github.com/LEB-EPFL/ALICA/releases/tag/v0.2.2
+[v0.2.3]: https://github.com/LEB-EPFL/ALICA/releases/tag/v0.2.3
+[v0.2.4]: https://github.com/LEB-EPFL/ALICA/releases/tag/v0.2.4
+[v0.2.5]: https://github.com/LEB-EPFL/ALICA/releases/tag/v0.2.5
