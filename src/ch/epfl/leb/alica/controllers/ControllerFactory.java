@@ -20,7 +20,6 @@
 package ch.epfl.leb.alica.controllers;
 
 import ch.epfl.leb.alica.AbstractFactory;
-import ch.epfl.leb.alica.AlicaLogger;
 import ch.epfl.leb.alica.Controller;
 import ch.epfl.leb.alica.controllers.inverter.InverterSetupPanel;
 import ch.epfl.leb.alica.controllers.manual.ManualSetupPanel;
@@ -109,7 +108,7 @@ class ControllerSetupPanelLoader {
             if (!u.toString().toUpperCase().contains("ALICA_")) {
                 continue;
             } else {
-                AlicaLogger.getInstance().logMessage("Loading ALICA addons from:\n" + u.toString());
+                Logger.getLogger(ControllerSetupPanelLoader.class.getName()).log(Level.INFO, "Loading ALICA analyzers from:\n" + u.toString());
             }
             
             // open the jar file
