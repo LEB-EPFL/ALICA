@@ -59,8 +59,6 @@ public abstract class AbstractFactory<ProductSetupPanel> {
      * @return currently selected factory product
      */
     public String getSelectedProductName() {
-        if (selected_name == null)
-            throw new NullPointerException("No product selected.");
         return selected_name;
     }
     
@@ -85,6 +83,10 @@ public abstract class AbstractFactory<ProductSetupPanel> {
      * @param name identifier of the product
      */
     public void selectProduct(String name) {
+        if (name == null) {
+            selected_name = null;
+            return;
+        }
         if (!setup_panels.containsKey(name)) {
             throw new IllegalArgumentException("No such product: "+name);
         }
@@ -96,6 +98,8 @@ public abstract class AbstractFactory<ProductSetupPanel> {
      * @return Return setup panel of currently selected product
      */
     public ProductSetupPanel getSelectedSetupPanel() {
+        if (selected_name==null)
+            return null;
         return setup_panels.get(selected_name);
     }
 }

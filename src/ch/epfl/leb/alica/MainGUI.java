@@ -107,19 +107,23 @@ public final class MainGUI extends JFrame {
     private void updateAnalyzerSetupPanel() {
         analyzer_panel.removeAll();
         javax.swing.JPanel panel = alica_core.getAnalyzerFactory().getSelectedSetupPanel();
-        analyzer_panel.add(panel);
-        panel.setBounds(5,5,200,150);
-        panel.revalidate();
-        panel.repaint();
+        if (panel != null) {
+            analyzer_panel.add(panel);
+            panel.setBounds(5,5,200,150);
+            panel.revalidate();
+            panel.repaint();
+        }
     }
     
     private void updateControllerSetupPanel() {
         controller_panel.removeAll();
         javax.swing.JPanel panel = alica_core.getControllerFactory().getSelectedSetupPanel();
-        controller_panel.add(panel);
-        panel.setBounds(5,5,200,150);
-        panel.revalidate();
-        panel.repaint();
+        if (panel != null) {
+            controller_panel.add(panel);
+            panel.setBounds(5,5,200,150);
+            panel.revalidate();
+            panel.repaint();
+        }
     }
     
     /**
