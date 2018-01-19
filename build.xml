@@ -45,7 +45,7 @@
         <echo message="Packaging analyzers and controllers into a single JAR at dist/ALICA_for_SASS.jar"/>
         <jar destfile="dist/ALICA_for_SASS.jar"
             basedir="build/classes"
-            includes="**/analyzers/**/*.class,**/controllers/**/*.class,**/alica/Analyzer.class,**/alica/Controller.class,**/alica/AbstractFactory.class"/>
+            includes="**/analyzers/**/*.class,**/controllers/**/*.class,**/alica/Analyzer.class,**/alica/Controller.class,**/alica/AlicaLogger.class,**/alica/AbstractFactory.class"/>
         <echo message="Finished" />
     </target>
 </project>
