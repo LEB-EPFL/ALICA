@@ -20,7 +20,6 @@
 package ch.epfl.leb.alica.analyzers;
 
 import ch.epfl.leb.alica.AbstractFactory;
-import ch.epfl.leb.alica.AlicaLogger;
 import ch.epfl.leb.alica.Analyzer;
 import ch.epfl.leb.alica.analyzers.autolase.AutoLaseSetupPanel;
 import ch.epfl.leb.alica.analyzers.integrator.IntegratorSetupPanel;
@@ -93,7 +92,7 @@ class AnalyzerSetupPanelLoader {
             if (!u.toString().toUpperCase().contains("ALICA_")) {
                 continue;
             } else {
-                AlicaLogger.getInstance().logMessage("Loading ALICA addons from:\n" + u.toString());
+                Logger.getLogger(AnalyzerSetupPanelLoader.class.getName()).log(Level.INFO, "Loading ALICA analyzers from:\n" + u.toString());
             }
             
             // open the jar file
