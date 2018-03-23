@@ -1,12 +1,21 @@
 # ALICA
-Automated Laser Illumination Control Algorithm
 
-MicroManager2.0 plugin for real-time image analysis and automated laser illumination control.
+- [![Join the chat at https://gitter.im/leb_epfl/ALICA](https://badges.gitter.im/leb_epfl/ALICA.svg)](https://gitter.im/leb_epfl/ALICA?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+A platform for real-time image analysis and automated laser
+illumination control in super-resolution microscopy. Also a plugin for
+[Micro-Manager 2.0](https://micro-manager.org/).
 
 Besides this short introduction, more extensive documentation can be found at [alica.readthedocs.io](http://alica.readthedocs.io).
 
 ## Installation
-Copy `ALICA.jar` from one of the [releases](https://github.com/MStefko/ALICA/releases) into the `Micro-Manager2.0/mmplugins` folder.
+Copy `ALICA.jar` from one of the
+[releases](https://github.com/MStefko/ALICA/releases) into the
+`Micro-Manager2.0/mmplugins` folder.
+
+## Documentation
+
+http://alica.readthedocs.io/en/latest
 
 ## Usage
  1. Select appropriate `Analyzer`, `Controller` and `Laser`, and adjust parameters.
@@ -51,6 +60,13 @@ Periodically, the `Analyzer` is queried by the `Controller` to produce a `double
 ## Developing custom functionality
 It is possible to implement your own `Analyzer` or `Controller`. 
 More info can be found in the [documentation](http://alica.readthedocs.io).
+
+## Getting help
+
+- How to use ALICA: https://gitter.im/leb_epfl/ALICA
+- Bug reports: https://github.com/LEB-EPFL/ALICA/issues
+- Feature requests: https://github.com/LEB-EPFL/ALICA/issues
+- Developer questions: https://gitter.im/leb_epfl/ALICA
 
 ## Acknowledgements
 ALICA uses adapted code and algorithms under GPL from following projects:
