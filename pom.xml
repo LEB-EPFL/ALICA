@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>ch.epfl.leb</groupId>
+    <artifactId>ALICA</artifactId>
+    <version>0.3-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.6</maven.compiler.source>
+        <maven.compiler.target>1.6</maven.compiler.target>
+    </properties>
+    
+    <dependencies>
+        <dependency>
+            <groupId>net.imagej</groupId>
+            <artifactId>ij</artifactId>
+            <version>1.49h</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.scijava/scijava-common -->
+        <dependency>
+            <groupId>org.scijava</groupId>
+            <artifactId>scijava-common</artifactId>
+            <version>2.46.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>17.0</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.10</version>
+            <scope>test</scope>
+            <type>jar</type>
+        </dependency>
+
+        <!-- ALICA Suite dependency -->
+        <dependency>
+            <groupId>ch.epfl.leb</groupId>
+            <artifactId>ALICA_Interfaces</artifactId>
+            <version>0.1</version>
+        </dependency>
+
+        <!-- LOCAL REPOSITORY DEPENDENCIES  -->
+        <!-- https://stackoverflow.com/questions/22956015/
+        maven-in-netbeans8-how-to-add-jars-to-local-repository 
+        To add a new jar file to local project repository, first add its
+        <dependency> entry below, save pom.xml, then in Netbeans Projects
+        left sidebar menu go to Dependencies, right-click the new entry,
+        and choose "Manually install artifact". -->
+        <dependency>
+            <groupId>org.micromanager</groupId>
+            <artifactId>mmcorej</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.micromanager</groupId>
+            <artifactId>mmacqengine</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.micromanager</groupId>
+            <artifactId>mmj</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+    </dependencies>
+    
+      <build>
+    <plugins>
+      <!-- any other plugins -->
+      <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <artifactSet>
+                                <includes>
+                                   <include>ch.epfl.leb:ALICA_Interfaces</include>
+                                </includes>
+                            </artifactSet>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+    </plugins>
+  </build>
+</project>

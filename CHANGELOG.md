@@ -2,10 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 ## Unreleased
-
-### Added
- - `ALICA_for_SASS.jar` build which contains necessary classes for
-   using Analyzers and Controllers in SASS.
+Maven distribution.
 
 ## [v0.2.5]
 
