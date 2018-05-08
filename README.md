@@ -1,5 +1,6 @@
 # ALICA
 
+- [![Build Status](https://travis-ci.org/LEB-EPFL/ALICA.svg?branch=master)](https://travis-ci.org/LEB-EPFL/ALICA)
 - [![Join the chat at https://gitter.im/leb_epfl/ALICA](https://badges.gitter.im/leb_epfl/ALICA.svg)](https://gitter.im/leb_epfl/ALICA?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 A platform for real-time image analysis and automated laser
