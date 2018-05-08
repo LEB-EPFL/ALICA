@@ -1,8 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## Unreleased
-Maven distribution.
+## [v0.3.0]
+
+### Changed 
+- The build system has been ported from Ant to Maven.
 
 ## [v0.2.5]
 
@@ -113,3 +115,4 @@ MicroManager, and also a "standalone" jar for inclusion into SASS.
 [v0.2.3]: https://github.com/LEB-EPFL/ALICA/releases/tag/v0.2.3
 [v0.2.4]: https://github.com/LEB-EPFL/ALICA/releases/tag/v0.2.4
 [v0.2.5]: https://github.com/LEB-EPFL/ALICA/releases/tag/v0.2.5
+[v0.3.0]: https://github.com/LEB-EPFL/ALICA/releases/tag/v0.3.0

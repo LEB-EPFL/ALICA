@@ -2,6 +2,7 @@
 /build/
 /store/
 /nbproject/private/
+licenseheader.txt
 
 # emacs
 *~
@@ -11,3 +12,6 @@
 
 # nix
 shell.nix
+
+# Maven
+/target
