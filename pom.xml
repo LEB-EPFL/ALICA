@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>ch.epfl.leb</groupId>
+    <artifactId>ALICA_</artifactId>
+    <version>0.3.0</version>
+    <packaging>jar</packaging>
+    
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.6</maven.compiler.source>
+        <maven.compiler.target>1.6</maven.compiler.target>
+	<ij.version>1.49h</ij.version>
+	<scijava-common.version>2.46.0</scijava-common.version>
+	<guava.version>17.0</guava.version>
+	<junit.version>4.12</junit.version>
+	<alica_interfaces.version>0.0.1</alica_interfaces.version>
+    </properties>
+
+    <name>ALICA</name>
+    <description>Automated laser illumination control system for Micro-Manager.</description>
+    <url>https://github.com/LEB-EPFL/ALICA</url>
+    <inceptionYear>2017</inceptionYear>
+
+    <repositories>
+        <repository>
+	    <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+    
+    <organization>
+            <name>The Laboratory of Experimental Biophysics</name>
+            <url>https://leb.epfl.ch</url>
+    </organization>
+    
+    <licenses>
+        <license>
+            <name>GNU General Public License v3+</name>
+            <url>https://www.gnu.org/licenses/gpl.html</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    
+    <developers>
+	<developer>
+            <id>kmdouglass</id>
+            <name>Kyle M. Douglass</name>
+		<url>https://kmdouglass.github.io</url>
+                <roles>
+                    <role>lead</role>
+                    <role>developer</role>
+                    <role>debugger</role>
+                    <role>reviewer</role>
+                    <role>support</role>
+                    <role>maintainer</role>
+                </roles>
+        </developer>
+    </developers>
+    
+    <contributors>
+        <contributor>
+            <name>Marcel Stefko</name>
+            <url>https://github.com/mstefko</url>
+            <roles>
+                <role>founder</role>
+                <role>developer</role>
+            </roles>
+        </contributor>
+
+        <contributor>
+            <name>Baptiste Ottino</name>
+            <url>https://github.com/bottino</url>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </contributor>
+    </contributors>
+    
+    <mailingLists>
+	<mailingList>
+            <name>Gitter</name>
+            <archive>https://gitter.im/leb_epfl/ALICA</archive>
+	</mailingList>
+    </mailingLists>
+
+    <scm>
+	<connection>scm:git:git://github.com/LEB-EPFL/ALICA</connection>
+	<developerConnection>scm:git:git@github.com:LEB-EPFL/ALICA</developerConnection>
+	<tag>HEAD</tag>
+	<url>https://github.com/LEB-EPFL/ALICA</url>
+    </scm>
+        
+    <issueManagement>
+	<system>GitHub Issues</system>
+	<url>https://github.com/LEB-EPFL/ALICA/issues</url>
+    </issueManagement>
+    
+    <ciManagement>
+	<system>https://travis-ci.org/LEB-EPFL/ALICA</system>
+    </ciManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>net.imagej</groupId>
+            <artifactId>ij</artifactId>
+	    <version>${ij.version}</version>
+        </dependency>
+	
+        <!-- https://mvnrepository.com/artifact/org.scijava/scijava-common -->
+        <dependency>
+            <groupId>org.scijava</groupId>
+            <artifactId>scijava-common</artifactId>
+	    <version>${scijava-common.version}</version>
+        </dependency>
+	
+        <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
+	
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+            <type>jar</type>
+        </dependency>
+
+        <!-- ALICA Suite dependency -->
+        <dependency>
+            <groupId>com.github.LEB-EPFL</groupId>
+            <artifactId>ALICA_interfaces</artifactId>
+            <version>${alica_interfaces.version}</version>
+        </dependency>
+
+        <!-- LOCAL REPOSITORY DEPENDENCIES  -->
+        <!-- https://stackoverflow.com/questions/22956015/
+        maven-in-netbeans8-how-to-add-jars-to-local-repository 
+        To add a new jar file to local project repository, first add its
+        <dependency> entry below, save pom.xml, then in Netbeans Projects
+        left sidebar menu go to Dependencies, right-click the new entry,
+        and choose "Manually install artifact". -->
+        <dependency>
+            <groupId>org.micro-manager</groupId>
+            <artifactId>MMCoreJ</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.micro-manager</groupId>
+            <artifactId>MMAcqEngine</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.micro-manager</groupId>
+            <artifactId>MMJ_</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+    </dependencies>
+    
+    <build>
+    <plugins>
+        <!-- any other plugins -->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-shade-plugin</artifactId>
+            <version>1.6</version>
+            <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                        <artifactSet>
+                            <includes>
+                               <include>com.github.LEB-EPFL:ALICA_interfaces</include>
+                            </includes>
+                        </artifactSet>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+    </plugins>
+  </build>
+</project>

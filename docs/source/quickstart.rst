@@ -32,10 +32,14 @@ ALICA is distributed as a .jar file and is easily installed by copying
 the file into the Micro-Manager plugins folder.
 
 1. Navigate to https://github.com/MStefko/ALICA/releases and download
-   the ALICA.jar file corresponding to the latest release.
-2. Copy ALICA.jar to the *MM2ROOT/mmplugins* directory, where
+   the ALICA*.jar file corresponding to the latest release.
+2. Copy ALICA*.jar to the *MM2ROOT/mmplugins* directory, where
    *MM2ROOT/* is the Micro-Manager installation directory.
-3. Verify that ALICA was installed and recognized by starting
+3. Navigate to https://github.com/LEB-EPFL/ALICA_ACPack and download
+   the ALICA_ACPack*.jar file corresponding to the latest release.
+4. Copy ALICA_ACPack*.jar to the *MM2ROOT/mmplugins* directory, where
+   *MM2ROOT/* is the Micro-Manager installation directory.
+5. Verify that ALICA was installed and recognized by starting
    Micro-Manager and selecting *Plugins > Device Control > ALICA* in
    the Micro-Manager menu bar. (ALICA will not be located in the
    ImageJ menu bar.) The ALICA Setup window should appear, which will

@@ -1,0 +1,23 @@
+language: java
+jdk:
+- oraclejdk8
+- openjdk8
+sudo: required
+services:
+- docker
+before_install:
+- docker pull epflbiophys/micro-manager:mvn-plugin-2.0
+install: true
+script:
+- docker run --name mm-build -v "$(pwd)":/opt/maven -w /opt/maven epflbiophys/micro-manager:mvn-plugin-2.0
+  mvn clean install
+deploy:
+  skip_cleanup: true
+  provider: releases
+  api_key:
+    secure: fovccBiDzoCvR5cGt9wfrUVeouUc8LIsaQlp7M0kIzRdnGQqgFcye+85UWenErch4RT4TKWA0QMT/i8DSmWY79cbW2MsHrILQ6TI5CR/HNZd75ikaqZsRYkUNeVf/c7/UyTqVNwNa5CivR4v66w7CCnDhpfvIMVc+PxfFU8ZAei8wnozq6qRQdGR4gbhXju0IuVg6f+jymPwjDYadZA8OoSAQU1Nsp/10YtrQrghw96eMn91Wpea3NCkbYs8pqQ+7rPPyq4d8D5eH6rjfO6ZujHcViUolyqp3G72OuTigoiFqZpaXBNR4Q0fiUEHl980OHpuaySoaMsSwZ7t90Z1m6k4jRSkn8XuXLVPI/3ylWtDgwrnUUbDB9HPm833uv/vw2Ha+qdSAxbevRy6k8AKZEDSB+OUYVRmw42RKu6wiTCPD7JRj7kMx+Z6ZUo+lBur/imbATLla7goSsm/39ao18JOaQ8aZUO0Yy7zIybWDWL/Au1c36gyXiLi7nHAucIOLqOimzs6oGYvkXykDPnS2iolrCrfZ6ENxKlGICPxjbubBkXsRr0bI1ZpQpdbLiJrfFEH3m/lDqJjjWToN8uXCT5kvOsUMXV0xCx7AN0RbpMTfrPA7DlNp2Ryf7Q1Q8wJdE9nStgqYeHVyW/7EYMYb8ZVhgaB7M5wj+sdSK9R7Do=
+  file_glob: true
+  file: target/ALICA_-*.jar
+  on:
+    repo: LEB-EPFL/ALICA
+    tags: true

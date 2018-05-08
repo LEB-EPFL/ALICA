@@ -2,9 +2,16 @@
 /build/
 /store/
 /nbproject/private/
+licenseheader.txt
 
 # emacs
 *~
 
 # sphinx
 /docs/build/
+
+# nix
+shell.nix
+
+# Maven
+/target
