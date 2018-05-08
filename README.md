@@ -9,11 +9,11 @@ illumination control in super-resolution microscopy. Also a plugin for
 
 ## Installation
 0. Download the latest `ALICA*.jar` from the [releases
-page](https://github.com/MStefko/ALICA/releases) and place it in the
+page](https://github.com/LEB-EPFL/ALICA/releases) and place it in the
 `mmplugins` folder inside the Micro-Manager installation directory.
 1. Download the latest `ALICA_ACPack*.jar` from the [ALICA_ACPack
-   releases page](https://github.com/LEB-EPFL/ALICA_ACPack) and place
-   it in the same `mmplugins` folder.
+   releases page](https://github.com/LEB-EPFL/ALICA_ACPack/releases)
+   and place it in the same `mmplugins` folder.
 
 ## Quickstart
 
