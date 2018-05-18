@@ -19,8 +19,6 @@
  */
 package ch.epfl.leb.alica;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.micromanager.MenuPlugin;
 import org.micromanager.Studio;
 import org.scijava.plugin.Plugin;
@@ -33,13 +31,21 @@ import org.scijava.plugin.SciJavaPlugin;
 @Plugin(type = MenuPlugin.class)
 public class AlicaPlugin implements MenuPlugin, SciJavaPlugin {
     
+    private final String VERSION = "0.4.0-SNAPSHOT";
+    private final String COPYRIGHT = "The Laboratory of Experimental " +
+                                     "Biophysics, Ecole Polytechnique " +
+                                     "Federale de Lausanne (EPFL), Switzerland";
+    private final String NAME = "ALICA";
+    private final String SUBMENU = "Device Control";
+    private final String TOOLTIP = "Automation routines for illumination control.";
+    
     /**
      * 
      * @return Sub-menu location of the plugin
      */
     @Override
     public String getSubMenu() {
-        return "Device Control";
+        return SUBMENU;
     }
 
     /**
@@ -83,7 +89,7 @@ public class AlicaPlugin implements MenuPlugin, SciJavaPlugin {
      */
     @Override
     public String getName() {
-        return "ALICA";
+        return NAME;
     }
 
     /**
@@ -92,7 +98,7 @@ public class AlicaPlugin implements MenuPlugin, SciJavaPlugin {
      */
     @Override
     public String getHelpText() {
-        return "Help!";
+        return TOOLTIP;
     }
 
     /**
@@ -101,7 +107,7 @@ public class AlicaPlugin implements MenuPlugin, SciJavaPlugin {
      */
     @Override
     public String getVersion() {
-        return "0.2.5";
+        return VERSION;
     }
 
     /**
@@ -110,7 +116,7 @@ public class AlicaPlugin implements MenuPlugin, SciJavaPlugin {
      */
     @Override
     public String getCopyright() {
-        return "GNU GENERAL PUBLIC LICENSE, Version 3, 29 June 2007";
+        return COPYRIGHT;
     }
     
     /**

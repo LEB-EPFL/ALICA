@@ -23,10 +23,7 @@ import ch.epfl.leb.alica.interfaces.analyzers.AnalyzerFactory;
 import ch.epfl.leb.alica.workers.Coordinator;
 import ch.epfl.leb.alica.interfaces.controllers.ControllerFactory;
 import ch.epfl.leb.alica.lasers.LaserFactory;
-import ij.IJ;
 import ij.gui.Roi;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import mmcorej.StrVector;
 import org.micromanager.Studio;
 

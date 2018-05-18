@@ -24,9 +24,6 @@ import ch.epfl.leb.alica.interfaces.Analyzer;
 import ch.epfl.leb.alica.ImagingMode;
 import com.google.common.eventbus.Subscribe;
 import ij.gui.Roi;
-import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import mmcorej.TaggedImage;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,7 +31,7 @@ import org.micromanager.Studio;
 import org.micromanager.data.Coords;
 import org.micromanager.data.Datastore;
 import org.micromanager.data.Image;
-import org.micromanager.data.NewImageEvent;
+import org.micromanager.data.DataProviderHasNewImageEvent;
 import org.micromanager.events.AcquisitionEndedEvent;
 import org.micromanager.events.AcquisitionStartedEvent;
 import org.micromanager.events.LiveModeEvent;
@@ -104,7 +101,9 @@ public class AnalysisWorker extends Thread {
     @Subscribe
     public void liveModeStarted(LiveModeEvent evt) {
         if (evt.getIsOn() && imaging_mode.equals(ImagingMode.LIVE)) {
-            studio.logs().logDebugMessage("Live mode start detected. Alica analyzer thread will now begin analyzing images from pipeline.");
+            studio.logs().logDebugMessage("Live mode start detected. Alica " +
+                                          "analyzer thread will now begin " +
+                                          "analyzing images from pipeline.");
             this.new_image_watcher.setLatestDatastore(this.studio.live().getDisplay().getDatastore());
             this.image_counter = 0;
             AlicaLogger.getInstance().clear();
@@ -380,7 +379,7 @@ class NewImageWatcher {
      * @param evt event containing coords
      */
     @Subscribe
-    public void newImageAcquired(NewImageEvent evt) {
+    public void newImageAcquired(DataProviderHasNewImageEvent evt) {
         synchronized(object_to_lock) {
             // notify thread that it can wake up
             object_to_lock.notify();
