@@ -8,10 +8,14 @@ illumination control in super-resolution microscopy. Also a plugin for
 [Micro-Manager 2.0](https://micro-manager.org/).
 
 ## Installation
-0. Download the latest `ALICA*.jar` from the [releases
+0. If you don't already have Micro-Manager 2.0 installed, download the
+   latest nightly build and install it from
+   [here](https://valelab4.ucsf.edu/~MM/nightlyBuilds/2.0.0-gamma/Windows/). Note
+   that ALICA will only work in Micro-Manager 2.0gamma.
+1. Download the latest `ALICA*.jar` from the [releases
 page](https://github.com/LEB-EPFL/ALICA/releases) and place it in the
 `mmplugins` folder inside the Micro-Manager installation directory.
-1. Download the latest `ALICA_ACPack*.jar` from the [ALICA_ACPack
+2. Download the latest `ALICA_ACPack*.jar` from the [ALICA_ACPack
    releases page](https://github.com/LEB-EPFL/ALICA_ACPack/releases)
    and place it in the same `mmplugins` folder.
 

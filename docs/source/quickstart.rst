@@ -16,8 +16,10 @@ If `Micro-Manager`_ 2.0 or greater is not already installed on your
 machine, then follow the steps in this section.
 
 1. Navigate to
-   https://www.micro-manager.org/wiki/Version_2.0#Downloads and
-   download the latest nightly build for your system.
+   https://valelab4.ucsf.edu/~MM/nightlyBuilds/2.0.0-gamma/Windows/
+   and download the latest nightly build for your system. (Note that
+   ALICA currently only works with Micro-Manager 2.0gamma, **NOT**
+   2.0beta.)
 2. Install Micro-Manager by following the directions provided on the
    previously mentioned website. Make note of the installation
    directory, which on Windows is usually something like *C:\\Program
