@@ -3,18 +3,21 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>ch.epfl.leb</groupId>
     <artifactId>ALICA_</artifactId>
-    <version>0.3.0</version>
+    <version>0.4.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.6</maven.compiler.source>
-        <maven.compiler.target>1.6</maven.compiler.target>
-	<ij.version>1.49h</ij.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+	<ij.version>1.51g</ij.version>
 	<scijava-common.version>2.46.0</scijava-common.version>
 	<guava.version>17.0</guava.version>
 	<junit.version>4.12</junit.version>
 	<alica_interfaces.version>0.0.1</alica_interfaces.version>
+        
+        <!-- Plugins -->
+        <maven-shade-plugin.version>3.1.1</maven-shade-plugin.version>
     </properties>
 
     <name>ALICA</name>
@@ -145,17 +148,17 @@
         and choose "Manually install artifact". -->
         <dependency>
             <groupId>org.micro-manager</groupId>
-            <artifactId>MMCoreJ</artifactId>
+            <artifactId>MMCoreJ-2.0gamma</artifactId>
             <version>1.0</version>
         </dependency>
         <dependency>
             <groupId>org.micro-manager</groupId>
-            <artifactId>MMAcqEngine</artifactId>
+            <artifactId>MMAcqEngine-2.0gamma</artifactId>
             <version>1.0</version>
         </dependency>
         <dependency>
             <groupId>org.micro-manager</groupId>
-            <artifactId>MMJ_</artifactId>
+            <artifactId>MMJ_-2.0gamma</artifactId>
             <version>1.0</version>
         </dependency>
 
@@ -167,7 +170,7 @@
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-shade-plugin</artifactId>
-            <version>1.6</version>
+            <version>${maven-shade-plugin.version}</version>
             <executions>
                     <execution>
                         <phase>package</phase>

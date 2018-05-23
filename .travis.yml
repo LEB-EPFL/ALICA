@@ -6,10 +6,10 @@ sudo: required
 services:
 - docker
 before_install:
-- docker pull epflbiophys/micro-manager:mvn-plugin-2.0
+- docker pull epflbiophys/micro-manager:mvn-plugin-2.0gamma
 install: true
 script:
-- docker run --name mm-build -v "$(pwd)":/opt/maven -w /opt/maven epflbiophys/micro-manager:mvn-plugin-2.0
+- docker run --name mm-build -v "$(pwd)":/opt/maven -w /opt/maven epflbiophys/micro-manager:mvn-plugin-2.0gamma
   mvn clean install
 deploy:
   skip_cleanup: true
