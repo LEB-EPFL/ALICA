@@ -109,7 +109,7 @@ MicroManager, and also a "standalone" jar for inclusion into SASS.
 ### Added
 - CHANGELOG.md was created for tracking changes to the project.
 
-[Unreleased] https://github.com/LEB-EPFL/ALICA/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/LEB-EPFL/ALICA/compare/v0.3.0...HEAD
 [v0.3.0]: https://github.com/LEB-EPFL/ALICA/releases/tag/v0.3.0
 [v0.2.5]: https://github.com/LEB-EPFL/ALICA/releases/tag/v0.2.5
 [v0.2.4]: https://github.com/LEB-EPFL/ALICA/releases/tag/v0.2.4
