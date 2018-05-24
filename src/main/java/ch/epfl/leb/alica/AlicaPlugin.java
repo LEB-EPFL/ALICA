@@ -31,7 +31,7 @@ import org.scijava.plugin.SciJavaPlugin;
 @Plugin(type = MenuPlugin.class)
 public class AlicaPlugin implements MenuPlugin, SciJavaPlugin {
     
-    private final String VERSION = "0.4.0-SNAPSHOT";
+    private final String VERSION = "0.3.1";
     private final String COPYRIGHT = "The Laboratory of Experimental " +
                                      "Biophysics, Ecole Polytechnique " +
                                      "Federale de Lausanne (EPFL), Switzerland";
