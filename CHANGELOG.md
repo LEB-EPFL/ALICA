@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+### Changed
+- Bumped ImageJ version to 1.51s.
+
 ## [v0.3.1]
 ### Changed
 - The API was ported for compatibility with Micro-Manager 2.0 gamma.
