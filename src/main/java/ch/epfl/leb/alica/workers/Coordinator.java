@@ -98,6 +98,7 @@ public class Coordinator {
                     analyzer.getName(), 
                     controller.getName(), 
                     laser.getDeviceName()+"-"+laser.getPropertyName(),
+                    analyzer.getShortReturnDescription(),
                     controller.getSetpoint());
             gui.setLaserPowerDisplayMax(laser.getMaxPower());
 

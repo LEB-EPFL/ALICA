@@ -1,8 +1,7 @@
 /* 
- * Copyright (C) 2017 Laboratory of Experimental Biophysics
+ * Copyright (C) 2017-2018 Laboratory of Experimental Biophysics
  * Ecole Polytechnique Federale de Lausanne
  * 
- * Author: Marcel Stefko
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,8 +29,10 @@ import org.micromanager.internal.graph.GraphPanel;
 
 
 /**
- * Display for monitoring the current Coordinator state. It is controlled
- by the Coordinator
+ * Display for monitoring the current Coordinator state.
+ * 
+ * This display is controlled by the Coordinator.
+ * 
  * @author Marcel Stefko
  */
 public class MonitorGUI extends javax.swing.JFrame {
@@ -48,9 +49,12 @@ public class MonitorGUI extends javax.swing.JFrame {
      * @param analyzer_name name of the used analyzer
      * @param controller_name name of the used controller
      * @param laser_name name of the used laser
+     * @param analyzer_description A short description of the analyzer's units.
      * @param start_setpoint setpoint value to display at startup
      */
-    public MonitorGUI(Coordinator coordinator, String analyzer_name, String controller_name, String laser_name, double start_setpoint) {
+    public MonitorGUI(Coordinator coordinator, String analyzer_name, 
+            String controller_name, String laser_name,
+            String analyzer_description, double start_setpoint) {
         super();
         try {
             this.setLocation(MainGUI.getInstance().getLocationOnScreen());
@@ -83,6 +87,7 @@ public class MonitorGUI extends javax.swing.JFrame {
         
         // place the GraphPanel into its container
         p_realtime_plot.add(realtime_graph);
+        l_realtime_plot.setText(analyzer_description);
         
         // place analyzer and controller status panels
         analyzer_status = coordinator.getAnalyzerStatusPanel();
@@ -103,7 +108,6 @@ public class MonitorGUI extends javax.swing.JFrame {
         // set the setpoint display
         l_setpoint.setText(String.format("%5.2f", start_setpoint));
         e_new_setpoint.setText(l_setpoint.getText());
-        
         
     }
     
@@ -228,6 +232,8 @@ public class MonitorGUI extends javax.swing.JFrame {
         jLabel12 = new javax.swing.JLabel();
         l_running = new javax.swing.JLabel();
         b_stop = new javax.swing.JButton();
+        p_realtime_plot_parent = new javax.swing.JPanel();
+        l_realtime_plot = new javax.swing.JLabel();
         p_realtime_plot = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         p_analyzer_status = new javax.swing.JPanel();
@@ -485,18 +491,41 @@ public class MonitorGUI extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        p_realtime_plot.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        p_realtime_plot.setPreferredSize(new java.awt.Dimension(380, 180));
+        p_realtime_plot_parent.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        p_realtime_plot_parent.setPreferredSize(new java.awt.Dimension(380, 180));
+
+        l_realtime_plot.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
         javax.swing.GroupLayout p_realtime_plotLayout = new javax.swing.GroupLayout(p_realtime_plot);
         p_realtime_plot.setLayout(p_realtime_plotLayout);
         p_realtime_plotLayout.setHorizontalGroup(
             p_realtime_plotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 420, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         p_realtime_plotLayout.setVerticalGroup(
             p_realtime_plotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 182, Short.MAX_VALUE)
+            .addGap(0, 129, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout p_realtime_plot_parentLayout = new javax.swing.GroupLayout(p_realtime_plot_parent);
+        p_realtime_plot_parent.setLayout(p_realtime_plot_parentLayout);
+        p_realtime_plot_parentLayout.setHorizontalGroup(
+            p_realtime_plot_parentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, p_realtime_plot_parentLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(p_realtime_plot_parentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(p_realtime_plot, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(l_realtime_plot, javax.swing.GroupLayout.DEFAULT_SIZE, 396, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        p_realtime_plot_parentLayout.setVerticalGroup(
+            p_realtime_plot_parentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, p_realtime_plot_parentLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(p_realtime_plot, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(l_realtime_plot, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         p_analyzer_status.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -560,7 +589,7 @@ public class MonitorGUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(p_realtime_plot, javax.swing.GroupLayout.PREFERRED_SIZE, 424, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(p_realtime_plot_parent, javax.swing.GroupLayout.PREFERRED_SIZE, 424, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -574,7 +603,7 @@ public class MonitorGUI extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(p_realtime_plot, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(p_realtime_plot_parent, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
@@ -652,12 +681,14 @@ public class MonitorGUI extends javax.swing.JFrame {
     private javax.swing.JLabel l_laser;
     public javax.swing.JLabel l_laser_power_max;
     public javax.swing.JLabel l_last_analysis_duration;
+    private javax.swing.JLabel l_realtime_plot;
     private javax.swing.JLabel l_roi_isset;
     private javax.swing.JLabel l_running;
     private javax.swing.JLabel l_setpoint;
     private javax.swing.JPanel p_analyzer_status;
     private javax.swing.JPanel p_controller_status;
-    public javax.swing.JPanel p_realtime_plot;
+    private javax.swing.JPanel p_realtime_plot;
+    public javax.swing.JPanel p_realtime_plot_parent;
     public javax.swing.JProgressBar pb_laser_power;
     // End of variables declaration//GEN-END:variables
 }
