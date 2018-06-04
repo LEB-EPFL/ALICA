@@ -15,3 +15,4 @@ shell.nix
 
 # Maven
 /target
+/nbproject/

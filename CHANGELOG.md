@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - Bumped ImageJ version to 1.51s.
 
+### Fixed
+- The `AlicaLogger` no longer overwrites values that have already been
+  written to the same frame number in the log.
+
 ## [v0.3.1]
 ### Changed
 - The API was ported for compatibility with Micro-Manager 2.0 gamma.
