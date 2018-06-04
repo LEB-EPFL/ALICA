@@ -2,8 +2,11 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+
 ### Changed
 - Bumped ImageJ version to 1.51s.
+- The real-time plot in the monitor window now displays a short
+  description of the analyzer's output.
 
 ### Fixed
 - The `AlicaLogger` no longer overwrites values that have already been
