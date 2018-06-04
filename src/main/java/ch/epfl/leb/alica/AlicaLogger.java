@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2017 Laboratory of Experimental Biophysics
+ * Copyright (C) 2017-2018 Laboratory of Experimental Biophysics
  * Ecole Polytechnique Federale de Lausanne
- * 
- * Author: Marcel Stefko
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,11 +29,10 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.micromanager.LogManager;
 import org.micromanager.Studio;
-import org.micromanager.internal.MMStudio;
 
 /**
- *
- * @author stefko
+ * The ALICA logger logs analyzer and controller outputs during an acquisition.
+ * @author Marcel Stefko
  */
 public class AlicaLogger {
     private static AlicaLogger instance = null;
@@ -52,8 +49,8 @@ public class AlicaLogger {
      * Resets logger, removes all data.
      */
     public final void clear() {
-        log_map = new LinkedHashMap<Integer, LinkedHashMap<String,Object>>();
-        parameter_set = new LinkedHashSet<String>();
+        log_map = new LinkedHashMap<>();
+        parameter_set = new LinkedHashSet<>();
     }
     
     /**
@@ -68,7 +65,15 @@ public class AlicaLogger {
     }
     
     /**
-     * Set studio to allow general logging
+     * Returns the current log.
+     * @return The current log stored by this logger.
+     */
+    public LinkedHashMap<Integer,LinkedHashMap<String, Object>> getLogMap() {
+        return log_map;
+    }
+    
+    /**
+     * Set studio to allow general logging.
      * @param studio MMStudio
      */
     public void setStudio(Studio studio) {
@@ -76,8 +81,8 @@ public class AlicaLogger {
     }
     
     /**
-     * Log message to MicroManager or to a general logger
-     * @param message message to be logged
+     * Log message to MicroManager or to a general logger.
+     * @param message The message to be logged.
      */
     public void logMessage(String message) {
         try {
@@ -147,7 +152,7 @@ public class AlicaLogger {
         addToLog(frame_no,"analyzer_intermittent_output",value);
     }
     /**
-     * Add batched output of analyzer into log
+     * Add batched output of analyzer into the log.
      * @param frame_no
      * @param value value of the output
      */
@@ -175,16 +180,22 @@ public class AlicaLogger {
     
     
     /**
-     * Add a parameter into log
-     * @param frame_no
+     * Add a parameter into the log.
+     * @param frame_no The acquisition frame number for this log entry.
      * @param value_name name of parameter
      * @param value value of parameter
      */
     public void addToLog(int frame_no, String value_name, double value) {
         parameter_set.add(value_name);
         if (!log_map.containsKey(frame_no))
-            log_map.put(frame_no, new LinkedHashMap<String,Object>());
-        log_map.get(frame_no).put(value_name, Double.valueOf(value));
+            log_map.put(frame_no, new LinkedHashMap<>());
+        
+        // This prevents overwriting batched outputs that have already been
+        // logged. This may occur, for example, when the controller is working
+        // faster than the logger.
+        LinkedHashMap<String, Object> currFrame = log_map.get(frame_no);
+        if (!currFrame.containsKey(value_name))
+            currFrame.put(value_name, value);
     }
     
     /**
@@ -196,8 +207,14 @@ public class AlicaLogger {
     public void addToLog(int frame_no, String value_name, String value) {
         parameter_set.add(value_name);
         if (!log_map.containsKey(frame_no))
-            log_map.put(frame_no, new LinkedHashMap<String,Object>());
-        log_map.get(frame_no).put(value_name, value);
+            log_map.put(frame_no, new LinkedHashMap<>());
+        
+        // This prevents overwriting batched outputs that have already been
+        // logged. This may occur, for example, when the controller is working
+        // faster than the logger.
+        LinkedHashMap<String, Object> currFrame = log_map.get(frame_no);
+        if (!currFrame.containsKey(value_name))
+            currFrame.put(value_name, value);
     }
     
     /**
