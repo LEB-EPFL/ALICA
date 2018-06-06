@@ -18,6 +18,14 @@ page](https://github.com/LEB-EPFL/ALICA/releases) and place it in the
 2. Download the latest `ALICA_ACPack*.jar` from the [ALICA_ACPack
    releases page](https://github.com/LEB-EPFL/ALICA_ACPack/releases)
    and place it in the same `mmplugins` folder.
+3. If you are using ALICA_ACPack version 0.2.0 or later, you will need
+   to update a few jars that Micro-Manager uses. Download
+   [imglib2-5.3.0.jar](http://maven.imagej.net/service/local/repositories/releases/content/net/imglib2/imglib2/5.3.0/imglib2-5.3.0.jar)
+   and
+   [imglib2-roi-0.5.1](http://maven.imagej.net/service/local/repositories/releases/content/net/imglib2/imglib2-roi/0.5.1/imglib2-roi-0.5.1.jar)
+   and place them in the `plugins\Micro-Manager` folder inside the
+   Micro-Manager installation directory. Delete the older versions of
+   imglib2 and imglib2-roi that are already located there.
 
 ## Quickstart
 

@@ -134,6 +134,16 @@ public class MonitorGUI extends javax.swing.JFrame {
     }
     
     /**
+     * Update analyzer description.
+     * 
+     * @param description A short description of the analyzer's outputs.
+     * 
+     */
+    public void updateAnalyzerDescription(String description) {
+        l_realtime_plot.setText(description);
+    }
+    
+    /**
      * Update displayed laser power to new value
      * @param value new value of laser power
      */

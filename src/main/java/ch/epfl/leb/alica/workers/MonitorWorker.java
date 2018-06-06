@@ -106,6 +106,8 @@ class MonitorTask extends TimerTask {
                 gui.updateFPS(FPS);
                 gui.updateLastAnalysisDuration(last_analysis_time);
                 gui.updatePlot(grapher.getGraphData());
+                gui.updateAnalyzerDescription(
+                        analysis_worker.getAnalyzerShortDescription());
             }
         });
     }

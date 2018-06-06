@@ -327,6 +327,15 @@ public class AnalysisWorker extends Thread {
     }
     
     /**
+     * Returns the current description of the analyzer's output.
+     * 
+     * @return A string describing the analyzer's current output.
+     */
+    public String getAnalyzerShortDescription() {
+        return this.analyzer.getShortReturnDescription();
+    }
+    
+    /**
      * Stops the analyzer after finalizing the current analysis.
      */
     public void requestStop() {
