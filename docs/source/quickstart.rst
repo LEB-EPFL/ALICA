@@ -39,9 +39,18 @@ the file into the Micro-Manager plugins folder.
    *MM2ROOT/* is the Micro-Manager installation directory.
 3. Navigate to https://github.com/LEB-EPFL/ALICA_ACPack and download
    the ALICA_ACPack*.jar file corresponding to the latest release.
-4. Copy ALICA_ACPack*.jar to the *MM2ROOT/mmplugins* directory, where
+4. If you are using ALICA_ACPack version 0.2.0 or later, you will need
+   to update a few jars that Micro-Manager uses. Download
+   imglib2-5.3.0.jar from
+   http://maven.imagej.net/service/local/repositories/releases/content/net/imglib2/imglib2/5.3.0/imglib2-5.3.0.jar
+   and imglib2-roi-0.5.1.jar from
+   http://maven.imagej.net/service/local/repositories/releases/content/net/imglib2/imglib2-roi/0.5.1/imglib2-roi-0.5.1.jar
+   and place them in the `plugins\Micro-Manager` folder inside the
+   Micro-Manager installation directory. Delete the older versions of
+   imglib2 and imglib2-roi that are already located there.
+5. Copy ALICA_ACPack*.jar to the *MM2ROOT/mmplugins* directory, where
    *MM2ROOT/* is the Micro-Manager installation directory.
-5. Verify that ALICA was installed and recognized by starting
+6. Verify that ALICA was installed and recognized by starting
    Micro-Manager and selecting *Plugins > Device Control > ALICA* in
    the Micro-Manager menu bar. (ALICA will not be located in the
    ImageJ menu bar.) The ALICA Setup window should appear, which will
